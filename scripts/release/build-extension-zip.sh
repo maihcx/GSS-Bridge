@@ -28,7 +28,7 @@ mkdir -p "$STAGE_DIR/scripts"
 cp -rp "$BRIDGE_DIR/scripts/powershell" "$STAGE_DIR/scripts/"
 cp -rp "$BRIDGE_DIR/scripts/bash" "$STAGE_DIR/scripts/"
 
-for f in README.md README.vi-VN.md LICENSE AGENTS.md CLAUDE.md .gitignore .gitattributes; do
+for f in README.md README.vi-VN.md CHANGELOG.md LICENSE AGENTS.md CLAUDE.md .gitignore .gitattributes; do
     if [ -f "$REPO_ROOT/$f" ]; then
         cp -p "$REPO_ROOT/$f" "$STAGE_DIR/"
     fi

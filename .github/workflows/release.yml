@@ -1,0 +1,167 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  linux-gate:
+    name: Linux bash release gate
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: ver
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "Version: $v"
+
+      - name: Validate release readiness
+        shell: pwsh
+        run: ./scripts/release/validate-release-readiness.ps1 -Version '${{ steps.ver.outputs.version }}'
+
+      - name: Run Linux bash smoke tests
+        shell: bash
+        run: |
+          bash tests/run-all.sh
+          bash tests/test-release-package.sh
+
+  windows-gate:
+    name: Windows PowerShell release gate
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: ver
+        shell: powershell
+        run: |
+          $v = "${env:GITHUB_REF_NAME}".Substring(1)
+          "version=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          Write-Output "Version: $v"
+
+      - name: Validate release readiness
+        shell: powershell
+        run: .\scripts\release\validate-release-readiness.ps1 -Version '${{ steps.ver.outputs.version }}'
+
+      - name: Run Windows PowerShell test suite
+        shell: powershell
+        run: .\tests\run-all.ps1
+
+  macos-gate:
+    name: macOS bash release gate
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        shell: bash
+        run: brew install bash jq
+
+      - name: Run macOS bash smoke tests
+        shell: bash
+        run: |
+          export PATH="$(brew --prefix)/bin:$PATH"
+          bash --version | head -n 1
+          bash tests/run-all.sh
+          bash tests/test-release-package.sh
+
+  release:
+    name: Build + publish release
+    needs:
+      - linux-gate
+      - windows-gate
+      - macos-gate
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: ver
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "Version: $v"
+
+      - name: Validate release readiness
+        shell: pwsh
+        run: ./scripts/release/validate-release-readiness.ps1 -Version '${{ steps.ver.outputs.version }}'
+
+      - name: Build extension ZIP
+        shell: pwsh
+        run: ./scripts/release/build-extension-zip.ps1 -Version '${{ steps.ver.outputs.version }}'
+
+      - name: Validate release package
+        shell: pwsh
+        run: ./scripts/release/validate-release-readiness.ps1 -Version '${{ steps.ver.outputs.version }}' -PackageZip 'dist/gss-bridge-v${{ steps.ver.outputs.version }}.zip'
+
+      - name: Extract release notes from CHANGELOG
+        shell: bash
+        run: |
+          python3 - '${{ steps.ver.outputs.version }}' <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          version = sys.argv[1]
+          body = Path("CHANGELOG.md").read_text(encoding="utf-8")
+          pattern = rf"(?ms)^##\s*\[{re.escape(version)}\][^\n]*\n(.*?)(?=^##\s*\[|\Z)"
+          match = re.search(pattern, body)
+          if not match:
+              print(f"::error::No '## [{version}]' section in CHANGELOG.md")
+              raise SystemExit(1)
+          notes = match.group(1).strip()
+          Path("release-notes.md").write_text(notes + "\n", encoding="utf-8")
+          print("Notes (first 300 chars):")
+          print(notes[:300])
+          PY
+
+      - name: Create GitHub release with ZIP assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release edit "$GITHUB_REF_NAME" \
+              --title "GSS-Bridge $GITHUB_REF_NAME" \
+              --notes-file release-notes.md
+            gh release upload "$GITHUB_REF_NAME" \
+              --clobber \
+              "dist/gss-bridge-v${{ steps.ver.outputs.version }}.zip" \
+              "dist/gss-bridge.zip"
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              --title "GSS-Bridge $GITHUB_REF_NAME" \
+              --notes-file release-notes.md \
+              "dist/gss-bridge-v${{ steps.ver.outputs.version }}.zip" \
+              "dist/gss-bridge.zip"
+          fi
+
+      - name: Summary
+        shell: bash
+        run: |
+          sha="$(sha256sum "dist/gss-bridge-v${{ steps.ver.outputs.version }}.zip" | awk '{print $1}')"
+          url="https://github.com/${{ github.repository }}/releases/download/$GITHUB_REF_NAME/gss-bridge-v${{ steps.ver.outputs.version }}.zip"
+          latest_url="https://github.com/${{ github.repository }}/releases/latest/download/gss-bridge.zip"
+          {
+            printf '## GSS-Bridge Release Published\n\n'
+            printf -- '- **Version Tag**: %s\n' "$GITHUB_REF_NAME"
+            printf -- '- **Versioned Asset**: %s\n' "$url"
+            printf -- '- **Latest Alias URL**: %s\n' "$latest_url"
+            printf -- '- **SHA256**: `%s`\n\n' "$sha"
+            printf '### Spec-Kit Installation Command\n\n'
+            printf '```bash\nspecify extension add gss-bridge --from %s\n```\n' "$latest_url"
+          } >> "$GITHUB_STEP_SUMMARY"
