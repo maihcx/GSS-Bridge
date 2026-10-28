@@ -39,7 +39,22 @@ done
 
 (
     cd "$STAGE_DIR"
-    zip -r -q "$OUT_ZIP" .
+    if command -v zip >/dev/null 2>&1; then
+        zip -r -q "$OUT_ZIP" .
+    else
+        PY_FOUND=0
+        for pcmd in python3 python py; do
+            if command -v "$pcmd" >/dev/null 2>&1 && "$pcmd" -c "import sys" >/dev/null 2>&1; then
+                "$pcmd" -c "import sys, zipfile, os; z = zipfile.ZipFile(sys.argv[1], 'w', zipfile.ZIP_DEFLATED); [z.write(os.path.join(r, f), os.path.relpath(os.path.join(r, f), '.')) for r, d, fs in os.walk('.') for f in fs]; z.close()" "$OUT_ZIP"
+                PY_FOUND=1
+                break
+            fi
+        done
+        if [ "$PY_FOUND" -eq 0 ]; then
+            echo "Error: neither 'zip' nor a functional 'python' command was found." >&2
+            exit 1
+        fi
+    fi
 )
 
 cp -p "$OUT_ZIP" "$LATEST_ZIP"

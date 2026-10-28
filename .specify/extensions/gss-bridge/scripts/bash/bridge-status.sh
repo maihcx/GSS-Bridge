@@ -50,10 +50,10 @@ STATUS=""
 OWNER=""
 PENDING_COUNT="-1"
 
-if [ -f "$HANDOFF_PATH" ] && command -v jq >/dev/null 2>&1; then
-    FEATURE_DIR="$(jq -r '.feature_directory // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
-    STATUS="$(jq -r '.status // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
-    OWNER="$(jq -r '.artifact_owner // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
+if [ -f "$HANDOFF_PATH" ]; then
+    FEATURE_DIR="$(read_handoff_field "$HANDOFF_PATH" "feature_directory")"
+    STATUS="$(read_handoff_field "$HANDOFF_PATH" "status")"
+    OWNER="$(read_handoff_field "$HANDOFF_PATH" "artifact_owner")"
     if [ -n "$FEATURE_DIR" ] && [ -f "$REPO_ROOT/$FEATURE_DIR/tasks.md" ]; then
         PENDING_COUNT="$(get_pending_task_count "$REPO_ROOT/$FEATURE_DIR/tasks.md")"
     fi
@@ -81,7 +81,12 @@ if [ "$READINESS" -eq 1 ]; then
     HAS_GIT=0
     HAS_PYTHON=0
     command -v git >/dev/null 2>&1 && HAS_GIT=1
-    (command -v python3 >/dev/null 2>&1 || command -v python >/dev/null 2>&1) && HAS_PYTHON=1
+    for pcmd in python3 python py; do
+        if command -v "$pcmd" >/dev/null 2>&1 && "$pcmd" -c "import sys" >/dev/null 2>&1; then
+            HAS_PYTHON=1
+            break
+        fi
+    done
 
     TOOLS_STATUS="ok"
     if [ "$HAS_GIT" -eq 0 ]; then TOOLS_STATUS="warning"; fi

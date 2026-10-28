@@ -53,6 +53,29 @@ get_artifacts_sha256_json() {
     printf '{"spec.md":%s,"plan.md":%s,"tasks.md":%s}' "$spec_sha" "$plan_sha" "$tasks_sha"
 }
 
+read_handoff_field() {
+    local file="$1"
+    local key="$2"
+    if [ ! -f "$file" ]; then return 0; fi
+    if command -v jq >/dev/null 2>&1; then
+        jq -r ".$key // empty" "$file" 2>/dev/null || true
+    else
+        awk -v key="$key" -F'"' '
+            $0 ~ "\"" key "\"" {
+                for (i = 1; i <= NF; i++) {
+                    if ($i == key) {
+                        val = $(i+2)
+                        if (val != "null" && val != "") {
+                            print val
+                        }
+                        exit
+                    }
+                }
+            }
+        ' "$file"
+    fi
+}
+
 write_bridge_state_summary_full() {
     local handoff_path="$1"
     local repo_root="$2"
@@ -65,10 +88,10 @@ write_bridge_state_summary_full() {
     local owner=""
     local pending_count="-1"
 
-    if [ -f "$handoff_path" ] && command -v jq >/dev/null 2>&1; then
-        feature_dir="$(jq -r '.feature_directory // empty' "$handoff_path" 2>/dev/null || true)"
-        status="$(jq -r '.status // empty' "$handoff_path" 2>/dev/null || true)"
-        owner="$(jq -r '.artifact_owner // empty' "$handoff_path" 2>/dev/null || true)"
+    if [ -f "$handoff_path" ]; then
+        feature_dir="$(read_handoff_field "$handoff_path" "feature_directory")"
+        status="$(read_handoff_field "$handoff_path" "status")"
+        owner="$(read_handoff_field "$handoff_path" "artifact_owner")"
 
         if [ -n "$feature_dir" ]; then
             local feature_full="$repo_root/$feature_dir"

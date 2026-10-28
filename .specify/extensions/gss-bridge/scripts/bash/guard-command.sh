@@ -51,9 +51,9 @@ fi
 HANDOFF_STATUS=""
 HANDOFF_FEATURE_DIR=""
 
-if [ -f "$HANDOFF_PATH" ] && command -v jq >/dev/null 2>&1; then
-    HANDOFF_STATUS="$(jq -r '.status // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
-    HANDOFF_FEATURE_DIR="$(jq -r '.feature_directory // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
+if [ -f "$HANDOFF_PATH" ]; then
+    HANDOFF_STATUS="$(read_handoff_field "$HANDOFF_PATH" "status")"
+    HANDOFF_FEATURE_DIR="$(read_handoff_field "$HANDOFF_PATH" "feature_directory")"
 fi
 
 DECISION="allow"
@@ -109,6 +109,13 @@ if command -v jq >/dev/null 2>&1; then
             actor: $actor,
             checked_action: $chk
         }' >> "$EVENT_PATH"
+else
+    local_fd_val="null"
+    local_rsn_val="null"
+    if [ -n "$HANDOFF_FEATURE_DIR" ]; then local_fd_val="\"$HANDOFF_FEATURE_DIR\""; fi
+    if [ -n "$DENY_REASON" ]; then local_rsn_val="\"$DENY_REASON\""; fi
+    printf '{"timestamp":"%s","action":"guard","status":"%s","feature_directory":%s,"decision":"%s","reason":%s,"actor":"%s","checked_action":"%s"}\n' \
+        "$TIMESTAMP" "$DECISION" "$local_fd_val" "$DECISION" "$local_rsn_val" "$ACTOR" "$ACTION" >> "$EVENT_PATH"
 fi
 
 write_bridge_state_summary_full "$HANDOFF_PATH" "$REPO_ROOT" "$ACTOR"

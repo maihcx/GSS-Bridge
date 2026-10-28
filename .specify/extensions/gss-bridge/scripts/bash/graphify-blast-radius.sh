@@ -57,14 +57,19 @@ if [ ! -f "$GRAPH_PATH" ]; then
     exit 2
 fi
 
-PYTHON_CMD="python3"
-if ! command -v python3 >/dev/null 2>&1; then
-    if command -v python >/dev/null 2>&1; then
-        PYTHON_CMD="python"
-    else
-        echo "Error: python3 or python required" >&2
-        exit 2
+PYTHON_CMD=""
+for cmd in python3 python py; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        if "$cmd" -c "import sys" >/dev/null 2>&1; then
+            PYTHON_CMD="$cmd"
+            break
+        fi
     fi
+done
+
+if [ -z "$PYTHON_CMD" ]; then
+    echo "Error: a functional python3 or python runtime is required" >&2
+    exit 2
 fi
 
 export GRAPH_PATH CHECK_COUPLING NODE NODE_A NODE_B MAX_HOPS OUTPUT_JSON

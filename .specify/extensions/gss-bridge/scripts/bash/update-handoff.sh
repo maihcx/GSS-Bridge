@@ -56,9 +56,9 @@ PRIOR_FEATURE_DIR=""
 PRIOR_OWNER=""
 PRIOR_ACTOR=""
 
-if [ -f "$HANDOFF_PATH" ] && command -v jq >/dev/null 2>&1; then
-    PRIOR_FEATURE_DIR="$(jq -r '.feature_directory // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
-    PRIOR_OWNER="$(jq -r '.artifact_owner // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
+if [ -f "$HANDOFF_PATH" ]; then
+    PRIOR_FEATURE_DIR="$(read_handoff_field "$HANDOFF_PATH" "feature_directory")"
+    PRIOR_OWNER="$(read_handoff_field "$HANDOFF_PATH" "artifact_owner")"
 fi
 
 TARGET_FEATURE_DIR="$FEATURE_DIR"
@@ -164,6 +164,78 @@ if command -v jq >/dev/null 2>&1; then
             actor: $actor,
             snapshot_id: (if $snap == "" then null else $snap end)
         }' >> "$SPECIFY_DIR/bridge-events.jsonl"
+else
+    fb_fd_val="null"
+    fb_spec_val="null"
+    fb_plan_val="null"
+    fb_tasks_val="null"
+    fb_blocked_val="null"
+    fb_snap_val="null"
+    fb_exec_val="gss-bridge"
+
+    if [ "$STATUS" = "ready" ]; then fb_exec_val="speckit"; fi
+    if [ -n "$TARGET_FEATURE_DIR" ]; then
+        fb_fd_val="\"$TARGET_FEATURE_DIR\""
+        fb_spec_val="\"$TARGET_FEATURE_DIR/spec.md\""
+        fb_plan_val="\"$TARGET_FEATURE_DIR/plan.md\""
+        fb_tasks_val="\"$TARGET_FEATURE_DIR/tasks.md\""
+    fi
+    if [ "$STATUS" = "blocked" ]; then
+        if [ -z "$REASON" ]; then
+            fb_blocked_val='"(no reason provided)"'
+        else
+            fb_blocked_val="\"$REASON\""
+        fi
+    fi
+    if [ -n "$SNAPSHOT_ID" ]; then
+        fb_snap_val="\"$SNAPSHOT_ID\""
+    fi
+
+    cat <<EOF > "$SPECIFY_DIR/gss-handoff.json"
+{
+  "schema_version": 1,
+  "updated_at": "$TIMESTAMP",
+  "feature_directory": $fb_fd_val,
+  "source_of_truth": {
+    "constitution": ".specify/memory/constitution.md",
+    "spec": $fb_spec_val,
+    "plan": $fb_plan_val,
+    "tasks": $fb_tasks_val
+  },
+  "supersedes": [
+    "speckit.implement"
+  ],
+  "executor": "$fb_exec_val",
+  "capabilities": [
+    "graphify-codebase-intelligence",
+    "blast-radius-analysis",
+    "task-parallelism-verification",
+    "executing-plans",
+    "test-driven-development",
+    "subagent-scoping",
+    "systematic-debugging",
+    "verification-before-completion",
+    "requesting-code-review",
+    "finishing-a-development-branch"
+  ],
+  "status": "$STATUS",
+  "blocked_reason": $fb_blocked_val,
+  "artifact_owner": "$OWNER",
+  "review_only_agents": [],
+  "last_snapshot_id": $fb_snap_val,
+  "artifacts_sha256": $SHA_MAP,
+  "instructions": "Use /gss-bridge or /speckit-gss-bridge-execute. GSS-Bridge combines Spec-Kit governance, Graphify topology context, and Superpowers TDD execution discipline."
+}
+EOF
+
+    # Dual write for backward compatibility
+    cp -p "$SPECIFY_DIR/gss-handoff.json" "$SPECIFY_DIR/superpowers-handoff.json"
+
+    # Append to event log
+    fb_ev_rsn="null"
+    if [ -n "$REASON" ]; then fb_ev_rsn="\"$REASON\""; fi
+    printf '{"timestamp":"%s","action":"handoff","status":"%s","feature_directory":%s,"decision":"updated","reason":%s,"actor":"%s","snapshot_id":%s}\n' \
+        "$TIMESTAMP" "$STATUS" "$fb_fd_val" "$fb_ev_rsn" "$ACTOR" "$fb_snap_val" >> "$SPECIFY_DIR/bridge-events.jsonl"
 fi
 
 WARN_COMPLETE=0
