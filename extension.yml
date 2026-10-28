@@ -6,9 +6,9 @@ extension:
   version: "1.0.0"
   description: "The Golden Triangle: Spec-Kit Governance, Graphify Codebase Context, and Superpowers Execution Discipline. Cross-agent."
   author: "GSS Team"
-  repository: "https://github.com/lihan3238/GSS-Bridge"
-  homepage: "https://github.com/lihan3238/GSS-Bridge"
-  documentation: "https://github.com/lihan3238/GSS-Bridge#readme"
+  repository: "https://github.com/maihcx/GSS-Bridge"
+  homepage: "https://github.com/maihcx/GSS-Bridge"
+  documentation: "https://github.com/maihcx/GSS-Bridge#readme"
   license: MIT
   category: process
   effect: read-write
