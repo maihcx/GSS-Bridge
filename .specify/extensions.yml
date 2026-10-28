@@ -2,7 +2,7 @@ extensions:
   gss-bridge:
     id: gss-bridge
     name: "GSS-Bridge: Graphify + Spec-Kit + Superpowers"
-    version: "1.0.0"
+    version: "1.0.1"
     path: ".specify/extensions/gss-bridge"
     enabled: true
 

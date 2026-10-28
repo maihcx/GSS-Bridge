@@ -5,6 +5,20 @@ All notable changes to **GSS-Bridge** will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-10-28
+
+### Added
+- **Full POSIX Bash Test Suite**: Added 1:1 bash test parity with PowerShell suites (`tests/test-graphify-blast-radius.sh`, `tests/test-guard-rules.sh`, and `tests/run-all.sh`).
+- **Zero-Dependency JSON Fallback**: Added AWK parser (`read_handoff_field`) and heredoc template generators in all bash scripts (`bridge-state.sh`, `update-handoff.sh`, `guard-command.sh`, `bridge-status.sh`), allowing GSS-Bridge to run reliably in environments without `jq` (such as Windows Git Bash or minimal Linux/Docker containers).
+- **Python Zipfile Fallback in Release Packager**: Enhanced `scripts/release/build-extension-zip.sh` to use Python's built-in `zipfile` module when the native `zip` command is not installed.
+- **Robust Windows Python Runtime Detection**: Added multi-candidate detection in `graphify-blast-radius.sh` and `bridge-status.sh` to bypass Windows Store `python3.exe` execution alias traps and resolve functional Python runtimes (`python3`, `python`, `py`).
+- **Dynamic Release Validation**: Upgraded package validation scripts to dynamically resolve target versions from manifest declarations.
+
+### Fixed
+- Fixed guard evaluation in `guard-command.sh` to ensure `speckit.implement` blocks properly when handoff is in `executing` status without external JSON tooling.
+- Fixed `update-handoff.sh` to guarantee `.specify/gss-handoff.json` and dual-write mirrors are written and updated even when `jq` is unavailable.
+- Standardized file line endings: strictly LF for `.sh` scripts and CRLF for `.ps1` scripts across the codebase.
+
 ## [1.0.0] - 2026-10-28
 
 ### Added

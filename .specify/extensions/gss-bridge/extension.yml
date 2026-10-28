@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: gss-bridge
   name: "GSS-Bridge: Graphify + Spec-Kit + Superpowers"
-  version: "1.0.0"
+  version: "1.0.1"
   description: "The Golden Triangle: Spec-Kit Governance, Graphify Codebase Context, and Superpowers Execution Discipline. Cross-agent."
   author: "GSS Team"
   repository: "https://github.com/maihcx/GSS-Bridge"
