@@ -1,21 +1,63 @@
 <p align="center">
-  <h1 align="center">GSS-Bridge</h1>
-  <p align="center">
-    <strong>Graphify (Ngữ cảnh) + Spec-Kit (Quản trị) + Superpowers (Kỷ luật)</strong>
-  </p>
-  <p align="center">
-    <em>Spec-Kit định nghĩa YÊU CẦU. Graphify thấu thị CẤU TRÚC. Superpowers thực thi KỶ LUẬT.</em>
-  </p>
+  <img src="assets/social/github-social-preview.png" alt="GSS-Bridge: Spec-Kit định nghĩa YÊU CẦU. Graphify thấu thị CẤU TRÚC. Superpowers thực thi KỶ LUẬT." width="960" />
 </p>
 
-> [!NOTE]
-> English Version: [README.md](README.md)
+<p align="center">
+  <em>Spec-Kit định nghĩa YÊU CẦU. Graphify thấu thị CẤU TRÚC. Superpowers thực thi KỶ LUẬT.</em>
+</p>
+
+<p align="center">
+  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" /></a>
+  <a href="https://github.com/maihcx/GSS-Bridge/releases"><img alt="Bridge version" src="https://img.shields.io/github/v/release/maihcx/GSS-Bridge?style=flat-square&label=bridge&color=success" /></a>
+  <a href="https://github.com/github/spec-kit"><img alt="Spec Kit verified 1.0.12" src="https://img.shields.io/badge/Spec_Kit-verified_1.0.12-success?style=flat-square" /></a>
+  <a href="https://github.com/safi-shamsi/graphify"><img alt="Graphify verified 0.3.10" src="https://img.shields.io/badge/Graphify-verified_0.3.10-cyan?style=flat-square" /></a>
+  <a href="https://github.com/obra/superpowers"><img alt="Superpowers verified 6.4.2" src="https://img.shields.io/badge/Superpowers-verified_6.4.2-blueviolet?style=flat-square" /></a>
+  <a href="https://github.com/github/spec-kit/blob/main/docs/community/extensions.md"><img alt="Spec Kit Marketplace ready" src="https://img.shields.io/badge/Spec_Kit_Marketplace-ready-orange?style=flat-square" /></a>
+</p>
+
+# GSS-Bridge (Tiếng Việt)
+
+> 🌐 **English**: See English documentation at [README.md](README.md).
+
+**GSS-Bridge là giao thức tam giác vàng kết hợp đặc tả Spec-Kit, cấu trúc mã nguồn Graphify và kỷ luật thực thi Superpowers.** Spec-Kit giữ vai trò là nguồn sự thật duy nhất cho đặc tả yêu cầu và quản trị (`constitution` $\rightarrow$ `spec` $\rightarrow$ `plan` $\rightarrow$ `tasks`). Graphify đóng vai trò là la bàn kiến trúc (`graph.json` $\rightarrow$ phân tích phạm vi ảnh hưởng $\rightarrow$ kiểm tra coupling task song song $\rightarrow$ khoanh vùng subagent). Superpowers thực thi kỷ luật kỹ thuật khắt khe (TDD Red-Green-Refactor $\rightarrow$ systematic call-graph debugging $\rightarrow$ xác nhận thực tế trước khi hoàn thành $\rightarrow$ code review chuẩn mực).
+
+Không daemon. Không dịch vụ chạy ngầm. Không database. Không workflow engine cồng kềnh. Không viết code vô căn cứ.
 
 ---
 
-## 🌟 Tổng quan
+## ⚡ Điểm nổi bật (At a glance)
 
-**GSS-Bridge (Graphify-Speckit-Superpowers Bridge)** là kiến trúc tam giác vàng (The Golden Triangle) kết hợp sức mạnh tối ưu của 3 công cụ hàng đầu dành cho AI Coding Agents:
+| Nếu bạn muốn... | GSS-Bridge mang lại cho bạn... |
+|---|---|
+| **Tài liệu Spec-Kit luôn là nguồn chuẩn mực** | Spec-Kit duy trì sở hữu `spec.md`, `plan.md`, và `tasks.md`. Tuyệt đối không tạo file rời rạc ở `docs/plans/`. |
+| **Thấu thị kiến trúc mà không cần grep mò mẫm** | Đồ thị tri thức lưu tại `graphify-out/graph.json` truy vấn nhanh qua `query`, `explain`, và `path`. |
+| **Biết trước phạm vi ảnh hưởng (Blast Radius)** | `graphify explain` tính toán các caller 1-hop và liên đới 2-hop ngay trong `plan.md`. |
+| **Triệt tiêu xung đột cho task chạy song song `[P]`** | `graphify path` kiểm chứng tính độc lập giữa các tác vụ trước khi dispatch subagent. |
+| **Subagent vận hành với chi phí token tối thiểu** | Ngữ cảnh được khoanh vùng nghiêm ngặt trong bán kính 1–2 hop AST (tiết kiệm 50x–100x token, chống ảo giác). |
+| **Kỷ luật TDD nghiêm ngặt & Debug theo dấu vết** | Chu trình Red-Green-Refactor, gỡ lỗi theo đường đi hàm và bắt buộc bằng chứng pass test. |
+| **Đa Agent phối hợp trên cùng một chuẩn** | Giao thức đồng nhất giữa Claude Code (`/gss-bridge`), OpenAI Codex (`$gss-bridge`), và Antigravity. |
+| **Tự động đồng bộ hóa đồ thị tri thức** | Tự động chạy `graphify --update` sau khi hoàn thành để cập nhật Knowledge Graph cho các phiên sau. |
+| **Hỗ trợ đầy đủ Windows, Linux và macOS** | Gói ZIP duy nhất hỗ trợ cả native Bash và PowerShell kèm kiểm thử CI/CD trên cả 3 nền tảng. |
+
+Cài đặt bản phát hành ổn định:
+
+```bash
+specify extension add gss-bridge \
+  --from https://github.com/maihcx/GSS-Bridge/releases/latest/download/gss-bridge.zip
+```
+
+---
+
+## 🎯 Tại sao cần GSS-Bridge?
+
+### Vấn đề của các công cụ đơn lẻ
+
+1. **Chỉ dùng Spec-Kit**: Rất tốt trong việc tạo tài liệu đặc tả, nhưng lệnh `speckit.implement` mặc định chỉ là một lượt chạy LLM một lần, không có TDD, không phân tách subagent và không hiểu cấu trúc AST.
+2. **Chỉ dùng Superpowers**: Kỷ luật thực thi rất tốt (TDD, subagents, review), nhưng lại tự tạo các file kế hoạch tạm bợ trong `docs/plans/`, làm mất đi tính quản trị lâu dài của dự án.
+3. **Chỉ dùng Graphify**: Cung cấp đồ thị tri thức tuyệt vời, nhưng cần một quy chuẩn thực thi để hiện thực hóa các thông tin cấu trúc đó vào code.
+4. **Các cầu nối cũ (Spec-Kit + Superpowers)**: Thực thi kỷ luật nhưng lại "mù" trước cấu trúc AST của mã nguồn, buộc agent phải dùng `grep` mò mẫm và đoán mò phạm vi ảnh hưởng.
+
+### Giải pháp: Tam Giác Vàng (The Golden Triangle)
 
 ```
                            ┌──────────────────────────────┐
@@ -28,146 +70,71 @@
                   ▼                                               ▼
    ┌──────────────────────────────┐                ┌──────────────────────────────┐
    │     Graphify (Ngữ cảnh)      │◄──────────────►│    Superpowers (Kỷ luật)     │
-   │  graphify-out/graph.json     │  Khoanh vùng   │  TDD · Subagents · Debugging │
-   │  query · explain · path      │  Truy vết lỗi  │  Verification · Code Review  │
+   │  graphify-out/graph.json     │   Khoanh vùng  │  TDD · Subagents · Debugging │
+   │  query · explain · path      │   Truy vết lỗi │  Verification · Code Review  │
    └──────────────────────────────┘                └──────────────────────────────┘
 ```
 
-1. **Spec-Kit (Quản trị & Tài liệu)**: Thiết lập đặc tả yêu cầu, kế hoạch kiến trúc và danh sách công việc chuẩn hóa.
-2. **Graphify (Ngữ cảnh & Cấu trúc mã nguồn)**: Đồ thị tri thức (Knowledge Graph) toàn diện, thấu thị phạm vi ảnh hưởng (blast radius), kiểm tra tính độc lập của tác vụ song song, khoanh vùng ngữ cảnh cho subagent.
-3. **Superpowers (Kỷ luật & Tiêu chuẩn kỹ thuật)**: Triển khai nghiêm ngặt phương pháp TDD (Test-Driven Development), phân tách subagent độc lập, truy vết lỗi có hệ thống và xác nhận thực tế trước khi hoàn thành.
-
----
-
-## ⚡ 3 Quy tắc phối hợp cốt lõi
-
-### 1. Nguồn sự thật về Tài liệu (Spec-Kit làm chủ)
-- **Tập trung hóa**: Mọi tài liệu đặc tả (`spec.md`), kế hoạch (`plan.md`) và danh sách công việc (`tasks.md`) BẮT BUỘC lưu theo cấu trúc chuẩn của Spec-Kit tại `specs/<feature>/`.
-- **Cấm tạo file rời**: Khi kích hoạt kỹ năng `writing-plans` của Superpowers, **KHÔNG** tạo file rời rạc ở `docs/plans/`; hãy ghi trực tiếp các kịch bản kiểm thử TDD vào `plan.md` và `tasks.md` của Spec-Kit.
-- **Tính bất biến khi thực thi**: Không sửa đổi hiến pháp hay đặc tả khi trạng thái handoff đang là `executing`. Nếu cần sửa đổi, phải chuyển trạng thái sang `blocked` trước.
-
-### 2. Nguồn sự thật về Mã nguồn (Graphify làm chủ)
-- **Truy vấn đồ thị trước tiên**: Luôn ưu tiên dùng `graphify query`, `graphify explain`, và `graphify path` trên `graphify-out/graph.json` trước khi dùng `grep`, `find` hoặc đọc toàn bộ thư mục.
-- **Xác định phạm vi ảnh hưởng (Blast Radius)**: Trước khi lập kế hoạch code, dùng `graphify explain "<Node>"` để xác định các module gọi trực tiếp (1-hop) và các thành phần liên đới (2-hop).
-- **Kiểm chứng tác vụ song song `[P]`**: Dùng `graphify path "NodeA" "NodeB"` để chứng minh hai module hoàn toàn không có liên kết trực tiếp trước khi đánh dấu tag song song `[P]`.
-
-### 3. Quy chuẩn Thực thi (Superpowers làm chủ)
-- **Test-Driven Development (TDD)**: Bắt buộc viết test thất bại (RED) trước khi viết code tối thiểu để pass test (GREEN), sau đó tái cấu trúc (REFACTOR).
-- **Subagent-Driven Development**: Phân tách subagent độc lập theo từng task `[P]`. Mỗi subagent CHỈ được nạp ngữ cảnh các file nằm trong bán kính đã được Graphify khoanh vùng (tiết kiệm token 50-100x và loại bỏ ảo giác).
-- **Systematic Debugging**: Khi gặp lỗi hoặc regression, dùng `graphify path` để truy vết luồng gọi hàm trước khi đưa ra giả thuyết sửa lỗi. Tuyệt đối không sửa mò.
-- **Verification Before Completion**: Chạy test runner thực tế và thu thập bằng chứng pass trước khi đánh dấu `[x]` vào `tasks.md`.
-- **Đồng bộ hóa đồ thị**: Chạy `graphify --update` sau khi hoàn thành code để cập nhật Knowledge Graph cho các phiên làm việc tiếp theo.
-
----
-
-## 🔄 Luồng hoạt động (Lifecycle Workflow)
-
-```mermaid
-flowchart TD
-    Start(["Bắt đầu tính năng mới"]) --> Spec["1. Spec-Kit: /speckit-specify\n+ Graphify: query thực thể hiện có"]
-    Spec --> Plan["2. Spec-Kit: /speckit-plan\n+ Graphify: explain phạm vi ảnh hưởng (Blast Radius)\n+ Superpowers: TDD strategy trong plan.md"]
-    Plan --> Tasks["3. Spec-Kit: /speckit-tasks\n+ Graphify: path check độc lập cho task [P]\n+ Khởi tạo handoff: executing"]
-    Tasks --> Loop{"Lặp qua từng Task trong tasks.md"}
-    
-    subgraph Execution ["Vòng lặp Kỷ luật Superpowers"]
-        Loop --> TDD_Red["Red: Viết test thất bại trước"]
-        TDD_Red --> TDD_Green["Green: Code tối thiểu để pass\n(Subagent nạp file theo khoanh vùng Graphify)"]
-        TDD_Green --> TDD_Refactor["Refactor: Tối ưu code & bảo toàn invariants"]
-        TDD_Refactor --> DebugCheck{"Gặp lỗi bất thường?"}
-        DebugCheck -- Có --> TraceGraph["Systematic Debugging:\nDùng graphify path truy vết luồng gọi"]
-        TraceGraph --> TDD_Red
-        DebugCheck -- Không --> Verify["Verification Before Completion:\nChạy build & test thực tế"]
-        Verify --> CheckTask["Đánh dấu [x] T### trong tasks.md"]
-    end
-    
-    CheckTask --> Loop
-    Loop -- "Đã xong toàn bộ tasks" --> Review["4. Superpowers: Code Review & Hoàn thiện branch"]
-    Review --> GraphSync["5. Graphify: Cập nhật đồ thị (graphify --update)"]
-    GraphSync --> Complete(["Hoàn thành tính năng!"])
-```
+GSS-Bridge kết hợp 3 công cụ thành một vòng lặp kỹ thuật khép kín:
+* **Spec-Kit định nghĩa YÊU CẦU (WHAT)**: Hợp đồng, yêu cầu và task checklist trong `specs/<feature>/`.
+* **Graphify thấu thị VỊ TRÍ (WHERE)**: Ranh giới bất biến, phạm vi ảnh hưởng (blast radius) và danh sách file cho subagent.
+* **Superpowers thực thi KỶ LUẬT (HOW)**: Viết test thất bại trước khi viết code, truy vết lỗi theo đồ thị và xác nhận thực tế trước khi đánh dấu `[x]`.
 
 ---
 
 ## 🚀 Hướng dẫn nhanh (Quick Start)
 
-### 1. Cài đặt vào dự án Spec-Kit
-
-Nếu sử dụng Spec-Kit extension:
 ```bash
-specify extension add gss-bridge --from ./dist/gss-bridge.zip
+# 1. Khởi tạo dự án Spec-Kit (hoặc dùng dự án hiện có)
+specify init my-project --integration claude   # hoặc --integration codex
+cd my-project
+
+# 2. Thêm extension GSS-Bridge
+specify extension add gss-bridge \
+  --from https://github.com/maihcx/GSS-Bridge/releases/latest/download/gss-bridge.zip
+
+# 3. Quét đồ thị tri thức mã nguồn bằng Graphify
+/graphify
 ```
 
-Hoặc sử dụng kỹ năng agent trực tiếp:
-- **Claude Code**: Kỹ năng tự động nhận diện tại `.claude/skills/gss-bridge/SKILL.md`
-- **Codex / Antigravity / Gemini CLI**: Kỹ năng tự động nhận diện tại `.agents/skills/gss-bridge/SKILL.md`
+### Quy trình 7 bước phát triển một tính năng
 
-### 2. Khởi tạo và lập đặc tả tính năng
-```bash
-# 1. Tạo đặc tả (tham chiếu ngữ cảnh từ Graphify)
-/speckit-specify 001-authentication-service
-
-# 2. Làm rõ yêu cầu
-/speckit-clarify
-
-# 3. Lập kế hoạch + Phân tích Blast Radius
-/speckit-plan
-
-# 4. Phân rã công việc + Kiểm chứng độc lập cho task [P]
-/speckit-tasks
-```
-
-### 3. Thực thi triển khai với GSS-Bridge
-Kích hoạt trình điều phối:
-- Trên Claude Code / Antigravity: `/gss-bridge` hoặc `/speckit-gss-bridge-execute`
-- Trên OpenAI Codex: `$gss-bridge` hoặc `$speckit-gss-bridge-execute`
+1. **Specify**: Chạy `/speckit-specify <tên-tính-năng>` (tự động tra cứu các thực thể hiện có qua `graphify query`).
+2. **Clarify**: Chạy `/speckit-clarify` để làm rõ các yêu cầu chưa rõ ràng.
+3. **Plan**: Chạy `/speckit-plan` $\rightarrow$ tự động phân tích Blast Radius qua `graphify explain` và nhúng chiến lược TDD vào `plan.md`.
+4. **Tasks**: Chạy `/speckit-tasks` $\rightarrow$ kiểm tra tính độc lập qua `graphify path` trước khi gán nhãn chạy song song `[P]`.
+5. **Auto-Handoff**: Hook `after_tasks` tự động tạo `.specify/gss-handoff.json` với trạng thái `executing`.
+6. **Implement**: Chạy `/gss-bridge` (Claude Code / Antigravity) hoặc `$gss-bridge` (Codex) $\rightarrow$ phân tách subagent theo file đã khoanh vùng, thực thi TDD Red-Green-Refactor, truy vết lỗi và chạy test xác nhận.
+7. **Complete & Sync**: Test pass $\rightarrow$ code review $\rightarrow$ tự động chạy `graphify --update` $\rightarrow$ chuyển handoff sang `complete`.
 
 ---
 
-## 🛠️ Bộ công cụ CLI tích hợp (Scripts)
+## 🛠️ Bộ công cụ CLI tích hợp
 
-| Kịch bản (PowerShell / Bash) | Mô tả chức năng |
-|---|---|
-| `bridge-status.ps1` / `.sh` | Xem trạng thái handoff, task tồn đọng và kiểm tra readiness của hệ thống. |
-| `graphify-blast-radius.ps1` / `.sh` | Phân tích phạm vi ảnh hưởng của 1 component hoặc kiểm tra coupling giữa 2 task `[P]`. |
-| `guard-command.ps1` / `.sh` | Thực thi các quy tắc biên giới, chặn hành vi code không TDD và chặn tạo file kế hoạch rời. |
-| `update-handoff.ps1` / `.sh` | Cập nhật trạng thái handoff (`ready`, `executing`, `blocked`, `complete`), snapshot và audit log. |
-| `auto-archive-handoff.ps1` / `.sh` | Tự động lưu trữ (archive) handoff đã hoàn tất khi bắt đầu tính năng mới. |
-
-### Ví dụ sử dụng CLI
+GSS-Bridge cung cấp đầy đủ script cho cả PowerShell 5.1+ và POSIX Bash tại `.specify/extensions/gss-bridge/scripts/`:
 
 ```powershell
-# Kiểm tra độ sẵn sàng của hệ thống (Readiness Report)
+# 1. Xem trạng thái bridge & độ sẵn sàng của hệ thống
 .\.specify\extensions\gss-bridge\scripts\powershell\bridge-status.ps1 -Readiness
 
-# Phân tích Blast Radius của module AuthService
+# 2. Phân tích phạm vi ảnh hưởng (Blast Radius) của AuthService
 .\.specify\extensions\gss-bridge\scripts\powershell\graphify-blast-radius.ps1 -Node "AuthService"
 
-# Kiểm tra xem Task A (OrderService) và Task B (PaymentService) có chạy song song [P] được không
+# 3. Kiểm tra xem 2 module có thể chạy song song [P] được không
 .\.specify\extensions\gss-bridge\scripts\powershell\graphify-blast-radius.ps1 -CheckCoupling -NodeA "OrderService" -NodeB "PaymentService"
 
-# Chuyển trạng thái sang executing
-.\.specify\extensions\gss-bridge\scripts\powershell\update-handoff.ps1 -Status executing -FeatureDirectory "specs/001-auth-service" -Actor claude
+# 4. Cập nhật trạng thái handoff
+.\.specify\extensions\gss-bridge\scripts\powershell\update-handoff.ps1 -Status executing -FeatureDirectory "specs/001-my-feature" -Actor claude
+
+# 5. Đánh giá quy tắc bảo vệ biên giới (Guard)
+.\.specify\extensions\gss-bridge\scripts\powershell\guard-command.ps1 -Action "speckit.implement" -Actor claude
 ```
 
 ---
 
-## 📊 Bảng so sánh vị thế (Positioning)
+## 🧪 Kiểm thử tự động (Verification Suite)
 
-| Tiêu chí | Chỉ dùng `speckit.implement` | Chỉ dùng Superpowers | speckit-superpowers-bridge | **GSS-Bridge (Kiến trúc này)** |
-|---|---|---|---|---|
-| **Nguồn sự thật tài liệu** | `specs/` | `docs/plans/` rời rạc | `specs/` | **`specs/` tập trung tuyệt đối** |
-| **Nhận thức kiến trúc (AST)** | Không (phải grep/find) | Không (grep mò mẫm) | Không | **Có: Graphify Knowledge Graph** |
-| **Phân tích Blast Radius** | Không | Không | Không | **Có: `graphify explain`** |
-| **Kiểm chứng song song `[P]`** | Phán đoán cảm tính | Phán đoán cảm tính | Phán đoán cảm tính | **Có: `graphify path` kiểm tra coupling** |
-| **Khoanh vùng Subagent** | Nạp cả codebase (tốn token) | Nạp rộng | Nạp rộng | **Khoanh vùng 1-2 hop (tiết kiệm 50-100x)** |
-| **Kỷ luật TDD & Debug** | Không (LLM chạy 1 lần) | TDD Red-Green | TDD Red-Green | **TDD + Debugging theo call path** |
-| **Đồng bộ hóa sau khi code** | Không | Không | Không | **Có: `graphify --update` tự động** |
-
----
-
-## 🧪 Kiểm thử (Testing)
-
-Chạy toàn bộ bộ test kiểm chứng hợp đồng của GSS-Bridge:
+Chạy bộ kiểm thử hợp đồng trên môi trường cục bộ:
 
 ```powershell
 # Trên Windows PowerShell
@@ -177,9 +144,11 @@ pwsh -File tests/run-all.ps1
 bash tests/run-all.sh
 ```
 
+Mọi phiên bản phát hành đều phải vượt qua 100% các quality gate tự động trên GitHub Actions (Linux, Windows, macOS).
+
 ---
 
 ## 📄 Bản quyền (License)
 
-Phát hành theo giấy phép [MIT License](LICENSE).
+Phát hành theo giấy phép [MIT License](LICENSE).  
 Bản quyền © 2026 GSS-Bridge Contributors.

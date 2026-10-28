@@ -27,6 +27,9 @@ Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "commands") -Destination $
 New-Item -ItemType Directory -Force -Path (Join-Path $stageDir "scripts") | Out-Null
 Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "scripts/powershell") -Destination (Join-Path $stageDir "scripts/powershell")
 Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "scripts/bash") -Destination (Join-Path $stageDir "scripts/bash") -ErrorAction SilentlyContinue
+if (Test-Path -LiteralPath (Join-Path $repoRoot "assets")) {
+    Copy-Item -Recurse -LiteralPath (Join-Path $repoRoot "assets") -Destination (Join-Path $stageDir "assets")
+}
 
 # Root documentation
 foreach ($name in @("README.md", "README.vi-VN.md", "CHANGELOG.md", "LICENSE", "AGENTS.md", "CLAUDE.md", ".gitignore", ".gitattributes")) {

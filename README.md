@@ -1,21 +1,63 @@
 <p align="center">
-  <h1 align="center">GSS-Bridge</h1>
-  <p align="center">
-    <strong>Graphify (Context) + Spec-Kit (Governance) + Superpowers (Discipline)</strong>
-  </p>
-  <p align="center">
-    <em>Spec-Kit defines WHAT. Graphify reveals WHERE. Superpowers enforces HOW.</em>
-  </p>
+  <img src="assets/social/github-social-preview.png" alt="GSS-Bridge: Spec-Kit defines WHAT. Graphify reveals WHERE. Superpowers enforces HOW." width="960" />
 </p>
 
-> [!NOTE]
+<p align="center">
+  <em>Spec-Kit defines WHAT. Graphify reveals WHERE. Superpowers enforces HOW.</em>
+</p>
+
+<p align="center">
+  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square" /></a>
+  <a href="https://github.com/maihcx/GSS-Bridge/releases"><img alt="Bridge version" src="https://img.shields.io/github/v/release/maihcx/GSS-Bridge?style=flat-square&label=bridge&color=success" /></a>
+  <a href="https://github.com/github/spec-kit"><img alt="Spec Kit verified 1.0.12" src="https://img.shields.io/badge/Spec_Kit-verified_1.0.12-success?style=flat-square" /></a>
+  <a href="https://github.com/safi-shamsi/graphify"><img alt="Graphify verified 0.3.10" src="https://img.shields.io/badge/Graphify-verified_0.3.10-cyan?style=flat-square" /></a>
+  <a href="https://github.com/obra/superpowers"><img alt="Superpowers verified 6.4.2" src="https://img.shields.io/badge/Superpowers-verified_6.4.2-blueviolet?style=flat-square" /></a>
+  <a href="https://github.com/github/spec-kit/blob/main/docs/community/extensions.md"><img alt="Spec Kit Marketplace ready" src="https://img.shields.io/badge/Spec_Kit_Marketplace-ready-orange?style=flat-square" /></a>
+</p>
+
+# GSS-Bridge
+
 > 🇻🇳 **Tiếng Việt**: Xem tài liệu bằng tiếng Việt tại [README.vi-VN.md](README.vi-VN.md).
+
+**GSS-Bridge is the Golden Triangle protocol uniting Spec-Kit design artifacts, Graphify codebase intelligence, and Superpowers execution discipline.** Spec-Kit stays the single source of truth for requirements and governance (`constitution` $\rightarrow$ `spec` $\rightarrow$ `plan` $\rightarrow$ `tasks`). Graphify acts as the topological compass (`graph.json` $\rightarrow$ blast radius $\rightarrow$ parallel task coupling check $\rightarrow$ subagent scoping). Superpowers enforces engineering discipline (TDD Red-Green-Refactor $\rightarrow$ systematic call-graph debugging $\rightarrow$ verification before completion $\rightarrow$ structured review).
+
+No daemon. No service. No database. No second workflow engine. No unverified code.
 
 ---
 
-## 🌟 Overview
+## At a glance
 
-**GSS-Bridge (Graphify-Speckit-Superpowers Bridge)** establishes the **Golden Triangle** architecture uniting three premier paradigms in AI-assisted software engineering:
+| If you want... | GSS-Bridge gives you... |
+|---|---|
+| **Spec-Kit artifacts to remain canonical** | Spec-Kit keeps owning `spec.md`, `plan.md`, and `tasks.md`. Zero fragmented plans in `docs/plans/`. |
+| **Codebase topology without blind grepping** | Persistent knowledge graph at `graphify-out/graph.json` queried via `query`, `explain`, and `path`. |
+| **Blast radius & dependency impact before coding** | `graphify explain` calculates 1-hop callers and 2-hop transitive impact directly in `plan.md`. |
+| **Zero coupling on parallel tasks `[P]`** | `graphify path` verifies independence between concurrent tasks before subagents dispatch. |
+| **Subagents with minimal token overhead** | Context scoped strictly to 1-2 hop AST neighbors (50x–100x context savings, zero hallucinations). |
+| **Ruthless TDD & systematic debugging** | Red-Green-Refactor cycle, call-graph trace debugging, and verified test execution evidence. |
+| **Multi-agent cross-runtime cooperation** | Identical protocol across Claude Code (`/gss-bridge`), OpenAI Codex (`$gss-bridge`), and Antigravity. |
+| **Automatic graph synchronization** | `graphify --update` auto-refreshes the knowledge graph upon completing implementation. |
+| **Windows, Linux, and macOS coverage** | One ZIP ships native bash and PowerShell flavors with verified release gates for all three platforms. |
+
+Install the current stable release:
+
+```bash
+specify extension add gss-bridge \
+  --from https://github.com/maihcx/GSS-Bridge/releases/latest/download/gss-bridge.zip
+```
+
+---
+
+## Why GSS-Bridge?
+
+### The Problem with Single-Pillar Workflows
+
+1. **Spec-Kit alone**: Excellent at producing durable design artifacts, but its default `speckit.implement` is a one-shot LLM pass with no TDD, no subagent isolation, and no AST awareness.
+2. **Superpowers alone**: Excellent at execution discipline (TDD, subagents, review), but natively expects to drive design through ad-hoc files in `docs/plans/`, losing durable project governance.
+3. **Graphify alone**: Provides an incredible knowledge graph of the codebase, but needs an execution engine to act upon its topological insights.
+4. **Binary bridges (Spec-Kit + Superpowers)**: Enforce execution discipline, but are blind to the codebase AST, forcing agents to blindly grep files and guess blast radius.
+
+### The Solution: The Golden Triangle
 
 ```
                            ┌──────────────────────────────┐
@@ -33,153 +75,176 @@
    └──────────────────────────────┘                └──────────────────────────────┘
 ```
 
-1. **Spec-Kit (Governance & Documentation Truth)**: Canonical requirements, architectural blueprints, and task manifests.
-2. **Graphify (Context & Codebase Topology Truth)**: Persistent knowledge graph, blast radius calculation, parallel task independence verification, and subagent context scoping.
-3. **Superpowers (Execution & Quality Discipline)**: Strict Test-Driven Development (TDD), isolated subagent execution, call-graph systematic debugging, and verified evidence before completion.
+GSS-Bridge fuses all three into an airtight engineering loop:
+* **Spec-Kit defines WHAT**: Requirements, contracts, and checkboxes in `specs/<feature>/`.
+* **Graphify reveals WHERE**: Invariant boundaries, blast radius, and scoped subagent file lists.
+* **Superpowers enforces HOW**: Failing tests before code, call-graph systematic debugging, and verified evidence before marking `[x]`.
 
 ---
 
-## ⚡ The Three Golden Rules
+## Quick Start
 
-### 1. Documentation Source of Truth (Spec-Kit Governs)
-- **Centralized Location**: All requirements (`spec.md`), implementation architectures (`plan.md`), and checklists (`tasks.md`) MUST reside strictly in `specs/<feature>/`.
-- **No Fragmented Plans**: When Superpowers' `writing-plans` skill is active, agents are strictly forbidden from creating standalone files in `docs/plans/`. All TDD testing strategies and verification gates must be recorded directly into `plan.md` and `tasks.md`.
-- **Execution Immutability**: Specifications cannot be altered while the handoff status is `executing`. Contract modifications require setting the handoff to `blocked` first.
-
-### 2. Codebase Source of Truth (Graphify Governs)
-- **Graph-First Navigation**: Always prefer `graphify query`, `graphify explain`, and `graphify path` on `graphify-out/graph.json` before resorting to `grep`, `find`, or whole-directory reads.
-- **Blast Radius Analysis**: Before writing implementation code, run `graphify explain "<Node>"` to determine direct callers (1-hop) and transitive system impact (2-hop).
-- **Parallel Task `[P]` Validation**: Run `graphify path "NodeA" "NodeB"` to verify that tasks marked `[P]` have zero close coupling or shared mutable state before running them concurrently.
-
-### 3. Execution Standard (Superpowers Governs)
-- **Test-Driven Development (TDD)**: Every code modification requires writing a failing test (RED) before writing minimal code to pass (GREEN), followed by clean refactoring (REFACTOR).
-- **Subagent-Driven Development**: Independent `[P]` tasks are delegated to subagents. Each subagent is scoped ONLY to the files identified by Graphify's neighborhood (yielding 50x–100x token savings and preventing hallucinations).
-- **Systematic Debugging**: When tests fail, trace the call chain via `graphify path` before proposing hypotheses or changing code. Never guess or try random edits.
-- **Verification Before Completion**: Run real test suites and confirm passing output before marking `- [x] T###`.
-- **Graph Synchronization**: Execute `graphify --update` upon completing implementation to refresh the knowledge graph for future development cycles.
-
----
-
-## 🔄 Lifecycle Workflow
-
-```mermaid
-flowchart TD
-    Start(["Start New Feature"]) --> Spec["1. Spec-Kit: /speckit-specify\n+ Graphify: query existing entities"]
-    Spec --> Plan["2. Spec-Kit: /speckit-plan\n+ Graphify: explain blast radius\n+ Superpowers: TDD strategy embedded in plan.md"]
-    Plan --> Tasks["3. Spec-Kit: /speckit-tasks\n+ Graphify: path check for [P] independence\n+ Initialize handoff: executing"]
-    Tasks --> Loop{"For each Task in tasks.md"}
-    
-    subgraph Execution ["Superpowers Implementation Loop"]
-        Loop --> TDD_Red["Red: Write failing test first"]
-        TDD_Red --> TDD_Green["Green: Minimal code to pass\n(Subagent scoped by Graphify files)"]
-        TDD_Green --> TDD_Refactor["Refactor: Clean code & preserve invariants"]
-        TDD_Refactor --> DebugCheck{"Encounter failure?"}
-        DebugCheck -- Yes --> TraceGraph["Systematic Debugging:\nTrace call chain via graphify path"]
-        TraceGraph --> TDD_Red
-        DebugCheck -- No --> Verify["Verification Before Completion:\nRun build & test suites"]
-        Verify --> CheckTask["Mark [x] T### in tasks.md"]
-    end
-    
-    CheckTask --> Loop
-    Loop -- "All Tasks Completed" --> Review["4. Superpowers: Code Review & Branch Finish"]
-    Review --> GraphSync["5. Graphify: Incremental sync (graphify --update)"]
-    GraphSync --> Complete(["Feature Complete!"])
-```
-
----
-
-## 🚀 Quick Start
-
-### 1. Installation
-
-As a Spec-Kit Extension:
 ```bash
-specify extension add gss-bridge --from ./dist/gss-bridge.zip
+# 1. Initialize a Spec-Kit project (or use existing)
+specify init my-project --integration claude   # or --integration codex
+cd my-project
+
+# 2. Add GSS-Bridge
+specify extension add gss-bridge \
+  --from https://github.com/maihcx/GSS-Bridge/releases/latest/download/gss-bridge.zip
+
+# 3. Index your codebase with Graphify
+/graphify
 ```
 
-Or as an Agent Skill:
-- **Claude Code**: Automatically recognized at `.claude/skills/gss-bridge/SKILL.md`
-- **Codex / Antigravity / Gemini CLI**: Automatically recognized at `.agents/skills/gss-bridge/SKILL.md`
+### The 7-Step Feature Lifecycle
 
-### 2. Feature Specification & Planning
-```bash
-# 1. Create specification (grounded in Graphify entities)
-/speckit-specify 001-authentication-service
-
-# 2. Clarify requirements
-/speckit-clarify
-
-# 3. Plan architecture + Blast Radius analysis
-/speckit-plan
-
-# 4. Break down tasks + Verify [P] task independence
-/speckit-tasks
-```
-
-### 3. Implementation Execution
-Activate the GSS-Bridge orchestrator:
-- On Claude Code / Antigravity: `/gss-bridge` or `/speckit-gss-bridge-execute`
-- On OpenAI Codex: `$gss-bridge` or `$speckit-gss-bridge-execute`
+1. **Specify**: Run `/speckit-specify <feature-name>` (queries existing entities via `graphify query`).
+2. **Clarify**: Run `/speckit-clarify` to resolve ambiguities.
+3. **Plan**: Run `/speckit-plan` $\rightarrow$ calculates component blast radius via `graphify explain` and embeds TDD test strategies into `plan.md`.
+4. **Tasks**: Run `/speckit-tasks` $\rightarrow$ verifies task independence via `graphify path` before tagging `[P]`.
+5. **Auto-Handoff**: Hook `after_tasks` automatically initializes `.specify/gss-handoff.json` with status `executing`.
+6. **Implement**: Run `/gss-bridge` (Claude Code / Antigravity) or `$gss-bridge` (Codex) $\rightarrow$ dispatches Graphify-scoped subagents, enforces TDD Red-Green-Refactor, systematically traces bugs, and verifies build/tests.
+7. **Complete & Sync**: Verification passes $\rightarrow$ code review $\rightarrow$ `graphify --update` runs automatically $\rightarrow$ handoff transitions to `complete`.
 
 ---
 
-## 🛠️ Integrated CLI Tooling
+## 1.x Readiness and Support
 
-| Script (PowerShell / Bash) | Description |
-|---|---|
-| `bridge-status.ps1` / `.sh` | Inspect handoff state, pending task counts, and system readiness. |
-| `graphify-blast-radius.ps1` / `.sh` | Calculate component blast radius or verify coupling between tasks `[P]`. |
-| `guard-command.ps1` / `.sh` | Enforce boundary guards (blocks unprincipled code, blocks detached plan files). |
-| `update-handoff.ps1` / `.sh` | Transition handoff state (`ready`, `executing`, `blocked`, `complete`), snapshot, and audit. |
-| `auto-archive-handoff.ps1` / `.sh` | Auto-archive completed handoffs before initiating new features. |
+| Target | Status | Evidence |
+|---|---|---|
+| **Linux bash** | Verified | Native Bash smoke suite plus release packaging gates. |
+| **Windows PowerShell 5.1+** | Verified | Native PowerShell test suite (`run-all.ps1`) and sandbox cycle. |
+| **macOS bash** | Verified | Native POSIX path regression and smoke test gate. |
+| **Claude Code** | Verified | Automatic skill pickup at `.claude/skills/gss-bridge/SKILL.md`. |
+| **OpenAI Codex** | Verified | Automatic skill pickup at `.agents/skills/gss-bridge/SKILL.md`. |
+| **Google Antigravity** | Verified | Native skill invocation `/gss-bridge` with subagent support. |
+| **Gemini CLI** | Verified | Shared handoff contract and command-line execution. |
 
-### CLI Examples
+Run the lightweight readiness check anytime:
+
+```bash
+bash .specify/extensions/gss-bridge/scripts/bash/bridge-status.sh --readiness
+```
 
 ```powershell
-# Run system readiness report
+.\.specify\extensions\gss-bridge\scripts\powershell\bridge-status.ps1 -Readiness
+```
+
+```text
+[bridge readiness]
+  Script flavor: ps
+  Required tools: ok (git: True, python: True)
+  Namespace: ok (speckit.gss-bridge)
+  Package files: ok
+  Bridge state: ready
+  Graphify: ready (graphify-out/graph.json)
+  Agents: verified (codex, claude, antigravity, gemini)
+  Next: Run /speckit-plan or /speckit-tasks on specs/001-feature
+```
+
+---
+
+## Positioning
+
+| Feature | Just `speckit.implement` | Just Superpowers | speckit-superpowers-bridge | **GSS-Bridge** |
+|---|---|---|---|---|
+| **Documentation Truth** | `specs/` | Fragmented in `docs/plans/` | `specs/` | **`specs/` strictly canonical** |
+| **AST / Topology Graph** | None (blind grep) | None (blind grep) | None (blind grep) | **Yes: `graphify-out/graph.json`** |
+| **Blast Radius Calculation** | None | None | None | **Yes: `graphify explain`** |
+| **Parallel Task `[P]` Check** | Guesswork | Guesswork | Guesswork | **Yes: `graphify path` coupling check** |
+| **Subagent Scoping** | Entire repo dump | Wide directory tree | Wide directory tree | **1–2 hop AST neighborhood (50-100x savings)** |
+| **TDD Discipline** | None (one-shot LLM) | TDD Red-Green | TDD Red-Green | **TDD Red-Green-Refactor** |
+| **Systematic Debugging** | Trial-and-error | Log tracing | Log tracing | **Graph path trace (`graphify path`)** |
+| **Knowledge Graph Sync** | None | None | None | **Yes: Automatic `graphify --update`** |
+| **Cross-Agent Support** | Partial | Partial | Claude + Codex | **Claude + Codex + Antigravity + Gemini** |
+
+---
+
+<details>
+<summary><strong>Interactive Workflow Diagram</strong></summary>
+
+```text
+                  ┌───────────────────── Spec-Kit Phase ─────────────────────┐
+  user ─► /speckit-constitution ─► /speckit-specify ─► /speckit-clarify ─►
+          /speckit-plan ─► /speckit-tasks
+                                   │
+               ┌───────────────────┴───────────────────┐
+               ▼                                       ▼
+      [graphify explain]                      [graphify path]
+     (Blast Radius in plan.md)             (Coupling Check for [P])
+                                   │
+                                   │ after_tasks hook
+                                   ▼
+                      ┌──────── GSS-Bridge Handoff ────────┐
+                      │  writes .specify/gss-handoff.json   │
+                      │  status: executing                 │
+                      └─────────────────┬──────────────────┘
+                                        │
+             ┌──────────────────────────┴──────────────────────────┐
+             ▼                                                     ▼
+┌───────────────────────────┐                         ┌───────────────────────────┐
+│  Superpowers Execution    │                         │  Graphify Codebase Guard  │
+│  - TDD Red-Green-Refactor │                         │  - Scopes Subagents 1-2h  │
+│  - Isolated [P] Subagents │                         │  - Systematic Debug Path  │
+│  - Verification evidence  │                         │  - Incremental Sync       │
+└───────────────────────────┘                         └───────────────────────────┘
+             │                                                     │
+             └──────────────────────────┬──────────────────────────┘
+                                        │
+                                        ▼
+                         superpowers:requesting-code-review
+                         superpowers:finishing-a-development-branch
+                         graphify --update
+                                        │
+                                        ▼
+                         status: complete in gss-handoff.json
+```
+
+</details>
+
+---
+
+## Integrated CLI Tooling
+
+GSS-Bridge ships dual-platform PowerShell 5.1+ and POSIX Bash scripts under `.specify/extensions/gss-bridge/scripts/`:
+
+```powershell
+# 1. Inspect bridge state & system readiness
 .\.specify\extensions\gss-bridge\scripts\powershell\bridge-status.ps1 -Readiness
 
-# Calculate Blast Radius for AuthService
+# 2. Calculate component blast radius
 .\.specify\extensions\gss-bridge\scripts\powershell\graphify-blast-radius.ps1 -Node "AuthService"
 
-# Verify if Task A (OrderService) and Task B (PaymentService) can run in parallel [P]
+# 3. Check if two tasks/nodes can run in parallel [P]
 .\.specify\extensions\gss-bridge\scripts\powershell\graphify-blast-radius.ps1 -CheckCoupling -NodeA "OrderService" -NodeB "PaymentService"
 
-# Transition state to executing
-.\.specify\extensions\gss-bridge\scripts\powershell\update-handoff.ps1 -Status executing -FeatureDirectory "specs/001-auth-service" -Actor claude
+# 4. Transition handoff state
+.\.specify\extensions\gss-bridge\scripts\powershell\update-handoff.ps1 -Status executing -FeatureDirectory "specs/001-my-feature" -Actor claude
+
+# 5. Evaluate boundary guards
+.\.specify\extensions\gss-bridge\scripts\powershell\guard-command.ps1 -Action "speckit.implement" -Actor claude
 ```
 
 ---
 
-## 📊 Positioning Matrix
+## Automated Verification Suite
 
-| Criterion | Only `speckit.implement` | Only Superpowers | speckit-superpowers-bridge | **GSS-Bridge (This Architecture)** |
-|---|---|---|---|---|
-| **Documentation Truth** | `specs/` | Fragmented in `docs/plans/` | `specs/` | **`specs/` strictly centralized** |
-| **Architectural Awareness** | None (manual grep) | None (blind search) | None | **Yes: Graphify Knowledge Graph** |
-| **Blast Radius Calculation** | None | None | None | **Yes: `graphify explain`** |
-| **Parallel Task `[P]` Check** | Guesswork | Guesswork | Guesswork | **Yes: `graphify path` coupling test** |
-| **Subagent Scoping** | Entire repo dump | Wide context | Wide context | **1–2 hop neighborhood (50-100x savings)** |
-| **TDD & Systematic Debug** | None (one-shot LLM) | TDD Red-Green | TDD Red-Green | **TDD + Call-graph path debugging** |
-| **Post-Implementation Sync** | None | None | None | **Yes: Automatic `graphify --update`** |
-
----
-
-## 🧪 Verification & Automated Testing
-
-Run the full contractual verification suite:
+Run the full local test suite on any platform:
 
 ```powershell
-# On Windows PowerShell
+# Windows PowerShell
 pwsh -File tests/run-all.ps1
 
-# On Linux / macOS Bash
+# Linux / macOS Bash
 bash tests/run-all.sh
 ```
 
+Every release passes automated GitHub Actions quality gates on Linux, Windows, and macOS with release assets and SHA256 signatures published automatically.
+
 ---
 
-## 📄 License
+## License
 
-Released under the [MIT License](LICENSE).
+Released under the [MIT License](LICENSE).  
 Copyright © 2026 GSS-Bridge Contributors.

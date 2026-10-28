@@ -27,6 +27,9 @@ cp -rp "$BRIDGE_DIR/commands" "$STAGE_DIR/"
 mkdir -p "$STAGE_DIR/scripts"
 cp -rp "$BRIDGE_DIR/scripts/powershell" "$STAGE_DIR/scripts/"
 cp -rp "$BRIDGE_DIR/scripts/bash" "$STAGE_DIR/scripts/"
+if [ -d "$REPO_ROOT/assets" ]; then
+    cp -rp "$REPO_ROOT/assets" "$STAGE_DIR/"
+fi
 
 for f in README.md README.vi-VN.md CHANGELOG.md LICENSE AGENTS.md CLAUDE.md .gitignore .gitattributes; do
     if [ -f "$REPO_ROOT/$f" ]; then
