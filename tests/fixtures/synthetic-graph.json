@@ -1,0 +1,75 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "id": "AuthService",
+      "label": "AuthService",
+      "source_file": "src/services/auth.py",
+      "source_location": "L15",
+      "degree": 3
+    },
+    {
+      "id": "TokenMiddleware",
+      "label": "TokenMiddleware",
+      "source_file": "src/middleware/token.py",
+      "source_location": "L10",
+      "degree": 2
+    },
+    {
+      "id": "UserController",
+      "label": "UserController",
+      "source_file": "src/controllers/user.py",
+      "source_location": "L5",
+      "degree": 2
+    },
+    {
+      "id": "OrderService",
+      "label": "OrderService",
+      "source_file": "src/services/order.py",
+      "source_location": "L20",
+      "degree": 2
+    },
+    {
+      "id": "PaymentService",
+      "label": "PaymentService",
+      "source_file": "src/services/payment.py",
+      "source_location": "L25",
+      "degree": 2
+    },
+    {
+      "id": "NotificationWorker",
+      "label": "NotificationWorker",
+      "source_file": "src/workers/notification.py",
+      "source_location": "L8",
+      "degree": 1
+    }
+  ],
+  "links": [
+    {
+      "source": "TokenMiddleware",
+      "target": "AuthService",
+      "relation": "calls",
+      "confidence": "EXTRACTED"
+    },
+    {
+      "source": "UserController",
+      "target": "AuthService",
+      "relation": "calls",
+      "confidence": "EXTRACTED"
+    },
+    {
+      "source": "OrderService",
+      "target": "PaymentService",
+      "relation": "depends_on",
+      "confidence": "EXTRACTED"
+    },
+    {
+      "source": "OrderService",
+      "target": "NotificationWorker",
+      "relation": "dispatches",
+      "confidence": "EXTRACTED"
+    }
+  ]
+}

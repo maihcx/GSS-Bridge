@@ -1,0 +1,174 @@
+#!/usr/bin/env bash
+# update-handoff.sh — update GSS-Bridge handoff state.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/common-actor-resolution.sh"
+. "$SCRIPT_DIR/bridge-state.sh"
+
+STATUS="ready"
+FEATURE_DIR=""
+REASON=""
+ARTIFACT_OWNER=""
+ACTOR_ARG=""
+CLEAR_FEATURE_DIR=0
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --status)
+            STATUS="$2"
+            shift 2
+            ;;
+        --feature-directory)
+            FEATURE_DIR="$2"
+            shift 2
+            ;;
+        --reason)
+            REASON="$2"
+            shift 2
+            ;;
+        --artifact-owner)
+            ARTIFACT_OWNER="$2"
+            shift 2
+            ;;
+        --actor)
+            ACTOR_ARG="$2"
+            shift 2
+            ;;
+        --clear-feature-directory)
+            CLEAR_FEATURE_DIR=1
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+REPO_ROOT="$(get_bridge_repo_root)"
+ACTOR="$(resolve_bridge_actor "$ACTOR_ARG")"
+
+SPECIFY_DIR="$REPO_ROOT/.specify"
+mkdir -p "$SPECIFY_DIR"
+
+HANDOFF_PATH="$SPECIFY_DIR/gss-handoff.json"
+PRIOR_FEATURE_DIR=""
+PRIOR_OWNER=""
+PRIOR_ACTOR=""
+
+if [ -f "$HANDOFF_PATH" ] && command -v jq >/dev/null 2>&1; then
+    PRIOR_FEATURE_DIR="$(jq -r '.feature_directory // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
+    PRIOR_OWNER="$(jq -r '.artifact_owner // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
+fi
+
+TARGET_FEATURE_DIR="$FEATURE_DIR"
+if [ "$CLEAR_FEATURE_DIR" -eq 1 ]; then
+    TARGET_FEATURE_DIR=""
+elif [ -z "$TARGET_FEATURE_DIR" ]; then
+    TARGET_FEATURE_DIR="$PRIOR_FEATURE_DIR"
+fi
+
+OWNER="$ARTIFACT_OWNER"
+if [ -z "$OWNER" ]; then
+    OWNER="${PRIOR_OWNER:-$ACTOR}"
+fi
+[ -z "$OWNER" ] && OWNER="unknown"
+
+TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+SNAPSHOT_ID=""
+
+if [ -n "$TARGET_FEATURE_DIR" ] && [ -d "$REPO_ROOT/$TARGET_FEATURE_DIR" ]; then
+    SNAP_TS="$(date -u +"%Y%m%d%H%M%S")"
+    SNAPSHOT_ID="${SNAP_TS}-${STATUS}"
+    SNAP_DIR="$SPECIFY_DIR/bridge-snapshots/$SNAPSHOT_ID"
+    mkdir -p "$SNAP_DIR"
+    for art in spec.md plan.md tasks.md; do
+        if [ -f "$REPO_ROOT/$TARGET_FEATURE_DIR/$art" ]; then
+            cp -p "$REPO_ROOT/$TARGET_FEATURE_DIR/$art" "$SNAP_DIR/"
+        fi
+    done
+    if [ -f "$SPECIFY_DIR/memory/constitution.md" ]; then
+        cp -p "$SPECIFY_DIR/memory/constitution.md" "$SNAP_DIR/"
+    fi
+fi
+
+SHA_MAP="null"
+if [ "$STATUS" = "executing" ] || [ "$STATUS" = "complete" ]; then
+    if [ -n "$TARGET_FEATURE_DIR" ] && [ -d "$REPO_ROOT/$TARGET_FEATURE_DIR" ]; then
+        SHA_MAP="$(get_artifacts_sha256_json "$REPO_ROOT/$TARGET_FEATURE_DIR")"
+    fi
+fi
+
+if command -v jq >/dev/null 2>&1; then
+    jq -n \
+        --arg ts "$TIMESTAMP" \
+        --arg fd "$TARGET_FEATURE_DIR" \
+        --arg st "$STATUS" \
+        --arg rsn "$REASON" \
+        --arg owner "$OWNER" \
+        --arg snap "$SNAPSHOT_ID" \
+        --argjson shas "$SHA_MAP" \
+        '{
+            schema_version: 1,
+            updated_at: $ts,
+            feature_directory: (if $fd == "" then null else $fd end),
+            source_of_truth: {
+                constitution: ".specify/memory/constitution.md",
+                spec: (if $fd == "" then null else ($fd + "/spec.md") end),
+                plan: (if $fd == "" then null else ($fd + "/plan.md") end),
+                tasks: (if $fd == "" then null else ($fd + "/tasks.md") end)
+            },
+            supersedes: ["speckit.implement"],
+            executor: (if $st == "ready" then "speckit" else "gss-bridge" end),
+            capabilities: [
+                "graphify-codebase-intelligence",
+                "blast-radius-analysis",
+                "task-parallelism-verification",
+                "executing-plans",
+                "test-driven-development",
+                "subagent-scoping",
+                "systematic-debugging",
+                "verification-before-completion",
+                "requesting-code-review",
+                "finishing-a-development-branch"
+            ],
+            status: $st,
+            blocked_reason: (if $st == "blocked" then (if $rsn == "" then "(no reason provided)" else $rsn end) else null end),
+            artifact_owner: $owner,
+            review_only_agents: [],
+            last_snapshot_id: (if $snap == "" then null else $snap end),
+            artifacts_sha256: $shas,
+            instructions: "Use /gss-bridge or /speckit-gss-bridge-execute. GSS-Bridge combines Spec-Kit governance, Graphify topology context, and Superpowers TDD execution discipline."
+        }' > "$SPECIFY_DIR/gss-handoff.json"
+
+    # Dual write for backward compatibility
+    cp -p "$SPECIFY_DIR/gss-handoff.json" "$SPECIFY_DIR/superpowers-handoff.json"
+
+    # Append to event log
+    jq -c -n \
+        --arg ts "$TIMESTAMP" \
+        --arg act "handoff" \
+        --arg st "$STATUS" \
+        --arg fd "$TARGET_FEATURE_DIR" \
+        --arg dec "updated" \
+        --arg rsn "$REASON" \
+        --arg actor "$ACTOR" \
+        --arg snap "$SNAPSHOT_ID" \
+        '{
+            timestamp: $ts,
+            action: $act,
+            status: $st,
+            feature_directory: (if $fd == "" then null else $fd end),
+            decision: $dec,
+            reason: $rsn,
+            actor: $actor,
+            snapshot_id: (if $snap == "" then null else $snap end)
+        }' >> "$SPECIFY_DIR/bridge-events.jsonl"
+fi
+
+WARN_COMPLETE=0
+if [ "$STATUS" = "complete" ]; then WARN_COMPLETE=1; fi
+write_bridge_state_summary_full "$SPECIFY_DIR/gss-handoff.json" "$REPO_ROOT" "$ACTOR" "$PRIOR_ACTOR" "$WARN_COMPLETE"
+
+echo "Wrote .specify/gss-handoff.json with status '$STATUS'."
+exit 0

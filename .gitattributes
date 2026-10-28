@@ -1,0 +1,11 @@
+# Ensure PowerShell scripts always retain CRLF line endings
+*.ps1 text eol=crlf
+
+# Ensure shell scripts always retain LF line endings
+*.sh text eol=lf
+
+# Default text normalization
+*.md text
+*.yml text
+*.yaml text
+*.json text

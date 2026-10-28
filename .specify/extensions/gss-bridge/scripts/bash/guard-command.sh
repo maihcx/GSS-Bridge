@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# guard-command.sh — Guard Spec-Kit, Graphify, and Superpowers boundaries in GSS-Bridge.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+. "$SCRIPT_DIR/common-actor-resolution.sh"
+. "$SCRIPT_DIR/bridge-state.sh"
+
+ACTION=""
+REASON=""
+ACTOR_ARG=""
+TARGET_FEATURE_DIR=""
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --action)
+            ACTION="$2"
+            shift 2
+            ;;
+        --reason)
+            REASON="$2"
+            shift 2
+            ;;
+        --actor)
+            ACTOR_ARG="$2"
+            shift 2
+            ;;
+        --target-feature-directory)
+            TARGET_FEATURE_DIR="$2"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+if [ -z "$ACTION" ]; then
+    echo "Error: --action is required" >&2
+    exit 2
+fi
+
+REPO_ROOT="$(get_bridge_repo_root)"
+ACTOR="$(resolve_bridge_actor "$ACTOR_ARG")"
+
+HANDOFF_PATH="$REPO_ROOT/.specify/gss-handoff.json"
+if [ ! -f "$HANDOFF_PATH" ]; then
+    HANDOFF_PATH="$REPO_ROOT/.specify/superpowers-handoff.json"
+fi
+
+HANDOFF_STATUS=""
+HANDOFF_FEATURE_DIR=""
+
+if [ -f "$HANDOFF_PATH" ] && command -v jq >/dev/null 2>&1; then
+    HANDOFF_STATUS="$(jq -r '.status // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
+    HANDOFF_FEATURE_DIR="$(jq -r '.feature_directory // empty' "$HANDOFF_PATH" 2>/dev/null || true)"
+fi
+
+DECISION="allow"
+DENY_REASON=""
+
+# Rule 1: deny speckit.implement when handoff status is executing
+if [ "$ACTION" = "speckit.implement" ] && [ "$HANDOFF_STATUS" = "executing" ]; then
+    DECISION="deny"
+    DENY_REASON="speckit.implement blocked while GSS-Bridge handoff is executing; use speckit.gss-bridge.execute"
+# Rule 2: deny superpowers:writing-plans when active feature has spec.md + plan.md
+elif [ "$ACTION" = "superpowers:writing-plans" ] && [ -n "$HANDOFF_FEATURE_DIR" ]; then
+    if [ -f "$REPO_ROOT/$HANDOFF_FEATURE_DIR/spec.md" ] && [ -f "$REPO_ROOT/$HANDOFF_FEATURE_DIR/plan.md" ]; then
+        DECISION="deny"
+        DENY_REASON="Standalone planning in docs/plans/ is prohibited. Record TDD test matrices directly into $HANDOFF_FEATURE_DIR/plan.md and tasks.md."
+    fi
+# Rule 3: deny superpowers:brainstorming when active feature has spec.md + plan.md
+elif [ "$ACTION" = "superpowers:brainstorming" ] && [ -n "$HANDOFF_FEATURE_DIR" ]; then
+    if [ -f "$REPO_ROOT/$HANDOFF_FEATURE_DIR/spec.md" ] && [ -f "$REPO_ROOT/$HANDOFF_FEATURE_DIR/plan.md" ]; then
+        DECISION="deny"
+        DENY_REASON="Native superpowers brainstorming is forbidden while Spec-Kit owns active design artifacts"
+    fi
+# Rule 4: deny speckit.constitution while handoff is executing
+elif [ "$ACTION" = "speckit.constitution" ] && [ "$HANDOFF_STATUS" = "executing" ]; then
+    DECISION="deny"
+    DENY_REASON="constitution edits blocked during active handoff; mark handoff blocked first"
+# Rule 5: allow any other speckit.*
+elif [[ "$ACTION" =~ ^speckit\. ]]; then
+    DECISION="allow"
+else
+    DECISION="allow"
+fi
+
+# Write event log
+EVENT_PATH="$REPO_ROOT/.specify/bridge-events.jsonl"
+TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+if command -v jq >/dev/null 2>&1; then
+    jq -c -n \
+        --arg ts "$TIMESTAMP" \
+        --arg act "guard" \
+        --arg st "$DECISION" \
+        --arg fd "$HANDOFF_FEATURE_DIR" \
+        --arg dec "$DECISION" \
+        --arg rsn "$DENY_REASON" \
+        --arg actor "$ACTOR" \
+        --arg chk "$ACTION" \
+        '{
+            timestamp: $ts,
+            action: $act,
+            status: $st,
+            feature_directory: $fd,
+            decision: $dec,
+            reason: $rsn,
+            actor: $actor,
+            checked_action: $chk
+        }' >> "$EVENT_PATH"
+fi
+
+write_bridge_state_summary_full "$HANDOFF_PATH" "$REPO_ROOT" "$ACTOR"
+
+if [ "$DECISION" = "deny" ]; then
+    echo "Guard denied $ACTION."
+    if [ -n "$DENY_REASON" ]; then
+        echo "Reason: $DENY_REASON"
+    fi
+    exit 1
+fi
+
+echo "Guard allowed $ACTION."
+exit 0
