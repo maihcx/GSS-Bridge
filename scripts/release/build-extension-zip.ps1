@@ -29,7 +29,7 @@ Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "scripts/powershell") -Des
 Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "scripts/bash") -Destination (Join-Path $stageDir "scripts/bash") -ErrorAction SilentlyContinue
 
 # Root documentation
-foreach ($name in @("README.md", "LICENSE", "AGENTS.md", "CLAUDE.md", ".gitignore", ".gitattributes")) {
+foreach ($name in @("README.md", "README.vi-VN.md", "LICENSE", "AGENTS.md", "CLAUDE.md", ".gitignore", ".gitattributes")) {
     $src = Join-Path $repoRoot $name
     if (Test-Path -LiteralPath $src) {
         Copy-Item -LiteralPath $src -Destination $stageDir
