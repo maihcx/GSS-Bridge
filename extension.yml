@@ -3,7 +3,7 @@ schema_version: "1.0"
 extension:
   id: gss-bridge
   name: "GSS-Bridge: Graphify + Spec-Kit + Superpowers"
-  version: "1.0.1"
+  version: "1.1.0"
   description: "The Golden Triangle: Spec-Kit Governance, Graphify Codebase Context, and Superpowers Execution Discipline. Cross-agent."
   author: "GSS Team"
   repository: "https://github.com/maihcx/GSS-Bridge"
@@ -46,6 +46,23 @@ provides:
     - name: speckit.gss-bridge.blast-radius
       file: commands/speckit.gss-bridge.blast-radius.md
       description: "Analyze component blast radius and verify parallel task [P] independence using Graphify"
+    - name: speckit.gss-bridge.bug-assess
+      file: commands/speckit.gss-bridge.bug-assess.md
+      description: "Diagnose and triage bug reports using Graphify knowledge graph context and blast radius analysis"
+      aliases:
+        - speckit.bug-assess
+        - gss-bridge.bug-assess
+    - name: speckit.gss-bridge.bug-fix
+      file: commands/speckit.gss-bridge.bug-fix.md
+      description: "Implement and verify bug remediation under strict Superpowers TDD and verification discipline"
+      aliases:
+        - speckit.bug-fix
+        - gss-bridge.bug-fix
+    - name: speckit.gss-bridge.dispatch
+      file: commands/speckit.gss-bridge.dispatch.md
+      description: "Partition tasks tagged [P] into independent execution waves and generate Graphify-scoped subagent prompts"
+      aliases:
+        - gss-bridge.dispatch
 
 hooks:
   before_clarify:
@@ -68,6 +85,14 @@ hooks:
     command: speckit.gss-bridge.handoff
     optional: false
     description: "Create the GSS handoff state after Spec-Kit task generation"
+  before_bug_assess:
+    command: speckit.gss-bridge.guard
+    optional: true
+    description: "Guard bug assessment preconditions"
+  before_bug_fix:
+    command: speckit.gss-bridge.guard
+    optional: false
+    description: "Enforce assessment contract before bug fix"
 
 tags:
   - bridge
@@ -78,3 +103,6 @@ tags:
   - tdd
   - blast-radius
   - architecture-graph
+  - bug-assess
+  - bug-fix
+  - subagent-dispatch

@@ -124,19 +124,35 @@ if ($targetFeatureDir) {
     $featureDirectoryProjectPath = Convert-ToProjectPath -RepoRoot $repoRoot -Path $featureDirectoryFullPath
 }
 
-$sourceOfTruth = [ordered]@{
-    constitution = ".specify/memory/constitution.md"
-    spec = $null
-    plan = $null
-    tasks = $null
+$isBugWorkflow = ($featureDirectoryProjectPath -and $featureDirectoryProjectPath.Contains("bugs"))
+$sourceOfTruth = if ($isBugWorkflow) {
+    [ordered]@{
+        constitution = ".specify/memory/constitution.md"
+        assessment = "$featureDirectoryProjectPath/assessment.md"
+        fix = "$featureDirectoryProjectPath/fix.md"
+    }
+} else {
+    [ordered]@{
+        constitution = ".specify/memory/constitution.md"
+        spec = $null
+        plan = $null
+        tasks = $null
+    }
 }
 
 $missing = New-Object System.Collections.Generic.List[string]
 if ($featureDirectoryFullPath) {
-    foreach ($pair in @(@{ k = "spec"; f = "spec.md" }, @{ k = "plan"; f = "plan.md" }, @{ k = "tasks"; f = "tasks.md" })) {
-        $artifactFull = Join-Path $featureDirectoryFullPath $pair.f
-        $sourceOfTruth[$pair.k] = Convert-ToProjectPath -RepoRoot $repoRoot -Path $artifactFull
-        if (-not (Test-Path -LiteralPath $artifactFull)) { $missing.Add($sourceOfTruth[$pair.k]) }
+    if ($isBugWorkflow) {
+        $assessFull = Join-Path $featureDirectoryFullPath "assessment.md"
+        if (-not (Test-Path -LiteralPath $assessFull)) {
+            $missing.Add("$featureDirectoryProjectPath/assessment.md")
+        }
+    } else {
+        foreach ($pair in @(@{ k = "spec"; f = "spec.md" }, @{ k = "plan"; f = "plan.md" }, @{ k = "tasks"; f = "tasks.md" })) {
+            $artifactFull = Join-Path $featureDirectoryFullPath $pair.f
+            $sourceOfTruth[$pair.k] = Convert-ToProjectPath -RepoRoot $repoRoot -Path $artifactFull
+            if (-not (Test-Path -LiteralPath $artifactFull)) { $missing.Add($sourceOfTruth[$pair.k]) }
+        }
     }
 }
 
@@ -211,6 +227,19 @@ if ($priorActor -and $priorActor -ne $Actor) {
 }
 
 Write-BridgeEvent -RepoRoot $repoRoot -Action "handoff" -Status $resolvedStatus -FeatureDirectory $featureDirectoryProjectPath -Decision "updated" -Reason $eventReasonAugmented -SnapshotId $snapshotId -Actor $Actor -PriorActor $priorActor
+
+# Auto Graphify Sync upon completion
+if ($resolvedStatus -eq "complete" -and (Test-Path -LiteralPath (Join-Path $repoRoot "graphify-out\graph.json"))) {
+    if (Get-Command "graphify" -ErrorAction SilentlyContinue) {
+        try {
+            Write-Output "[bridge] Triggering automatic Graphify sync (graphify --update)..."
+            & graphify update . | Out-Null
+            Write-Output "[bridge] Knowledge graph synchronized."
+        } catch {
+            Write-Verbose "Auto graphify sync failed: $($_.Exception.Message)"
+        }
+    }
+}
 
 Write-BridgeStateSummaryFull -HandoffPath $gssHandoffPath -RepoRoot $repoRoot -Actor $Actor -PriorActor $priorActor -EmitCompleteWarning:($resolvedStatus -eq "complete")
 

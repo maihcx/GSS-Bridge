@@ -51,8 +51,19 @@ if (Test-Path -LiteralPath $handoffPath) {
 $decision = $null
 $denyReason = $null
 
+# Rule 0: Bug fix guard — assessment contract mandatory before fix
+if ($Action -in @("speckit.bug.fix", "speckit.gss-bridge.bug-fix")) {
+    $targetBugDir = if ($TargetFeatureDirectory) { $TargetFeatureDirectory } elseif ($handoffFeatureDir -and $handoffFeatureDir.Contains("bugs")) { $handoffFeatureDir } else { "" }
+    if ($targetBugDir) {
+        $assessFile = Join-Path $repoRoot (Join-Path $targetBugDir "assessment.md")
+        if (-not (Test-Path -LiteralPath $assessFile)) {
+            $decision = "deny"
+            $denyReason = "$Action blocked: assessment contract '$targetBugDir/assessment.md' not found. Run speckit.bug.assess with Graphify blast radius first."
+        }
+    }
+}
 # Rule 1: Deny speckit.implement when handoff is executing
-if ($Action -eq "speckit.implement" -and $handoffStatus -eq "executing") {
+elseif ($Action -eq "speckit.implement" -and $handoffStatus -eq "executing") {
     $decision = "deny"
     $denyReason = "speckit.implement blocked while GSS-Bridge handoff is executing; use speckit.gss-bridge.execute"
 }
@@ -86,6 +97,13 @@ elseif ($Action -like "speckit.*") {
 # Rule 6 (default): allow
 else {
     $decision = "allow"
+}
+
+# Multi-Agent Collision Check
+if ($handoffStatus -eq "executing" -and $priorActor -and $priorActor -ne $Actor) {
+    if ($TargetFeatureDirectory -and $handoffFeatureDir -and $TargetFeatureDirectory -ne $handoffFeatureDir) {
+        Write-Output "[bridge WARNING] Multi-Agent Concurrency: Agent '$priorActor' is currently executing '$handoffFeatureDir'. Concurrent execution by '$Actor' on '$TargetFeatureDirectory' requires verification of zero blast radius overlap."
+    }
 }
 
 Write-GuardEvent -RepoRoot $repoRoot -ActionName $Action -Decision $decision -ReasonText $denyReason -Actor $Actor -FeatureDirectory $handoffFeatureDir

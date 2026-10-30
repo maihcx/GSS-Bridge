@@ -112,12 +112,16 @@ if command -v jq >/dev/null 2>&1; then
             schema_version: 1,
             updated_at: $ts,
             feature_directory: (if $fd == "" then null else $fd end),
-            source_of_truth: {
+            source_of_truth: (if ($fd | test("bugs")) then {
+                constitution: ".specify/memory/constitution.md",
+                assessment: ($fd + "/assessment.md"),
+                fix: ($fd + "/fix.md")
+            } else {
                 constitution: ".specify/memory/constitution.md",
                 spec: (if $fd == "" then null else ($fd + "/spec.md") end),
                 plan: (if $fd == "" then null else ($fd + "/plan.md") end),
                 tasks: (if $fd == "" then null else ($fd + "/tasks.md") end)
-            },
+            } end),
             supersedes: ["speckit.implement"],
             executor: (if $st == "ready" then "speckit" else "gss-bridge" end),
             capabilities: [
@@ -236,6 +240,15 @@ EOF
     if [ -n "$REASON" ]; then fb_ev_rsn="\"$REASON\""; fi
     printf '{"timestamp":"%s","action":"handoff","status":"%s","feature_directory":%s,"decision":"updated","reason":%s,"actor":"%s","snapshot_id":%s}\n' \
         "$TIMESTAMP" "$STATUS" "$fb_fd_val" "$fb_ev_rsn" "$ACTOR" "$fb_snap_val" >> "$SPECIFY_DIR/bridge-events.jsonl"
+fi
+
+# Auto Graphify Sync upon completion
+if [ "$STATUS" = "complete" ] && [ -f "$REPO_ROOT/graphify-out/graph.json" ]; then
+    if command -v graphify >/dev/null 2>&1; then
+        echo "[bridge] Triggering automatic Graphify sync (graphify update .)..."
+        graphify update . >/dev/null 2>&1 || true
+        echo "[bridge] Knowledge graph synchronized."
+    fi
 fi
 
 WARN_COMPLETE=0

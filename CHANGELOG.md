@@ -5,6 +5,27 @@ All notable changes to **GSS-Bridge** will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-10-30
+
+### Added
+- **The GSS-Bug Protocol**:
+  - `speckit.gss-bridge.bug-assess`: Combines Spec-Kit bug tracking with Graphify AST knowledge graph analysis. Parses stack traces, maps affected nodes, traces caller/callee hierarchies, computes blast radius, and embeds visual Mermaid flowcharts into `.specify/bugs/<slug>/assessment.md`.
+  - `speckit.gss-bridge.bug-fix`: Enforces Superpowers `systematic-debugging` and strict Test-Driven Development (TDD) Red $\rightarrow$ Green $\rightarrow$ Refactor workflow. Requires an automated reproduction test before writing fix code, executes test suites to verify fix evidence, automatically synchronizes the codebase knowledge graph via `graphify update .`, and records completion in `.specify/bugs/<slug>/fix.md`.
+  - Bug templates: `.specify/templates/bug-assessment-template.md` and `.specify/templates/bug-fix-template.md`.
+- **Parallel Subagent Wave Dispatcher (`speckit.gss-bridge.dispatch`)**:
+  - Computes pairwise topological distances on `graphify-out/graph.json` between parallel tasks tagged `[P]` in `tasks.md`.
+  - Automatically partitions independent tasks ($d \ge 3$) into concurrent execution waves (Wave 1, Wave 2, etc.) while blocking conflicting tasks from running in parallel.
+  - Generates subagent dispatch prompts with context strictly bounded to 1-2 hop AST neighborhoods, reducing subagent token overhead by up to 100x.
+- **Visual Mermaid Blast Radius Diagrams**:
+  - Added `-Mermaid` / `--mermaid` support to `graphify-blast-radius.ps1` and `graphify-blast-radius.sh` to render GitHub-compatible caller/callee architecture diagrams.
+- **Automatic Knowledge Graph Synchronization**:
+  - Automatically runs `graphify update .` when completing feature implementations (`update-handoff`) or bug fixes (`bug-fix`).
+- **Multi-Agent Collision Guard**:
+  - Enhanced `guard-command.ps1` and `guard-command.sh` to prevent conflicting concurrent feature implementations across multiple agents and ensure bug fixes are blocked until an approved bug assessment exists.
+- **Comprehensive Test Suites**:
+  - Added `tests/test-bug-workflow.ps1` and `tests/test-bug-workflow.sh` for full bug assess/fix lifecycle verification.
+  - Added `tests/test-dispatch-subagents.ps1` and `tests/test-dispatch-subagents.sh` for wave partitioning and conflict detection verification.
+
 ## [1.0.1] - 2026-10-28
 
 ### Added

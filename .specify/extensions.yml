@@ -2,7 +2,7 @@ extensions:
   gss-bridge:
     id: gss-bridge
     name: "GSS-Bridge: Graphify + Spec-Kit + Superpowers"
-    version: "1.0.1"
+    version: "1.1.0"
     path: ".specify/extensions/gss-bridge"
     enabled: true
 
@@ -26,4 +26,12 @@ hooks:
   after_tasks:
     - extension: gss-bridge
       command: speckit.gss-bridge.handoff
+      optional: false
+  before_bug_assess:
+    - extension: gss-bridge
+      command: speckit.gss-bridge.guard
+      optional: true
+  before_bug_fix:
+    - extension: gss-bridge
+      command: speckit.gss-bridge.guard
       optional: false

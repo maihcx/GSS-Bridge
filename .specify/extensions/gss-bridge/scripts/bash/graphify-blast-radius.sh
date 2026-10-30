@@ -14,6 +14,7 @@ NODE_A=""
 NODE_B=""
 MAX_HOPS=2
 OUTPUT_JSON=0
+MERMAID=0
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -39,6 +40,10 @@ while [ $# -gt 0 ]; do
             ;;
         --json)
             OUTPUT_JSON=1
+            shift
+            ;;
+        --mermaid)
+            MERMAID=1
             shift
             ;;
         *)
@@ -72,7 +77,7 @@ if [ -z "$PYTHON_CMD" ]; then
     exit 2
 fi
 
-export GRAPH_PATH CHECK_COUPLING NODE NODE_A NODE_B MAX_HOPS OUTPUT_JSON
+export GRAPH_PATH CHECK_COUPLING NODE NODE_A NODE_B MAX_HOPS OUTPUT_JSON MERMAID
 
 $PYTHON_CMD - << 'EOF'
 import os, sys, json
@@ -85,6 +90,7 @@ node_a_term = os.environ.get('NODE_A', '')
 node_b_term = os.environ.get('NODE_B', '')
 max_hops = int(os.environ.get('MAX_HOPS', '2'))
 output_json = os.environ.get('OUTPUT_JSON', '0') == '1'
+mermaid_only = os.environ.get('MERMAID', '0') == '1'
 
 with open(graph_path, 'r', encoding='utf-8') as f:
     data = json.load(f)
@@ -215,8 +221,38 @@ report = {
     "risk_level": risk
 }
 
+import re
+def safe_id(s):
+    clean = re.sub(r'[^a-zA-Z0-9_]', '_', s)
+    if clean and clean[0].isdigit():
+        clean = f"n_{clean}"
+    return clean
+
+target_safe = safe_id(lbl)
+mermaid_lines = [
+    "```mermaid",
+    "flowchart LR",
+    "    classDef targetNode fill:#4f46e5,stroke:#312e81,stroke-width:2px,color:#ffffff;",
+    "    classDef callerNode fill:#0ea5e9,stroke:#0369a1,stroke-width:1px,color:#ffffff;",
+    "    classDef calleeNode fill:#10b981,stroke:#047857,stroke-width:1px,color:#ffffff;",
+    f"    {target_safe}[\"{lbl}\"]:::targetNode"
+]
+
+for c in callers:
+    c_safe = safe_id(c)
+    mermaid_lines.append(f"    {c_safe}[\"{c}\"]:::callerNode --> {target_safe}")
+for c in callees:
+    c_safe = safe_id(c)
+    mermaid_lines.append(f"    {target_safe} --> {c_safe}[\"{c}\"]:::calleeNode")
+mermaid_lines.append("```")
+mermaid_block = "\n".join(mermaid_lines)
+
+report["mermaid"] = mermaid_block
+
 if output_json:
     print(json.dumps(report, indent=2))
+elif mermaid_only:
+    print(mermaid_block)
 else:
     print("## Blast Radius & Architecture Context (Graphify)")
     print(f"- **Target Node**: {lbl}")
@@ -225,4 +261,7 @@ else:
     print(f"- **Direct Callees (1-hop)**: {', '.join(callees) if callees else '(none)'}")
     print(f"- **Transitive Impact (2-hop)**: {len(hop2)} node(s) impacted")
     print(f"- **Coupling / Risk Assessment**: {risk}")
+    print()
+    print("### Architecture Call Flow")
+    print(mermaid_block)
 EOF

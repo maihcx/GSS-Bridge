@@ -6,7 +6,8 @@ param(
     [string]$NodeA = "",
     [string]$NodeB = "",
     [int]$MaxHops = 2,
-    [switch]$Json
+    [switch]$Json,
+    [switch]$Mermaid
 )
 
 $ErrorActionPreference = "Stop"
@@ -213,8 +214,38 @@ $report = [ordered]@{
     risk_level = $risk
 }
 
+function Get-SafeMermaidId([string]$str) {
+    $clean = $str -replace '[^a-zA-Z0-9_]', '_'
+    if ($clean -match '^[0-9]') { $clean = "n_$clean" }
+    return $clean
+}
+
+$targetSafeId = Get-SafeMermaidId $targetLabel
+$mermaidLines = New-Object System.Collections.Generic.List[string]
+$mermaidLines.Add('```mermaid')
+$mermaidLines.Add('flowchart LR')
+$mermaidLines.Add('    classDef targetNode fill:#4f46e5,stroke:#312e81,stroke-width:2px,color:#ffffff;')
+$mermaidLines.Add('    classDef callerNode fill:#0ea5e9,stroke:#0369a1,stroke-width:1px,color:#ffffff;')
+$mermaidLines.Add('    classDef calleeNode fill:#10b981,stroke:#047857,stroke-width:1px,color:#ffffff;')
+$mermaidLines.Add("    $targetSafeId[`"$targetLabel`"]:::targetNode")
+
+foreach ($c in $callers1Hop) {
+    $cId = Get-SafeMermaidId $c
+    $mermaidLines.Add("    $cId[`"$c`"]:::callerNode --> $targetSafeId")
+}
+foreach ($c in $callees1Hop) {
+    $cId = Get-SafeMermaidId $c
+    $mermaidLines.Add("    $targetSafeId --> $cId[`"$c`"]:::calleeNode")
+}
+$mermaidLines.Add('```')
+$mermaidBlock = ($mermaidLines -join [Environment]::NewLine)
+
+$report['mermaid'] = $mermaidBlock
+
 if ($Json) {
     $report | ConvertTo-Json -Depth 4
+} elseif ($Mermaid) {
+    Write-Output $mermaidBlock
 } else {
     Write-Output "## Blast Radius & Architecture Context (Graphify)"
     Write-Output "- **Target Node**: $targetLabel"
@@ -223,5 +254,8 @@ if ($Json) {
     Write-Output "- **Direct Callees (1-hop)**: $(if ($callees1Hop.Count -gt 0) { $callees1Hop -join ', ' } else { '(none)' })"
     Write-Output "- **Transitive Impact (2-hop)**: $($hop2Set.Count) node(s) impacted"
     Write-Output "- **Coupling / Risk Assessment**: $risk"
+    Write-Output ""
+    Write-Output "### Architecture Call Flow"
+    Write-Output $mermaidBlock
 }
 exit 0

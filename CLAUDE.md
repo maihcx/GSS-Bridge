@@ -12,11 +12,20 @@
 # Check status and readiness
 bash .specify/extensions/gss-bridge/scripts/bash/bridge-status.sh --readiness
 
-# Calculate component blast radius
-bash .specify/extensions/gss-bridge/scripts/bash/graphify-blast-radius.sh --node "<ComponentName>"
+# Calculate component blast radius with Mermaid diagram
+bash .specify/extensions/gss-bridge/scripts/bash/graphify-blast-radius.sh --node "<ComponentName>" --mermaid
 
 # Verify task independence for parallel [P] execution
 bash .specify/extensions/gss-bridge/scripts/bash/graphify-blast-radius.sh --check-coupling --node-a "CompA" --node-b "CompB"
+
+# Assess a bug with Graphify call graph & blast radius
+bash .specify/extensions/gss-bridge/scripts/bash/bug-assess.sh --slug "auth-null-token" --target-node "AuthService"
+
+# Remediate a bug with Superpowers TDD & automatic Graphify sync
+bash .specify/extensions/gss-bridge/scripts/bash/bug-fix.sh --slug "auth-null-token"
+
+# Partition parallel [P] tasks into conflict-free execution waves
+bash .specify/extensions/gss-bridge/scripts/bash/dispatch-subagents.sh --tasks "specs/001-feature/tasks.md"
 
 # Run tests
 pwsh -File tests/run-all.ps1

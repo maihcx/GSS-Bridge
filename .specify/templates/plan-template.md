@@ -20,7 +20,21 @@
 - **Transitive Impact (2-hop)**: [Upstream/downstream systems affected]
 - **Risk Assessment**: [Low / Medium / High] - [Mitigation strategy]
 
-### C. Architectural Boundaries & Invariants
+### C. Architecture Call Flow (Graphify Mermaid Diagram)
+> Run `graphify-blast-radius.ps1 -Node "<TargetNode>" -Mermaid` to generate.
+
+```mermaid
+flowchart LR
+    classDef targetNode fill:#4f46e5,stroke:#312e81,stroke-width:2px,color:#ffffff;
+    classDef callerNode fill:#0ea5e9,stroke:#0369a1,stroke-width:1px,color:#ffffff;
+    classDef calleeNode fill:#10b981,stroke:#047857,stroke-width:1px,color:#ffffff;
+
+    TargetNode["TargetNode"]:::targetNode
+    Caller1["Caller1"]:::callerNode --> TargetNode
+    TargetNode --> Callee1["Callee1"]:::calleeNode
+```
+
+### D. Architectural Boundaries & Invariants
 - Invariant 1: [Critical architectural invariant that must not be broken]
 - Invariant 2: [Interface contract preservation]
 
@@ -38,10 +52,10 @@
 | User Story 1 | `test_should_reject_invalid_token` | Assert token validation fails | Implement signature check |
 | User Story 2 | `test_should_handle_concurrent_write` | Assert race condition detected | Add transaction lock |
 
-## 4. Subagent Scoping (Graphify Neighborhoods)
-For each independent phase, subagents must be scoped to specific files:
-- **Task Cluster 1**: Scope to `[file1, file2, file3]` (Do not load full repo)
-- **Task Cluster 2**: Scope to `[file4, file5]`
+## 4. Subagent Scoping & Wave Dispatch (Graphify Neighborhoods)
+Run `/speckit.gss-bridge.dispatch` to automatically group parallel `[P]` tasks into waves:
+- **Wave 1**: Scope Subagent 1 to `[file1, file2]`; Subagent 2 to `[file3, file4]` (Zero pairwise coupling)
+- **Wave 2**: Scope to dependent tasks after Wave 1 passes verification
 
 ## 5. Verification Checklist Before Completion
 - [ ] Unit tests pass with 100% success

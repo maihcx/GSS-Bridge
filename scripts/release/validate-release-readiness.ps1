@@ -113,7 +113,7 @@ $cmdDir = Join-Path $resolvedRepoRoot ".specify/extensions/gss-bridge/commands"
 if (-not (Test-Path -LiteralPath $cmdDir)) {
     Add-Problem $problems "Missing commands directory at $cmdDir"
 } else {
-    foreach ($cmd in @("execute", "guard", "handoff", "blast-radius")) {
+    foreach ($cmd in @("execute", "guard", "handoff", "blast-radius", "bug-assess", "bug-fix", "dispatch")) {
         $cmdFile = Join-Path $cmdDir "speckit.gss-bridge.$cmd.md"
         if (-not (Test-Path -LiteralPath $cmdFile)) {
             Add-Problem $problems "Missing command file: speckit.gss-bridge.$cmd.md"

@@ -37,7 +37,7 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
    - `graphify query "<topic>"`: Search concepts in domain vocabulary.
    - `graphify explain "<node>"`: Trace callers, callees, and compute blast radius for `plan.md`.
    - `graphify path "<nodeA>" "<nodeB>"`: Verify that tasks tagged `[P]` have no direct coupling or shared mutable state.
-   - `graphify --update`: Run incremental sync upon completing implementation.
+   - `graphify update .`: Run incremental sync upon completing implementation.
 
 3. **Superpowers Discipline**:
    - `test-driven-development`: Write failing test before writing implementation code.
@@ -46,16 +46,23 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
    - `verification-before-completion`: Run test suites and verify output before marking `- [x] T###`.
    - `requesting-code-review` & `finishing-a-development-branch`.
 
+4. **The GSS-Bug Protocol**:
+   - `speckit.gss-bridge.bug-assess`: Diagnoses bugs with Graphify AST context, computing upstream callers, downstream callees, blast radius, and visual Mermaid diagrams. Outputs canonical assessment to `.specify/bugs/<slug>/assessment.md`.
+   - `speckit.gss-bridge.bug-fix`: Remediates bugs under strict Superpowers TDD discipline (reproduction test RED $\rightarrow$ fix GREEN $\rightarrow$ REFACTOR), test verification, automatic `graphify update .`, and canonical closure in `.specify/bugs/<slug>/fix.md`.
+
+5. **Automated Subagent Wave Dispatcher**:
+   - `speckit.gss-bridge.dispatch`: Automatically partitions `[P]` tasks in `tasks.md` into execution waves based on pairwise topological graph distance ($d \ge 3$), generating subagent prompts strictly scoped to 1-2 hop AST neighborhoods.
+
 ---
 
 ## Agent Invocation Matrix
 
-| Agent | Slash Command / Prompt Alias | Direct CLI Execution |
-|---|---|---|
-| **Claude Code** | `/gss-bridge` or `/speckit-gss-bridge-execute` | `bash .specify/extensions/gss-bridge/scripts/bash/update-handoff.sh` |
-| **OpenAI Codex** | `$gss-bridge` or `$speckit-gss-bridge-execute` | `powershell .specify/extensions/gss-bridge/scripts/powershell/update-handoff.ps1` |
-| **Google Antigravity** | `/gss-bridge` or native skill invocation | `pwsh .specify/extensions/gss-bridge/scripts/powershell/update-handoff.ps1` |
-| **Gemini CLI** | `/gss-bridge` | `bash .specify/extensions/gss-bridge/scripts/bash/update-handoff.sh` |
+| Agent | Feature Execution | Bug Assessment | Bug Remediation | Wave Dispatch |
+|---|---|---|---|---|
+| **Claude Code** | `/gss-bridge` or `/speckit.gss-bridge.execute` | `/speckit.gss-bridge.bug-assess` | `/speckit.gss-bridge.bug-fix` | `/speckit.gss-bridge.dispatch` |
+| **OpenAI Codex** | `$gss-bridge` or `$speckit.gss-bridge.execute` | `$speckit.gss-bridge.bug-assess` | `$speckit.gss-bridge.bug-fix` | `$speckit.gss-bridge.dispatch` |
+| **Google Antigravity** | `/gss-bridge` or native skill | `speckit.gss-bridge.bug-assess` | `speckit.gss-bridge.bug-fix` | `speckit.gss-bridge.dispatch` |
+| **Gemini CLI** | `/gss-bridge` | `/speckit.gss-bridge.bug-assess` | `/speckit.gss-bridge.bug-fix` | `/speckit.gss-bridge.dispatch` |
 
 ---
 
