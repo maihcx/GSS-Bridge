@@ -34,34 +34,56 @@ provides:
     - name: speckit.gss-bridge.handoff
       file: commands/speckit.gss-bridge.handoff.md
       description: "Create or update the GSS-Bridge implementation handoff state"
+      aliases:
+        - speckit-gss-bridge-handoff
+        - gss-bridge-handoff
+        - gss-bridge.handoff
     - name: speckit.gss-bridge.guard
       file: commands/speckit.gss-bridge.guard.md
       description: "Guard Spec-Kit, Graphify, and Superpowers boundaries"
+      aliases:
+        - speckit-gss-bridge-guard
+        - gss-bridge-guard
+        - gss-bridge.guard
     - name: speckit.gss-bridge.execute
       file: commands/speckit.gss-bridge.execute.md
       description: "Execute Spec-Kit tasks with Graphify-scoped context and Superpowers TDD discipline"
       aliases:
+        - speckit-gss-bridge-execute
+        - speckit-gss-bridge
         - speckit.gss-bridge
         - gss-bridge
     - name: speckit.gss-bridge.blast-radius
       file: commands/speckit.gss-bridge.blast-radius.md
       description: "Analyze component blast radius and verify parallel task [P] independence using Graphify"
+      aliases:
+        - speckit-gss-bridge-blast-radius
+        - gss-bridge-blast-radius
+        - gss-bridge.blast-radius
     - name: speckit.gss-bridge.bug-assess
       file: commands/speckit.gss-bridge.bug-assess.md
       description: "Diagnose and triage bug reports using Graphify knowledge graph context and blast radius analysis"
       aliases:
+        - speckit-gss-bridge-bug-assess
+        - speckit-bug-assess
+        - gss-bridge-bug-assess
         - speckit.bug-assess
         - gss-bridge.bug-assess
     - name: speckit.gss-bridge.bug-fix
       file: commands/speckit.gss-bridge.bug-fix.md
       description: "Implement and verify bug remediation under strict Superpowers TDD and verification discipline"
       aliases:
+        - speckit-gss-bridge-bug-fix
+        - speckit-bug-fix
+        - gss-bridge-bug-fix
         - speckit.bug-fix
         - gss-bridge.bug-fix
     - name: speckit.gss-bridge.dispatch
       file: commands/speckit.gss-bridge.dispatch.md
       description: "Partition tasks tagged [P] into independent execution waves and generate Graphify-scoped subagent prompts"
       aliases:
+        - speckit-gss-bridge-dispatch
+        - gss-bridge-dispatch
         - gss-bridge.dispatch
 
 hooks:

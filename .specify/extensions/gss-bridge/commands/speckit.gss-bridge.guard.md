@@ -9,7 +9,7 @@ Enforce architectural boundaries and execution rules across the Golden Triangle 
 ## Guard Rules Evaluated
 
 1. **Deny raw `speckit.implement`**:
-   Blocked when handoff status is `executing`. Implementation must follow Superpowers TDD discipline and Graphify context scoping via `speckit.gss-bridge.execute`.
+   Blocked when handoff status is `executing`. Implementation must follow Superpowers TDD discipline and Graphify context scoping via `/speckit-gss-bridge-execute` (or `/gss-bridge`).
 2. **Redirect `superpowers:writing-plans`**:
    Denied when an active feature directory exists and attempts to create standalone plan files in `docs/plans/`. Planning must record TDD test matrices directly into `specs/<feature>/plan.md` and `tasks.md`.
 3. **Deny `speckit.constitution`**:

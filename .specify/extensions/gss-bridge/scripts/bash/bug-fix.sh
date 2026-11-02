@@ -58,7 +58,7 @@ BUG_DIR="$SPECIFY_DIR/bugs/$SLUG"
 ASSESSMENT_PATH="$BUG_DIR/assessment.md"
 
 if [ ! -f "$ASSESSMENT_PATH" ]; then
-    echo "[gss-bridge] Assessment contract missing at '$ASSESSMENT_PATH'. Run /speckit.gss-bridge.bug-assess --slug $SLUG first before attempting a fix." >&2
+    echo "[gss-bridge] Assessment contract missing at '$ASSESSMENT_PATH'. Run /speckit-gss-bridge-bug-assess --slug $SLUG first before attempting a fix." >&2
     exit 1
 fi
 

@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **The GSS-Bug Protocol**:
-  - `speckit.gss-bridge.bug-assess`: Combines Spec-Kit bug tracking with Graphify AST knowledge graph analysis. Parses stack traces, maps affected nodes, traces caller/callee hierarchies, computes blast radius, and embeds visual Mermaid flowcharts into `.specify/bugs/<slug>/assessment.md`.
-  - `speckit.gss-bridge.bug-fix`: Enforces Superpowers `systematic-debugging` and strict Test-Driven Development (TDD) Red $\rightarrow$ Green $\rightarrow$ Refactor workflow. Requires an automated reproduction test before writing fix code, executes test suites to verify fix evidence, automatically synchronizes the codebase knowledge graph via `graphify update .`, and records completion in `.specify/bugs/<slug>/fix.md`.
+  - `speckit-gss-bridge-bug-assess` (`speckit.gss-bridge.bug-assess`): Combines Spec-Kit bug tracking with Graphify AST knowledge graph analysis. Parses stack traces, maps affected nodes, traces caller/callee hierarchies, computes blast radius, and embeds visual Mermaid flowcharts into `.specify/bugs/<slug>/assessment.md`.
+  - `speckit-gss-bridge-bug-fix` (`speckit.gss-bridge.bug-fix`): Enforces Superpowers `systematic-debugging` and strict Test-Driven Development (TDD) Red $\rightarrow$ Green $\rightarrow$ Refactor workflow. Requires an automated reproduction test before writing fix code, executes test suites to verify fix evidence, automatically synchronizes the codebase knowledge graph via `graphify update .`, and records completion in `.specify/bugs/<slug>/fix.md`.
   - Bug templates: `.specify/templates/bug-assessment-template.md` and `.specify/templates/bug-fix-template.md`.
-- **Parallel Subagent Wave Dispatcher (`speckit.gss-bridge.dispatch`)**:
+- **Parallel Subagent Wave Dispatcher (`speckit-gss-bridge-dispatch`)**:
   - Computes pairwise topological distances on `graphify-out/graph.json` between parallel tasks tagged `[P]` in `tasks.md`.
   - Automatically partitions independent tasks ($d \ge 3$) into concurrent execution waves (Wave 1, Wave 2, etc.) while blocking conflicting tasks from running in parallel.
   - Generates subagent dispatch prompts with context strictly bounded to 1-2 hop AST neighborhoods, reducing subagent token overhead by up to 100x.

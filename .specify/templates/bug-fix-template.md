@@ -21,4 +21,4 @@
 - [x] Verification evidence confirmed before marking complete.
 
 ## 4. Graphify Synchronization
-- Knowledge graph synchronized via `graphify --update`.
+- Knowledge graph synchronized via `graphify update .`.

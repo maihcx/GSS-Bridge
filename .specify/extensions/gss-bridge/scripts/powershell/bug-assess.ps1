@@ -127,7 +127,7 @@ $lines.Add('- [ ] **TDD Failing Test Required**: You MUST write a minimal reprod
 $lines.Add('- [ ] **Boundary Scoping**: Code modifications MUST be restricted to the immediate suspect component and directly coupled callers/callees identified above.')
 $lines.Add('')
 $lines.Add('## 4. Next Step')
-$lines.Add("Execute fix with Superpowers discipline: $bt/speckit.gss-bridge.bug-fix slug=$Slug$bt")
+$lines.Add("Execute fix with Superpowers discipline: $bt/speckit-gss-bridge-bug-fix slug=$Slug$bt")
 
 $assessmentContent = ($lines -join [Environment]::NewLine)
 
@@ -156,6 +156,6 @@ if ($Json) {
     Write-Output "  Assessment: .specify/bugs/$Slug/assessment.md"
     Write-Output "  Suspect:    $(if ($targetNode) { $targetNode } else { '(manual identification needed)' })"
     Write-Output "  Blast Risk: $(if ($blastReport) { $blastReport.risk_level } else { 'UNKNOWN' })"
-    Write-Output "  Next step:  Run /speckit.gss-bridge.bug-fix slug=$Slug"
+    Write-Output "  Next step:  Run /speckit-gss-bridge-bug-fix slug=$Slug"
 }
 exit 0

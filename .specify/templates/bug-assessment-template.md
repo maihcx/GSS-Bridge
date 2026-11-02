@@ -34,4 +34,4 @@ flowchart LR
 - [ ] **Boundary Scoping**: Code modifications MUST be restricted to the immediate suspect component and directly coupled callers/callees identified above.
 
 ## 4. Next Step
-Execute fix with Superpowers discipline: `/speckit.gss-bridge.bug-fix slug=[SLUG]`
+Execute fix with Superpowers discipline: `/speckit-gss-bridge-bug-fix slug=[SLUG]`

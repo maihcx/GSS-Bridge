@@ -25,7 +25,7 @@ $BugDir = Join-Path $SpecifyDir "bugs\$Slug"
 $AssessmentPath = Join-Path $BugDir "assessment.md"
 
 if (-not (Test-Path -LiteralPath $AssessmentPath)) {
-    Write-Error "[gss-bridge] Assessment contract missing at '$AssessmentPath'. Run /speckit.gss-bridge.bug-assess -Slug $Slug first before attempting a fix."
+    Write-Error "[gss-bridge] Assessment contract missing at '$AssessmentPath'. Run /speckit-gss-bridge-bug-assess -Slug $Slug first before attempting a fix."
     exit 1
 }
 
@@ -100,7 +100,7 @@ $flines.Add('- [x] Regression test passing without side effects.')
 $flines.Add('- [x] Verification evidence confirmed before marking complete.')
 $flines.Add('')
 $flines.Add('## 4. Graphify Synchronization')
-$flines.Add("- Knowledge graph scheduled for sync via ${bt}graphify --update${bt}.")
+$flines.Add("- Knowledge graph scheduled for sync via ${bt}graphify update .${bt}.")
 
 $FixContent = ($flines -join [Environment]::NewLine)
 
@@ -139,7 +139,7 @@ if ($Json) {
 } else {
     Write-Output "[gss-bridge bug-fix] Bug '$Slug' successfully resolved and verified!"
     Write-Output "  Fix Report:   .specify/bugs/$Slug/fix.md"
-    Write-Output "  Graphify Sync: $(if ($graphSynced) { 'Synchronized (graphify --update)' } else { 'Run /graphify --update' })"
+    Write-Output "  Graphify Sync: $(if ($graphSynced) { 'Synchronized (graphify update .)' } else { 'Run graphify update .' })"
     Write-Output "  Next step:    Run superpowers:requesting-code-review and finish branch."
 }
 exit 0

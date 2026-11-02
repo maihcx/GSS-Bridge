@@ -92,7 +92,7 @@ specify extension add gss-bridge \
 2. **Clarify**: Chạy `/speckit-clarify` để giải quyết các điểm mơ hồ trong yêu cầu.
 3. **Plan**: Chạy `/speckit-plan` $\rightarrow$ tính toán phạm vi ảnh hưởng và vẽ sơ đồ Mermaid qua `graphify explain`, ghi chiến lược TDD trực tiếp vào `plan.md`.
 4. **Tasks**: Chạy `/speckit-tasks` $\rightarrow$ kiểm tra coupling trước khi gắn cờ song song `[P]`.
-5. **Dispatch Waves**: Chạy `/speckit.gss-bridge.dispatch` để phân nhóm các task `[P]` thành các đợt (waves) không va chạm tài nguyên.
+5. **Dispatch Waves**: Chạy `/speckit-gss-bridge-dispatch` để phân nhóm các task `[P]` thành các đợt (waves) không va chạm tài nguyên.
 6. **Implement**: Chạy `/gss-bridge` (Claude / Antigravity) hoặc `$gss-bridge` (Codex) $\rightarrow$ điều phối subagent theo phạm vi 1-hop của Graphify, áp dụng TDD Red-Green-Refactor, truy vết bug theo đồ thị và xác thực build/test.
 7. **Complete & Sync**: Xác thực đạt $\rightarrow$ review mã nguồn $\rightarrow$ tự động chạy `graphify update .` $\rightarrow$ chuyển trạng thái sang `complete`.
 
@@ -108,11 +108,11 @@ flowchart LR
     Sync --> Done[".specify/bugs/<slug>/fix.md"]
 ```
 
-1. **Đánh giá lỗi (`/speckit.gss-bridge.bug-assess`)**:
+1. **Đánh giá lỗi (`/speckit-gss-bridge-bug-assess`)**:
    - Trích xuất ký hiệu và hàm crash trong stack trace đối chiếu với `graphify-out/graph.json`.
    - Lập bản đồ cuộc gọi, tính toán 1-hop callers và 2-hop blast radius.
    - Xuất sơ đồ Mermaid và điều kiện TDD bắt buộc vào `.specify/bugs/<slug>/assessment.md`.
-2. **Khắc phục lỗi (`/speckit.gss-bridge.bug-fix`)**:
+2. **Khắc phục lỗi (`/speckit-gss-bridge-bug-fix`)**:
    - Guard chặn đứng việc sửa code nếu chưa có `assessment.md`.
    - Áp dụng `systematic-debugging` và `test-driven-development`: BẮT BUỘC viết regression test đỏ (thất bại) trước khi chạm vào mã nguồn sản phẩm.
    - Sửa mã nguồn tối thiểu trong ranh giới blast radius để test xanh (thành công).

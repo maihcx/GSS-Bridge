@@ -46,7 +46,7 @@ flowchart TD
 - Remedying a bug where strict Test-Driven Development (writing a failing test first) and verification evidence are required.
 - Planning architecture in `plan.md` and needing component blast radius analysis with Mermaid call graphs.
 - Partitioning parallel tasks `[P]` in `tasks.md` into decoupled subagent waves.
-- The user or prompt invokes `/gss-bridge`, `/speckit-gss-bridge-execute`, `$gss-bridge`, `/speckit.gss-bridge.bug-assess`, or `/speckit.gss-bridge.bug-fix`.
+- The user or prompt invokes `/gss-bridge`, `/speckit-gss-bridge-execute`, `$gss-bridge`, `/speckit-gss-bridge-bug-assess`, `/speckit-gss-bridge-bug-fix`, or `/speckit-gss-bridge-dispatch`.
 
 ### When NOT to Use
 - Quick, one-line scratchpad edits with zero architectural dependencies or side effects.
@@ -131,7 +131,7 @@ sequenceDiagram
     SP-->>Fix: Write fix.md & mark complete
 ```
 
-### A. Bug Assessment (`speckit.gss-bridge.bug-assess`)
+### A. Bug Assessment (`speckit-gss-bridge-bug-assess`)
 - **Input**: Bug description, error stack trace, or log file.
 - **Action**:
   1. Identifies suspect components from error trace against `graphify-out/graph.json`.
@@ -143,7 +143,7 @@ sequenceDiagram
   .\.specify\extensions\gss-bridge\scripts\powershell\bug-assess.ps1 -Slug "login-crash" -Symptom "NullReferenceException at AuthService.validateToken" -Actor <actor>
   ```
 
-### B. Bug Fix (`speckit.gss-bridge.bug-fix`)
+### B. Bug Fix (`speckit-gss-bridge-bug-fix`)
 - **Precondition Check**: Guard denies `speckit.bug.fix` if `assessment.md` does not exist.
 - **TDD Red-Green-Refactor**:
   1. Write a minimal regression test reproducing the failure. Confirm it fails (RED).
@@ -211,7 +211,7 @@ When multiple coding agents (e.g. Claude Code, Codex, Antigravity) collaborate o
 
 | Excuse | Reality | Mandated Action |
 |---|---|---|
-| *"I can diagnose this bug by reading the file directly."* | Stack traces only show symptoms. Graphify reveals the full caller chain and transitive blast radius. | Run `/speckit.gss-bridge.bug-assess` first. |
+| *"I can diagnose this bug by reading the file directly."* | Stack traces only show symptoms. Graphify reveals the full caller chain and transitive blast radius. | Run `/speckit-gss-bridge-bug-assess` first. |
 | *"I'll fix the bug first, then add a test."* | Tests written after code are biased toward passing and miss regression edge cases. | Write a failing regression test (RED) before touching code. |
 | *"I can run all [P] tasks at once."* | Tasks on coupled components produce merge conflicts and broken state. | Run `dispatch-subagents` to partition into independent waves. |
 | *"I'll create the implementation plan in `docs/plans/`."* | Violates Spec-Kit as the single source of truth for design documentation. | Write TDD matrices directly into `specs/<feature>/plan.md`. |

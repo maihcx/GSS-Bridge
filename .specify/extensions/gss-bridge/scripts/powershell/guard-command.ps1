@@ -52,20 +52,20 @@ $decision = $null
 $denyReason = $null
 
 # Rule 0: Bug fix guard — assessment contract mandatory before fix
-if ($Action -in @("speckit.bug.fix", "speckit.gss-bridge.bug-fix")) {
+if ($Action -in @("speckit.bug.fix", "speckit.gss-bridge.bug-fix", "speckit-bug-fix", "speckit-gss-bridge-bug-fix", "gss-bridge.bug-fix", "gss-bridge-bug-fix")) {
     $targetBugDir = if ($TargetFeatureDirectory) { $TargetFeatureDirectory } elseif ($handoffFeatureDir -and $handoffFeatureDir.Contains("bugs")) { $handoffFeatureDir } else { "" }
     if ($targetBugDir) {
         $assessFile = Join-Path $repoRoot (Join-Path $targetBugDir "assessment.md")
         if (-not (Test-Path -LiteralPath $assessFile)) {
             $decision = "deny"
-            $denyReason = "$Action blocked: assessment contract '$targetBugDir/assessment.md' not found. Run speckit.bug.assess with Graphify blast radius first."
+            $denyReason = "$Action blocked: assessment contract '$targetBugDir/assessment.md' not found. Run /speckit-gss-bridge-bug-assess with Graphify blast radius first."
         }
     }
 }
 # Rule 1: Deny speckit.implement when handoff is executing
 elseif ($Action -eq "speckit.implement" -and $handoffStatus -eq "executing") {
     $decision = "deny"
-    $denyReason = "speckit.implement blocked while GSS-Bridge handoff is executing; use speckit.gss-bridge.execute"
+    $denyReason = "speckit.implement blocked while GSS-Bridge handoff is executing; use /speckit-gss-bridge-execute (or /gss-bridge)"
 }
 # Rule 2: Deny superpowers:writing-plans from creating docs/plans/ when active feature exists
 elseif ($Action -eq "superpowers:writing-plans" -and $handoffFeatureDir) {

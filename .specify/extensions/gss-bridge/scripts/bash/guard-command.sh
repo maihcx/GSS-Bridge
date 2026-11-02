@@ -60,19 +60,19 @@ DECISION="allow"
 DENY_REASON=""
 
 # Rule 0: Bug fix guard — assessment contract mandatory before fix
-if [ "$ACTION" = "speckit.bug.fix" ] || [ "$ACTION" = "speckit.gss-bridge.bug-fix" ]; then
+if [ "$ACTION" = "speckit.bug.fix" ] || [ "$ACTION" = "speckit.gss-bridge.bug-fix" ] || [ "$ACTION" = "speckit-bug-fix" ] || [ "$ACTION" = "speckit-gss-bridge-bug-fix" ] || [ "$ACTION" = "gss-bridge.bug-fix" ] || [ "$ACTION" = "gss-bridge-bug-fix" ]; then
     target_bug_dir="${TARGET_FEATURE_DIR:-}"
     if [ -z "$target_bug_dir" ] && [[ "$HANDOFF_FEATURE_DIR" == *"bugs"* ]]; then
         target_bug_dir="$HANDOFF_FEATURE_DIR"
     fi
     if [ -n "$target_bug_dir" ] && [ ! -f "$REPO_ROOT/$target_bug_dir/assessment.md" ]; then
         DECISION="deny"
-        DENY_REASON="$ACTION blocked: assessment contract '$target_bug_dir/assessment.md' not found. Run speckit.bug.assess with Graphify blast radius first."
+        DENY_REASON="$ACTION blocked: assessment contract '$target_bug_dir/assessment.md' not found. Run /speckit-gss-bridge-bug-assess with Graphify blast radius first."
     fi
 # Rule 1: deny speckit.implement when handoff status is executing
 elif [ "$ACTION" = "speckit.implement" ] && [ "$HANDOFF_STATUS" = "executing" ]; then
     DECISION="deny"
-    DENY_REASON="speckit.implement blocked while GSS-Bridge handoff is executing; use speckit.gss-bridge.execute"
+    DENY_REASON="speckit.implement blocked while GSS-Bridge handoff is executing; use /speckit-gss-bridge-execute (or /gss-bridge)"
 # Rule 2: deny superpowers:writing-plans when active feature has spec.md + plan.md
 elif [ "$ACTION" = "superpowers:writing-plans" ] && [ -n "$HANDOFF_FEATURE_DIR" ]; then
     if [ -f "$REPO_ROOT/$HANDOFF_FEATURE_DIR/spec.md" ] && [ -f "$REPO_ROOT/$HANDOFF_FEATURE_DIR/plan.md" ]; then

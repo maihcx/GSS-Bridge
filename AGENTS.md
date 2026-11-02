@@ -47,11 +47,11 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
    - `requesting-code-review` & `finishing-a-development-branch`.
 
 4. **The GSS-Bug Protocol**:
-   - `speckit.gss-bridge.bug-assess`: Diagnoses bugs with Graphify AST context, computing upstream callers, downstream callees, blast radius, and visual Mermaid diagrams. Outputs canonical assessment to `.specify/bugs/<slug>/assessment.md`.
-   - `speckit.gss-bridge.bug-fix`: Remediates bugs under strict Superpowers TDD discipline (reproduction test RED $\rightarrow$ fix GREEN $\rightarrow$ REFACTOR), test verification, automatic `graphify update .`, and canonical closure in `.specify/bugs/<slug>/fix.md`.
+   - `speckit-gss-bridge-bug-assess`: Diagnoses bugs with Graphify AST context, computing upstream callers, downstream callees, blast radius, and visual Mermaid diagrams. Outputs canonical assessment to `.specify/bugs/<slug>/assessment.md`.
+   - `speckit-gss-bridge-bug-fix`: Remediates bugs under strict Superpowers TDD discipline (reproduction test RED $\rightarrow$ fix GREEN $\rightarrow$ REFACTOR), test verification, automatic `graphify update .`, and canonical closure in `.specify/bugs/<slug>/fix.md`.
 
 5. **Automated Subagent Wave Dispatcher**:
-   - `speckit.gss-bridge.dispatch`: Automatically partitions `[P]` tasks in `tasks.md` into execution waves based on pairwise topological graph distance ($d \ge 3$), generating subagent prompts strictly scoped to 1-2 hop AST neighborhoods.
+   - `speckit-gss-bridge-dispatch`: Automatically partitions `[P]` tasks in `tasks.md` into execution waves based on pairwise topological graph distance ($d \ge 3$), generating subagent prompts strictly scoped to 1-2 hop AST neighborhoods.
 
 ---
 
@@ -59,10 +59,10 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
 
 | Agent | Feature Execution | Bug Assessment | Bug Remediation | Wave Dispatch |
 |---|---|---|---|---|
-| **Claude Code** | `/gss-bridge` or `/speckit.gss-bridge.execute` | `/speckit.gss-bridge.bug-assess` | `/speckit.gss-bridge.bug-fix` | `/speckit.gss-bridge.dispatch` |
-| **OpenAI Codex** | `$gss-bridge` or `$speckit.gss-bridge.execute` | `$speckit.gss-bridge.bug-assess` | `$speckit.gss-bridge.bug-fix` | `$speckit.gss-bridge.dispatch` |
-| **Google Antigravity** | `/gss-bridge` or native skill | `speckit.gss-bridge.bug-assess` | `speckit.gss-bridge.bug-fix` | `speckit.gss-bridge.dispatch` |
-| **Gemini CLI** | `/gss-bridge` | `/speckit.gss-bridge.bug-assess` | `/speckit.gss-bridge.bug-fix` | `/speckit.gss-bridge.dispatch` |
+| **Claude Code** | `/gss-bridge` or `/speckit-gss-bridge-execute` | `/speckit-gss-bridge-bug-assess` | `/speckit-gss-bridge-bug-fix` | `/speckit-gss-bridge-dispatch` |
+| **OpenAI Codex** | `$gss-bridge` or `$speckit-gss-bridge-execute` | `$speckit-gss-bridge-bug-assess` | `$speckit-gss-bridge-bug-fix` | `$speckit-gss-bridge-dispatch` |
+| **Google Antigravity** | `/gss-bridge` or native skill | `speckit-gss-bridge-bug-assess` | `speckit-gss-bridge-bug-fix` | `speckit-gss-bridge-dispatch` |
+| **Gemini CLI** | `/gss-bridge` | `/speckit-gss-bridge-bug-assess` | `/speckit-gss-bridge-bug-fix` | `/speckit-gss-bridge-dispatch` |
 
 ---
 

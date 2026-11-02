@@ -53,7 +53,7 @@ flowchart LR
 | User Story 2 | `test_should_handle_concurrent_write` | Assert race condition detected | Add transaction lock |
 
 ## 4. Subagent Scoping & Wave Dispatch (Graphify Neighborhoods)
-Run `/speckit.gss-bridge.dispatch` to automatically group parallel `[P]` tasks into waves:
+Run `/speckit-gss-bridge-dispatch` to automatically group parallel `[P]` tasks into waves:
 - **Wave 1**: Scope Subagent 1 to `[file1, file2]`; Subagent 2 to `[file3, file4]` (Zero pairwise coupling)
 - **Wave 2**: Scope to dependent tasks after Wave 1 passes verification
 
@@ -61,4 +61,4 @@ Run `/speckit.gss-bridge.dispatch` to automatically group parallel `[P]` tasks i
 - [ ] Unit tests pass with 100% success
 - [ ] Integration tests pass
 - [ ] No regressions in 2-hop blast radius callers
-- [ ] Graphify incremental sync (`graphify --update`) executed
+- [ ] Graphify incremental sync (`graphify update .`) executed

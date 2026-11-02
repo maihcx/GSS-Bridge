@@ -92,7 +92,7 @@ specify extension add gss-bridge \
 2. **Clarify**: Run `/speckit-clarify` to resolve ambiguities.
 3. **Plan**: Run `/speckit-plan` $\rightarrow$ calculates component blast radius and Mermaid call flow via `graphify explain` and embeds TDD test strategies into `plan.md`.
 4. **Tasks**: Run `/speckit-tasks` $\rightarrow$ tags parallel tasks `[P]` after verifying coupling.
-5. **Dispatch Waves**: Run `/speckit.gss-bridge.dispatch` to group `[P]` tasks into non-colliding execution waves with 1-hop file boundaries.
+5. **Dispatch Waves**: Run `/speckit-gss-bridge-dispatch` to group `[P]` tasks into non-colliding execution waves with 1-hop file boundaries.
 6. **Implement**: Run `/gss-bridge` (Claude Code / Antigravity) or `$gss-bridge` (Codex) $\rightarrow$ dispatches Graphify-scoped subagents, enforces TDD Red-Green-Refactor, systematically traces bugs, and verifies build/tests.
 7. **Complete & Sync**: Verification passes $\rightarrow$ code review $\rightarrow$ `graphify update .` runs automatically $\rightarrow$ handoff transitions to `complete`.
 
@@ -108,11 +108,11 @@ flowchart LR
     Sync --> Done[".specify/bugs/<slug>/fix.md"]
 ```
 
-1. **Assess (`/speckit.gss-bridge.bug-assess`)**:
+1. **Assess (`/speckit-gss-bridge-bug-assess`)**:
    - Parses error stack traces against `graphify-out/graph.json`.
    - Traces call paths, computes 1-hop callers and 2-hop blast radius.
    - Generates Mermaid diagram and TDD contract in `.specify/bugs/<slug>/assessment.md`.
-2. **Fix (`/speckit.gss-bridge.bug-fix`)**:
+2. **Fix (`/speckit-gss-bridge-bug-fix`)**:
    - Guard denies bug fix if `assessment.md` is missing.
    - Enforces `systematic-debugging` and `test-driven-development`: writes failing regression test (RED) before touching code.
    - Minimal code fix applied within blast boundary (GREEN).

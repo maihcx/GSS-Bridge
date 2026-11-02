@@ -44,12 +44,12 @@ trap cleanup EXIT
     grep -q "flowchart LR" "$ASSESSMENT_FILE" || fail "Expected Mermaid flowchart in assessment.md"
 
     # Step 2: Guard check - fix should be denied when assessment missing
-    if bash "$GUARD_SCRIPT" --action "speckit.bug.fix" --target-feature-directory ".specify/bugs/non-existent-bug" --actor "antigravity" >/dev/null 2>&1; then
+    if bash "$GUARD_SCRIPT" --action "speckit-gss-bridge-bug-fix" --target-feature-directory ".specify/bugs/non-existent-bug" --actor "antigravity" >/dev/null 2>&1; then
         fail "Expected guard to deny fix for non-existent bug"
     fi
 
     # Guard check - fix should be allowed when assessment exists
-    if ! bash "$GUARD_SCRIPT" --action "speckit.bug.fix" --target-feature-directory ".specify/bugs/login-crash" --actor "antigravity" >/dev/null 2>&1; then
+    if ! bash "$GUARD_SCRIPT" --action "speckit-gss-bridge-bug-fix" --target-feature-directory ".specify/bugs/login-crash" --actor "antigravity" >/dev/null 2>&1; then
         fail "Expected guard to allow fix when assessment exists"
     fi
 

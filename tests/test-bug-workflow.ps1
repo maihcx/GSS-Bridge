@@ -52,14 +52,14 @@ try {
 
     # Step 2: Guard check - fix should be blocked if assessment missing
     $guardDeny = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $guardScript `
-        -Action "speckit.bug.fix" `
+        -Action "speckit-gss-bridge-bug-fix" `
         -TargetFeatureDirectory ".specify/bugs/non-existent-bug" `
         -Actor "antigravity" 2>&1 | Out-String
     if ($LASTEXITCODE -eq 0) { Fail "Expected guard to deny fix for non-existent bug" }
 
     # Guard check - fix should be allowed when assessment exists
     $guardAllow = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $guardScript `
-        -Action "speckit.bug.fix" `
+        -Action "speckit-gss-bridge-bug-fix" `
         -TargetFeatureDirectory ".specify/bugs/login-crash" `
         -Actor "antigravity" 2>&1 | Out-String
     if ($LASTEXITCODE -ne 0) { Fail "Expected guard to allow fix when assessment exists" }
