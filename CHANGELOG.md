@@ -5,6 +5,15 @@ All notable changes to **GSS-Bridge** will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-11-02
+
+### Changed
+- **Command Syntax Standardization**:
+  - Standardized all command suggestions and next-step recommendations across PowerShell and Bash scripts from dot notation (`/speckit.gss-bridge.*`) to slash command dash notation (`/speckit-gss-bridge-bug-fix`, `/speckit-gss-bridge-bug-assess`, `/speckit-gss-bridge-dispatch`, `/speckit-gss-bridge-execute`).
+  - Added full set of dash-separated aliases (`speckit-gss-bridge-*`) in extension manifests (`extension.yml`) for seamless recognition across Spec-Kit, Claude Code, OpenAI Codex, Antigravity, and Gemini CLI.
+  - Enhanced guard rules in `guard-command.ps1` and `guard-command.sh` to recognize both dot and dash formatted actions (`speckit-gss-bridge-bug-fix`, `speckit-bug-fix`, `gss-bridge-bug-fix`).
+  - Updated templates (`bug-assessment-template.md`, `plan-template.md`, `bug-fix-template.md`) and documentation (`AGENTS.md`, `README.md`, `README.vi-VN.md`, `SKILL.md`) to reflect canonical dash syntax and correct `graphify update .` synchronization.
+
 ## [1.1.0] - 2026-10-30
 
 ### Added
