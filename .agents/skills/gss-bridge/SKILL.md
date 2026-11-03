@@ -225,13 +225,13 @@ Generates a standalone, zero-dependency dark-mode HTML cockpit at `.specify/dash
 
 In multi-agent environments spanning disparate execution runtimes (PowerShell on Windows, Git Bash, macOS zsh, Linux bash, and Python subprocesses), mixed or bare line endings (`\n` LF or `\r` CR) cause parse discrepancies, hash mismatches, corrupted script shebangs, and broken test assertions.
 
-### The Universal CRLF Rule
-- **Mandate**: All structural and project files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates, and config files) MUST strictly be written and persisted with **CRLF (`\r\n`)** line endings.
-- **Prohibition**: Never generate or save files with bare LF (`\n`) or bare CR (`\r`).
+### The Universal Line Ending & Portability Rule
+- **Mandate**: All structural and project files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.py`, manifests, templates, and config files) MUST strictly be written and persisted with **CRLF (`\r\n`)** line endings.
+- **POSIX Shell Scripts**: All shell scripts (`*.sh`) MUST strictly use **LF (`\n`)** line endings without carriage returns (`\r`) to ensure execution compatibility on Linux and macOS shells.
 - **Enforcement**:
-  - Repository `.gitattributes` mandates `* text=auto eol=crlf` across all structural assets.
-  - Test suites (`test-release-powershell.ps1` and `test-release-package.sh`) assert CRLF presence across package files.
-  - Agents must normalize buffer contents to CRLF before writing to disk.
+  - Repository `.gitattributes` mandates `* text=auto eol=crlf` and `*.sh text eol=lf`.
+  - Test suites (`test-release-powershell.ps1` and `test-release-package.sh`) assert CRLF on structural assets and zero-CR on shell scripts.
+  - Agents must normalize buffer contents accordingly before writing to disk.
 
 ---
 
@@ -266,7 +266,7 @@ In multi-agent environments spanning disparate execution runtimes (PowerShell on
 | *"I'll create the implementation plan in `docs/plans/`."* | Violates Spec-Kit as the single source of truth for design documentation. | Write TDD matrices directly into `specs/<feature>/plan.md`. |
 | *"I don't need to update the graph after fixing."* | Stale knowledge graphs deceive future queries and lead to architectural drift. | Run `graphify update .` upon completion. |
 | *"It's just line endings, Git or the OS will handle LF/CRLF conversion automatically."* | In multi-agent environments spanning Windows, POSIX, and diverse toolchains (PowerShell, Git Bash, Python), mixed or bare LF/CR line endings corrupt test assertions, AST parsers, script shebangs, and cross-agent handoffs. | Enforce strict CRLF (`\r\n`) across all structural files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates). |
-| *"Bash scripts must always be LF, so CRLF will break them."* | Git Bash and modern execution runtimes handle CRLF bash scripts seamlessly on Windows when properly configured in `.gitattributes`, whereas inconsistent line endings break PowerShell test suites and release validations. | Standardize all repository files to CRLF and maintain test verification on both PowerShell and Bash. |
+| *"Bash scripts can use CRLF on Linux/macOS."* | POSIX bash on Linux and macOS treats `\r` as a command character, causing syntax errors (`set: pipefail\r: invalid option`, `$'': command not found`). | Enforce strict LF (`\n`) for all `*.sh` scripts via `.gitattributes` while keeping all structural files CRLF. |
 
 ---
 

@@ -62,10 +62,10 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
    - `speckit-gss-bridge-dashboard`: Interactive standalone HTML cockpit at `.specify/dashboard/index.html`.
    - `speckit-gss-bridge-worktree`: Manages isolated git worktrees (`.specify/worktrees/`) for parallel subagent waves.
 
-7. **Universal CRLF Line Ending Standard**:
-   - All agents (**Claude Code**, **OpenAI Codex**, **Google Antigravity**, **Gemini CLI**) must strictly author and save all repository files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates, and configs) with **CRLF (`\r\n`)** line endings.
-   - Never generate or persist files with bare LF (`\n`) or bare CR (`\r`).
-   - `.gitattributes` enforces `* text=auto eol=crlf` across all structural assets.
+7. **Line Ending & Portability Discipline**:
+   - All structural files, manifests, templates, docs, data, and PowerShell scripts (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.py`) must strictly use **CRLF (`\r\n`)** line endings.
+   - All POSIX shell scripts (`*.sh`) must strictly use **LF (`\n`)** line endings without carriage returns (`\r`) for cross-platform execution on Linux (`ubuntu-latest`) and macOS (`macos-latest`).
+   - `.gitattributes` enforces `* text=auto eol=crlf` and `*.sh text eol=lf` across all assets.
 
 ---
 

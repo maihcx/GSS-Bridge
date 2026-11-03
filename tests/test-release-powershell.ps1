@@ -87,16 +87,25 @@ try {
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $archive -Actor codex | Out-Null
     if ($LASTEXITCODE -ne 0) { Fail "auto-archive-handoff failed" }
 
-    # 9. Verify CRLF on all structural files in bridge package
-    $structuralExts = @(".ps1", ".sh", ".md", ".yml", ".yaml", ".json", ".jsonl")
+    # 9. Verify CRLF on structural text files in bridge package (.ps1, .md, .yml, .json, etc.)
+    $crlfExts = @(".ps1", ".md", ".yml", ".yaml", ".json", ".jsonl")
     $pkgFiles = Get-ChildItem -Recurse -LiteralPath $bridgeDest -File | Where-Object {
-        $_.Extension -in $structuralExts
+        $_.Extension -in $crlfExts
     }
     foreach ($file in $pkgFiles) {
         $bytes = [System.IO.File]::ReadAllBytes($file.FullName)
         $text = [System.Text.Encoding]::UTF8.GetString($bytes)
         if ($text -notmatch "`r`n") {
             Fail "Structural file appears to lack CRLF line endings: $($file.FullName)"
+        }
+    }
+
+    # 10. Verify LF on POSIX shell scripts (.sh) for Linux/macOS execution
+    $shFiles = Get-ChildItem -Recurse -LiteralPath $bridgeDest -Filter "*.sh" -File
+    foreach ($file in $shFiles) {
+        $bytes = [System.IO.File]::ReadAllBytes($file.FullName)
+        if ($bytes -contains 13) {
+            Fail "Shell script contains CR carriage return () which breaks Linux/macOS: $($file.FullName)"
         }
     }
 } finally {
