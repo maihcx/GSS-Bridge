@@ -1,4 +1,4 @@
-# generate-dashboard.ps1 — Generates standalone interactive HTML visual dashboard for GSS-Bridge.
+# generate-dashboard.ps1 -- Generates standalone interactive HTML visual dashboard for GSS-Bridge.
 param(
     [string]$OutFile = "",
     [switch]$Open,
@@ -272,8 +272,8 @@ tr:hover td {{ background: rgba(255,255,255,0.02); }}
 <div class="container">
   <header>
     <div class="title-group">
-      <h1>🛡️ GSS-Bridge Cockpit</h1>
-      <p>Spec-Kit Governance · Graphify Context · Superpowers TDD Discipline</p>
+      <h1>&#128737;&#65039; GSS-Bridge Cockpit</h1>
+      <p>Spec-Kit Governance &middot; Graphify Context &middot; Superpowers TDD Discipline</p>
     </div>
     <div class="badges">
       <span class="badge badge-actor">Agent: {html.escape(actor)}</span>
@@ -291,12 +291,12 @@ tr:hover td {{ background: rgba(255,255,255,0.02); }}
     <div class="card">
       <div class="card-header">Knowledge Graph Size</div>
       <div class="card-val">{graph_nodes_count} <span style="font-size:16px;font-weight:400;color:var(--text-muted)">nodes</span></div>
-      <div class="card-sub">{graph_edges_count} edges · AST neighborhood indexed</div>
+      <div class="card-sub">{graph_edges_count} edges &middot; AST neighborhood indexed</div>
     </div>
     <div class="card">
       <div class="card-header">Active Bugs / Incidents</div>
       <div class="card-val">{len(bugs)} <span style="font-size:16px;font-weight:400;color:var(--text-muted)">triaged</span></div>
-      <div class="card-sub">{sum(1 for b in bugs if b['status'] == 'FIXED')} resolved · {sum(1 for b in bugs if b['status'] == 'ASSESSED')} active</div>
+      <div class="card-sub">{sum(1 for b in bugs if b['status'] == 'FIXED')} resolved &middot; {sum(1 for b in bugs if b['status'] == 'ASSESSED')} active</div>
     </div>
     <div class="card">
       <div class="card-header">Cross-Agent Decisions</div>
@@ -307,14 +307,14 @@ tr:hover td {{ background: rgba(255,255,255,0.02); }}
 
   <div class="section-grid">
     <div class="card">
-      <h2>📋 Feature Tasks & Execution Waves</h2>
+      <h2>&#128203; Feature Tasks &amp; Execution Waves</h2>
       <div class="task-list">
 """
 
 if tasks:
     for t in tasks:
         d_class = "done" if t["done"] else ""
-        icon = "✅" if t["done"] else "⬜"
+        icon = "&#9989;" if t["done"] else "&#11036;"
         p_badge = '<span class="badge-p">[P]</span>' if t["parallel"] else ""
         html_content += f"""        <div class="task-item {d_class}">
           <span>{icon}</span>
@@ -328,7 +328,7 @@ html_content += f"""      </div>
     </div>
 
     <div class="card">
-      <h2>🌐 Top AST Hubs & God Nodes</h2>
+      <h2>&#127760; Top AST Hubs &amp; God Nodes</h2>
       <table>
         <thead>
           <tr>
@@ -355,7 +355,7 @@ html_content += f"""        </tbody>
 
   <div class="section-grid">
     <div class="card">
-      <h2>🐛 Bug Assessments & Blast Radius</h2>
+      <h2>&#128027; Bug Assessments &amp; Blast Radius</h2>
       <table>
         <thead>
           <tr>
@@ -385,7 +385,7 @@ html_content += f"""        </tbody>
     </div>
 
     <div class="card">
-      <h2>🧠 Cross-Agent Decision Journal</h2>
+      <h2>&#129504; Cross-Agent Decision Journal</h2>
       <div class="decision-feed">
 """
 
@@ -393,7 +393,7 @@ if decisions:
     for d in decisions[:8]:
         html_content += f"""        <div class="decision-card">
           <div class="decision-top">
-            <span><strong>{html.escape(d.get("actor", "unknown"))}</strong> · {html.escape(d.get("topic", "general"))}</span>
+            <span><strong>{html.escape(d.get("actor", "unknown"))}</strong> &middot; {html.escape(d.get("topic", "general"))}</span>
             <span>{html.escape(d.get("timestamp", ""))}</span>
           </div>
           <div class="decision-title">{html.escape(d.get("decision", ""))}</div>
