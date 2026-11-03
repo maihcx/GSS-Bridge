@@ -132,6 +132,13 @@ flowchart LR
 | **Chẩn đoán & Đánh giá Bug** | Quét file mù quáng | Debug ngẫu hứng | Không có | **Có: Định vị call chain bằng Graph (`bug-assess`)** |
 | **Khắc phục Bug theo TDD** | Vá trực tiếp không test | TDD Red-Green | TDD Red-Green | **Có: Buộc TDD theo hợp đồng (`bug-fix`)** |
 | **Khoanh vùng Subagent** | Nạp cả repository | Cả thư mục lớn | Cả thư mục lớn | **1–2 hop AST (Tiết kiệm token 50-100 lần)** |
+| **Cắt gọt ngữ cảnh AST Skeleton** | Không có (file thô) | Không có | Không có | **Rút gọn AST (Tiết kiệm 70–80% token)** |
+| **Phân tích tác động kiểm thử (TIA)** | Chạy cả bộ test | Chạy tất cả | Chạy tất cả | **Chỉ chạy test liên quan trong 1–2 bước đồ thị** |
+| **Kiểm toán độ lệch kiến trúc & Chu trình** | Không có | Không có | Không có | **Thuật toán Tarjan SCC + Ranh giới phân tầng** |
+| **Tự động tạo Repro Test Bug** | Thủ công | Thủ công | Thủ công | **Tự tổng hợp ca kiểm thử lỗi ban đầu (RED)** |
+| **Bộ nhớ quyết định đa Agent** | Rời rạc | Không có | Không có | **Nhật ký chung (`.specify/agent-decisions.jsonl`)** |
+| **Bảng điều khiển trực quan (Dashboard)** | Không có | Không có | Không có | **Dashboard HTML độc lập tại `.specify/dashboard/`** |
+| **Cô lập đợt sóng bằng Git Worktree** | Không có (kẹt lock) | Không có | Không có | **Môi trường worktree độc lập (`.specify/worktrees/`)** |
 | **Cảnh báo xung đột đa Agent** | Không có | Không có | Không có | **Có: Phát hiện xung đột tài nguyên song song** |
 | **Đồng bộ đồ thị tự động** | Không có | Không có | Không có | **Có: Tự động chạy `graphify update .`** |
 | **Hỗ trợ đa nền tảng Agent** | Một phần | Một phần | Claude + Codex | **Claude + Codex + Antigravity + Gemini** |
@@ -152,14 +159,34 @@ GSS-Bridge cung cấp đầy đủ script PowerShell 5.1+ và POSIX Bash tại `
 # 3. Kiểm tra tính độc lập giữa 2 component trước khi đánh dấu [P]
 .\.specify\extensions\gss-bridge\scripts\powershell\graphify-blast-radius.ps1 -CheckCoupling -NodeA "OrderService" -NodeB "PaymentService"
 
-# 4. Phân nhóm các task [P] thành các đợt subagent song song
-.\.specify\extensions\gss-bridge\scripts\powershell\dispatch-subagents.ps1 -Actor claude
+# 4. Phân nhóm các task [P] thành các đợt subagent song song kèm cắt gọt ngữ cảnh AST
+.\.specify\extensions\gss-bridge\scripts\powershell\dispatch-subagents.ps1 -PruneContext -Actor claude
 
-# 5. Chẩn đoán lỗi bằng đồ thị Graphify
-.\.specify\extensions\gss-bridge\scripts\powershell\bug-assess.ps1 -Slug "login-crash" -Symptom "NullReferenceException" -Actor antigravity
+# 5. Trích xuất khung sườn AST để tiết kiệm token
+.\.specify\extensions\gss-bridge\scripts\powershell\ast-skeleton.ps1 -Path "src/auth.py"
 
-# 6. Khắc phục lỗi và hoàn tất quy trình TDD
-.\.specify\extensions\gss-bridge\scripts\powershell\bug-fix.ps1 -Slug "login-crash" -Complete -RegressionTest "tests/repro.ps1" -VerificationEvidence "PASS" -Actor antigravity
+# 6. Lọc các bộ test bị ảnh hưởng theo cấu trúc đồ thị (TIA)
+.\.specify\extensions\gss-bridge\scripts\powershell\test-impact.ps1 -Node "AuthService"
+
+# 7. Kiểm toán độ lệch kiến trúc và phát hiện chu trình phụ thuộc vòng
+.\.specify\extensions\gss-bridge\scripts\powershell\drift-detector.ps1 -FailOnCycles
+
+# 8. Chẩn đoán lỗi bằng Graphify và tự động tạo test tái hiện (RED)
+.\.specify\extensions\gss-bridge\scripts\powershell\bug-assess.ps1 -Slug "login-crash" -Symptom "NullReferenceException" -GenerateRepro -Actor antigravity
+
+# 9. Khắc phục lỗi và hoàn tất quy trình TDD
+.\.specify\extensions\gss-bridge\scripts\powershell\bug-fix.ps1 -Slug "login-crash" -Complete -RegressionTest "tests/repro/test_login-crash__repro.ps1" -VerificationEvidence "PASS" -Actor antigravity
+
+# 10. Ghi và truy vấn nhật ký quyết định kiến trúc đa Agent
+.\.specify\extensions\gss-bridge\scripts\powershell\log-decision.ps1 -Decision "Dùng AST skeleton" -Rationale "Tiết kiệm 70-80% tokens" -Topic "arch"
+.\.specify\extensions\gss-bridge\scripts\powershell\log-decision.ps1 -Query "skeleton"
+
+# 11. Tạo bảng điều khiển HTML tương tác trực quan
+.\.specify\extensions\gss-bridge\scripts\powershell\generate-dashboard.ps1 -Open
+
+# 12. Quản lý git worktree cô lập cho các đợt sóng subagent
+.\.specify\extensions\gss-bridge\scripts\powershell\wave-worktree.ps1 -Action create -Name "wave-1"
+.\.specify\extensions\gss-bridge\scripts\powershell\wave-worktree.ps1 -Action cleanup -Name "wave-1"
 ```
 
 ---
@@ -169,10 +196,10 @@ GSS-Bridge cung cấp đầy đủ script PowerShell 5.1+ và POSIX Bash tại `
 Chạy toàn bộ test suites trên bất kỳ hệ điều hành nào:
 
 ```powershell
-# Windows PowerShell (Toàn bộ 6 test suites)
+# Windows PowerShell (Toàn bộ 13 test suites)
 pwsh -File tests/run-all.ps1
 
-# Linux / macOS Bash (Toàn bộ 5 test suites)
+# Linux / macOS Bash (Toàn bộ 12 test suites)
 bash tests/run-all.sh
 ```
 

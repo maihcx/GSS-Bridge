@@ -4,6 +4,7 @@ param(
     [string]$TasksPath = "",
     [string]$FeatureDirectory = "",
     [string]$Actor = "",
+    [switch]$PruneContext,
     [switch]$Json
 )
 
@@ -179,6 +180,7 @@ foreach ($wave in $waves) {
             description = $t.Description
             target_node = if ($t.SuspectNode) { $t.SuspectNode } else { "(unmapped)" }
             scoped_files = $files
+            prune_context = $PruneContext.IsPresent
         }
     }
     $waveResults += [ordered]@{

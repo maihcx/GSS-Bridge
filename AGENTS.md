@@ -53,16 +53,25 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
 5. **Automated Subagent Wave Dispatcher**:
    - `speckit-gss-bridge-dispatch`: Automatically partitions `[P]` tasks in `tasks.md` into execution waves based on pairwise topological graph distance ($d \ge 3$), generating subagent prompts strictly scoped to 1-2 hop AST neighborhoods.
 
+6. **Advanced Architecture & Concurrency Optimizations**:
+   - `speckit-gss-bridge-prune`: Extracts AST structural skeletons, saving 70–80% of subagent prompt tokens.
+   - `speckit-gss-bridge-test-select`: Graph-guided Test Impact Analysis (TIA) to identify test suites affected within 1–2 hops.
+   - `speckit-gss-bridge-drift`: Audits knowledge graph for architectural drift, layer boundary violations, and circular dependencies.
+   - `speckit-gss-bridge-repro-gen`: Auto-synthesizes minimal failing reproduction test cases (RED) during bug triage.
+   - `speckit-gss-bridge-decision`: Persistent journal of cross-agent architectural trade-offs in `.specify/agent-decisions.jsonl`.
+   - `speckit-gss-bridge-dashboard`: Interactive standalone HTML cockpit at `.specify/dashboard/index.html`.
+   - `speckit-gss-bridge-worktree`: Manages isolated git worktrees (`.specify/worktrees/`) for parallel subagent waves.
+
 ---
 
 ## Agent Invocation Matrix
 
-| Agent | Feature Execution | Bug Assessment | Bug Remediation | Wave Dispatch |
-|---|---|---|---|---|
-| **Claude Code** | `/gss-bridge` or `/speckit-gss-bridge-execute` | `/speckit-gss-bridge-bug-assess` | `/speckit-gss-bridge-bug-fix` | `/speckit-gss-bridge-dispatch` |
-| **OpenAI Codex** | `$gss-bridge` or `$speckit-gss-bridge-execute` | `$speckit-gss-bridge-bug-assess` | `$speckit-gss-bridge-bug-fix` | `$speckit-gss-bridge-dispatch` |
-| **Google Antigravity** | `/gss-bridge` or native skill | `speckit-gss-bridge-bug-assess` | `speckit-gss-bridge-bug-fix` | `speckit-gss-bridge-dispatch` |
-| **Gemini CLI** | `/gss-bridge` | `/speckit-gss-bridge-bug-assess` | `/speckit-gss-bridge-bug-fix` | `/speckit-gss-bridge-dispatch` |
+| Agent | Feature Execution | Bug Assessment | Bug Remediation | Wave Dispatch | Telemetry & Dashboard |
+|---|---|---|---|---|---|
+| **Claude Code** | `/gss-bridge` or `/speckit-gss-bridge-execute` | `/speckit-gss-bridge-bug-assess` | `/speckit-gss-bridge-bug-fix` | `/speckit-gss-bridge-dispatch` | `/speckit-gss-bridge-dashboard` |
+| **OpenAI Codex** | `$gss-bridge` or `$speckit-gss-bridge-execute` | `$speckit-gss-bridge-bug-assess` | `$speckit-gss-bridge-bug-fix` | `$speckit-gss-bridge-dispatch` | `$speckit-gss-bridge-dashboard` |
+| **Google Antigravity** | `/gss-bridge` or native skill | `speckit-gss-bridge-bug-assess` | `speckit-gss-bridge-bug-fix` | `speckit-gss-bridge-dispatch` | `speckit-gss-bridge-dashboard` |
+| **Gemini CLI** | `/gss-bridge` | `/speckit-gss-bridge-bug-assess` | `/speckit-gss-bridge-bug-fix` | `/speckit-gss-bridge-dispatch` | `/speckit-gss-bridge-dashboard` |
 
 ---
 

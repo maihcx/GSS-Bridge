@@ -5,6 +5,41 @@ All notable changes to **GSS-Bridge** will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- **AST Skeleton Context Pruner (`speckit-gss-bridge-prune`)**:
+  - Extracts structural class/function signatures, type annotations, and docstrings while pruning implementation bodies.
+  - Achieves 70–80% token load reduction for subagent prompts; integrated into `dispatch-subagents` via `-PruneContext` / `--prune-context`.
+  - Implemented in `.specify/extensions/gss-bridge/scripts/powershell/ast-skeleton.ps1` and `scripts/bash/ast-skeleton.sh`.
+- **Graph-Guided Test Impact Analysis (`speckit-gss-bridge-test-select`)**:
+  - Traverses `graphify-out/graph.json` up to 2 hops to pinpoint test suites and files topologically coupled to modified components or git changes.
+  - Accelerates Superpowers TDD cycles by running only affected tests during iteration.
+  - Implemented in `scripts/powershell/test-impact.ps1` and `scripts/bash/test-impact.sh`.
+- **Architectural Drift & Cycle Auditor (`speckit-gss-bridge-drift`)**:
+  - Audits knowledge graphs against layer boundary contracts (`.specify/memory/architecture-rules.json`).
+  - Employs Tarjan's Strongly Connected Components (SCC) algorithm to detect circular dependency loops.
+  - Includes `--fail-on-cycles` for strict CI/CD gatekeeping.
+  - Implemented in `scripts/powershell/drift-detector.ps1` and `scripts/bash/drift-detector.sh`.
+- **Auto-Synthesizing Bug Repro Harness (`speckit-gss-bridge-repro-gen`)**:
+  - Automatically synthesizes isolated, minimal failing reproduction tests (RED phase) during bug assessment (`bug-assess -GenerateRepro`).
+  - Generates framework-appropriate tests (`pytest`, `jest`, `pester`, or bash `assert`) into `tests/repro/`.
+  - Implemented in `scripts/powershell/synthesize-repro.ps1` and `scripts/bash/synthesize-repro.sh`.
+- **Cross-Agent Reasoning & Decision Journal (`speckit-gss-bridge-decision`)**:
+  - Maintains persistent chronological log of architectural choices, trade-offs, and hypotheses in `.specify/agent-decisions.jsonl`.
+  - Enables seamless cross-agent memory across Claude Code, OpenAI Codex, Antigravity, and Gemini CLI.
+  - Implemented in `scripts/powershell/log-decision.ps1` and `scripts/bash/log-decision.sh`.
+- **Interactive Visual Cockpit Dashboard (`speckit-gss-bridge-dashboard`)**:
+  - Standalone, zero-dependency HTML dashboard at `.specify/dashboard/index.html`.
+  - Visualizes Spec-Kit tasks, Graphify top God nodes/degrees, triaged bug risk levels, and decision timelines.
+  - Implemented in `scripts/powershell/generate-dashboard.ps1` and `scripts/bash/generate-dashboard.sh`.
+- **Git Worktree Wave Isolation (`speckit-gss-bridge-worktree`)**:
+  - Manages isolated git worktrees under `.specify/worktrees/` for parallel subagent waves.
+  - Prevents file-lock contention and dirty working tree overwrites during concurrent execution.
+  - Implemented in `scripts/powershell/wave-worktree.ps1` and `scripts/bash/wave-worktree.sh`.
+- **Automated Verification Suites**:
+  - Added 7 new test suites in both PowerShell and POSIX Bash covering all new capabilities (total: 13 PowerShell suites, 12 Bash suites).
+
 ## [1.1.1] - 2026-11-02
 
 ### Changed

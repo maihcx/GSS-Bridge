@@ -156,6 +156,13 @@ bash .specify/extensions/gss-bridge/scripts/bash/bridge-status.sh --readiness
 | **Bug Triage & Assessment** | Blind file search | Ad-hoc debugging | None | **Yes: Graph-driven call chain (`bug-assess`)** |
 | **Bug Remediation & TDD** | Direct unverified patch | TDD Red-Green | TDD Red-Green | **Contract-governed TDD (`bug-fix`)** |
 | **Subagent Scoping** | Entire repo dump | Wide directory tree | Wide directory tree | **1–2 hop AST neighborhood (50-100x savings)** |
+| **AST Context Pruning** | None (full files) | None | None | **AST Skeleton Extraction (70–80% token savings)** |
+| **Test Impact Analysis (TIA)** | Entire test suite | Run all tests | Run all tests | **Topologically coupled tests within 1–2 hops** |
+| **Architectural Drift & Cycles** | None | None | None | **Tarjan SCC cycle detection + layer rule auditor** |
+| **Bug Repro Synthesis** | Manual | Manual | Manual | **Auto-synthesizes minimal failing test (RED)** |
+| **Cross-Agent Decision Memory** | Fragmented | None | None | **Shared ledger (`.specify/agent-decisions.jsonl`)** |
+| **Cockpit Dashboard** | None | None | None | **Standalone interactive HTML visual dashboard** |
+| **Worktree Wave Isolation** | None (index locks) | None | None | **Isolated git worktrees (`.specify/worktrees/`)** |
 | **Multi-Agent Collision Guard** | None | None | None | **Yes: Concurrent workspace conflict detection** |
 | **Knowledge Graph Sync** | None | None | None | **Yes: Automatic `graphify update .`** |
 | **Cross-Agent Support** | Partial | Partial | Claude + Codex | **Claude + Codex + Antigravity + Gemini** |
@@ -176,14 +183,34 @@ GSS-Bridge ships dual-platform PowerShell 5.1+ and POSIX Bash scripts under `.sp
 # 3. Check if two tasks/nodes can run in parallel [P]
 .\.specify\extensions\gss-bridge\scripts\powershell\graphify-blast-radius.ps1 -CheckCoupling -NodeA "OrderService" -NodeB "PaymentService"
 
-# 4. Dispatch parallel subagents into independent execution waves
-.\.specify\extensions\gss-bridge\scripts\powershell\dispatch-subagents.ps1 -Actor claude
+# 4. Dispatch parallel subagents into independent execution waves with AST skeleton pruning
+.\.specify\extensions\gss-bridge\scripts\powershell\dispatch-subagents.ps1 -PruneContext -Actor claude
 
-# 5. Triage an incoming bug report with Graphify
-.\.specify\extensions\gss-bridge\scripts\powershell\bug-assess.ps1 -Slug "login-crash" -Symptom "NullReferenceException" -Actor antigravity
+# 5. Extract AST structural skeleton from source code
+.\.specify\extensions\gss-bridge\scripts\powershell\ast-skeleton.ps1 -Path "src/auth.py"
 
-# 6. Execute bug remediation under Superpowers TDD
-.\.specify\extensions\gss-bridge\scripts\powershell\bug-fix.ps1 -Slug "login-crash" -Complete -RegressionTest "tests/repro.ps1" -VerificationEvidence "PASS" -Actor antigravity
+# 6. Select impacted test suites via Graphify topology (TIA)
+.\.specify\extensions\gss-bridge\scripts\powershell\test-impact.ps1 -Node "AuthService"
+
+# 7. Audit knowledge graph for architectural drift and circular dependencies
+.\.specify\extensions\gss-bridge\scripts\powershell\drift-detector.ps1 -FailOnCycles
+
+# 8. Triage bug with Graphify and auto-synthesize repro test harness
+.\.specify\extensions\gss-bridge\scripts\powershell\bug-assess.ps1 -Slug "login-crash" -Symptom "NullReferenceException" -GenerateRepro -Actor antigravity
+
+# 9. Execute bug remediation under Superpowers TDD
+.\.specify\extensions\gss-bridge\scripts\powershell\bug-fix.ps1 -Slug "login-crash" -Complete -RegressionTest "tests/repro/test_login-crash__repro.ps1" -VerificationEvidence "PASS" -Actor antigravity
+
+# 10. Record and query cross-agent architectural decisions
+.\.specify\extensions\gss-bridge\scripts\powershell\log-decision.ps1 -Decision "Adopt AST pruning" -Rationale "Saves 70-80% tokens" -Topic "performance" -Actor antigravity
+.\.specify\extensions\gss-bridge\scripts\powershell\log-decision.ps1 -Query "skeleton"
+
+# 11. Generate standalone interactive HTML dashboard
+.\.specify\extensions\gss-bridge\scripts\powershell\generate-dashboard.ps1 -Open
+
+# 12. Manage isolated git worktrees for parallel waves
+.\.specify\extensions\gss-bridge\scripts\powershell\wave-worktree.ps1 -Action create -Name "wave-1"
+.\.specify\extensions\gss-bridge\scripts\powershell\wave-worktree.ps1 -Action cleanup -Name "wave-1"
 ```
 
 ---
@@ -193,10 +220,10 @@ GSS-Bridge ships dual-platform PowerShell 5.1+ and POSIX Bash scripts under `.sp
 Run the full local test suite on any platform:
 
 ```powershell
-# Windows PowerShell (All 6 test suites)
+# Windows PowerShell (All 13 test suites)
 pwsh -File tests/run-all.ps1
 
-# Linux / macOS Bash (All 5 test suites)
+# Linux / macOS Bash (All 12 test suites)
 bash tests/run-all.sh
 ```
 

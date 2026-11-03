@@ -24,8 +24,26 @@ bash .specify/extensions/gss-bridge/scripts/bash/bug-assess.sh --slug "auth-null
 # Remediate a bug with Superpowers TDD & automatic Graphify sync
 bash .specify/extensions/gss-bridge/scripts/bash/bug-fix.sh --slug "auth-null-token"
 
-# Partition parallel [P] tasks into conflict-free execution waves
-bash .specify/extensions/gss-bridge/scripts/bash/dispatch-subagents.sh --tasks "specs/001-feature/tasks.md"
+# Partition parallel [P] tasks into conflict-free execution waves with AST pruning
+bash .specify/extensions/gss-bridge/scripts/bash/dispatch-subagents.sh --tasks "specs/001-feature/tasks.md" --prune-context
+
+# Extract AST structural skeleton to reduce token load
+bash .specify/extensions/gss-bridge/scripts/bash/ast-skeleton.sh --path "src/core.py"
+
+# Select impacted tests based on Graphify topology
+bash .specify/extensions/gss-bridge/scripts/bash/test-impact.sh --detect-changed
+
+# Audit architectural drift and circular dependency cycles
+bash .specify/extensions/gss-bridge/scripts/bash/drift-detector.sh --fail-on-cycles
+
+# Generate interactive HTML dashboard
+bash .specify/extensions/gss-bridge/scripts/bash/generate-dashboard.sh --open
+
+# Record cross-agent decision
+bash .specify/extensions/gss-bridge/scripts/bash/log-decision.sh --decision "Adopt X" --rationale "Because Y" --topic "arch"
+
+# Manage isolated git worktrees for subagents
+bash .specify/extensions/gss-bridge/scripts/bash/wave-worktree.sh --action list
 
 # Run tests
 pwsh -File tests/run-all.ps1

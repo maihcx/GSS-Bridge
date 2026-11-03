@@ -3,6 +3,8 @@ dist/
 graphify-out/
 .specify/bridge-snapshots/
 .specify/bridge-events.jsonl
+.specify/worktrees/
+.specify/dashboard/
 .specify/gss-handoff.json
 .specify/superpowers-handoff.json
 *.zip

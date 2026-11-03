@@ -12,6 +12,7 @@ STACK_FILE=""
 SUSPECT_NODE=""
 ACTOR_ARG=""
 OUTPUT_JSON=0
+GENERATE_REPRO=0
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -34,6 +35,10 @@ while [ $# -gt 0 ]; do
         --actor)
             ACTOR_ARG="$2"
             shift 2
+            ;;
+        --generate-repro)
+            GENERATE_REPRO=1
+            shift
             ;;
         --json)
             OUTPUT_JSON=1
@@ -157,6 +162,20 @@ BUG_DIR="$SPECIFY_DIR/bugs/$SLUG"
 mkdir -p "$BUG_DIR"
 ASSESSMENT_PATH="$BUG_DIR/assessment.md"
 TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+REPRO_LINE=""
+if [ "$GENERATE_REPRO" -eq 1 ]; then
+    SYNTH_SCRIPT="$SCRIPT_DIR/synthesize-repro.sh"
+    if [ -f "$SYNTH_SCRIPT" ]; then
+        SYNTH_OUT="$(bash "$SYNTH_SCRIPT" --slug "$SLUG" --suspect-node "$TARGET_NODE" --symptom "$SYMPTOM_TEXT" --json 2>/dev/null || true)"
+        if [ -n "$SYNTH_OUT" ] && [ -n "$PYTHON_CMD" ]; then
+            REPRO_FILE="$(echo "$SYNTH_OUT" | $PYTHON_CMD -c 'import sys, json; print(json.load(sys.stdin).get("repro_test_file", ""))' 2>/dev/null || true)"
+            if [ -n "$REPRO_FILE" ]; then
+                REPRO_LINE="- [ ] **Auto-Synthesized Repro**: Run \`$REPRO_FILE\` to verify initial failure (RED)."
+            fi
+        fi
+    fi
+fi
 
 cat <<EOF > "$ASSESSMENT_PATH"
 # Bug Assessment: $SLUG

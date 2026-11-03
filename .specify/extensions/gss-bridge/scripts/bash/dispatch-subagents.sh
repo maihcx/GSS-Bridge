@@ -10,6 +10,7 @@ TASKS_PATH=""
 FEATURE_DIR=""
 ACTOR_ARG=""
 OUTPUT_JSON=0
+PRUNE_CONTEXT=0
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -24,6 +25,10 @@ while [ $# -gt 0 ]; do
         --actor)
             ACTOR_ARG="$2"
             shift 2
+            ;;
+        --prune-context)
+            PRUNE_CONTEXT=1
+            shift
             ;;
         --json)
             OUTPUT_JSON=1
@@ -181,7 +186,8 @@ for i, wave in enumerate(waves):
                 "task_id": t["id"],
                 "description": t["description"],
                 "target_node": t["suspect_node"] or "(unmapped)",
-                "scoped_files": t["target_files"] or [f"Identified by Graphify for {t['suspect_node']}"]
+                "scoped_files": t["target_files"] or [f"Identified by Graphify for {t['suspect_node']}"],
+                "prune_context": bool(int(os.environ.get("PRUNE_CONTEXT", 0)))
             }
             for t in wave
         ]

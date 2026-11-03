@@ -8,6 +8,7 @@ param(
     [string]$StackFile = "",
     [string]$SuspectNode = "",
     [string]$Actor = "",
+    [switch]$GenerateRepro,
     [switch]$Json
 )
 
@@ -126,6 +127,18 @@ $lines.Add('## 3. Mandatory Superpowers TDD Preconditions')
 $lines.Add('- [ ] **TDD Failing Test Required**: You MUST write a minimal reproducing test case in the test suite that FAILS (Red) reproducing the symptom before touching any implementation code.')
 $lines.Add('- [ ] **Boundary Scoping**: Code modifications MUST be restricted to the immediate suspect component and directly coupled callers/callees identified above.')
 $lines.Add('')
+
+if ($GenerateRepro) {
+    $synthScript = Join-Path $ScriptDir "synthesize-repro.ps1"
+    if (Test-Path -LiteralPath $synthScript) {
+        $reproRaw = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $synthScript -Slug $Slug -SuspectNode $targetNode -Symptom $symptomText -Json | Out-String
+        $reproObj = $reproRaw | ConvertFrom-Json
+        if ($reproObj.repro_test_file) {
+            $lines.Add("- [ ] **Auto-Synthesized Repro**: Run $bt$($reproObj.repro_test_file)$bt to verify initial failure (RED).")
+        }
+    }
+}
+
 $lines.Add('## 4. Next Step')
 $lines.Add("Execute fix with Superpowers discipline: $bt/speckit-gss-bridge-bug-fix slug=$Slug$bt")
 

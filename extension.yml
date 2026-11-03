@@ -85,6 +85,56 @@ provides:
         - speckit-gss-bridge-dispatch
         - gss-bridge-dispatch
         - gss-bridge.dispatch
+    - name: speckit.gss-bridge.prune
+      file: commands/speckit.gss-bridge.prune.md
+      description: "Extract AST structural skeletons to prune token load for subagents"
+      aliases:
+        - speckit-gss-bridge-prune
+        - gss-bridge-prune
+        - gss-bridge.prune
+    - name: speckit.gss-bridge.test-select
+      file: commands/speckit.gss-bridge.test-select.md
+      description: "Select impacted test suites topologically linked to modified components via Graphify"
+      aliases:
+        - speckit-gss-bridge-test-select
+        - gss-bridge-test-select
+        - gss-bridge.test-select
+        - speckit-gss-bridge-tia
+    - name: speckit.gss-bridge.drift
+      file: commands/speckit.gss-bridge.drift.md
+      description: "Detect architectural drift, layer boundary violations, and circular dependencies"
+      aliases:
+        - speckit-gss-bridge-drift
+        - gss-bridge-drift
+        - gss-bridge.drift
+    - name: speckit.gss-bridge.repro-gen
+      file: commands/speckit.gss-bridge.repro-gen.md
+      description: "Auto-synthesize minimal failing reproduction test cases (RED) during bug triage"
+      aliases:
+        - speckit-gss-bridge-repro-gen
+        - gss-bridge-repro-gen
+        - gss-bridge.repro-gen
+    - name: speckit.gss-bridge.decision
+      file: commands/speckit.gss-bridge.decision.md
+      description: "Record and query architectural choices, trade-offs, and reasoning in a shared cross-agent journal"
+      aliases:
+        - speckit-gss-bridge-decision
+        - gss-bridge-decision
+        - gss-bridge.decision
+    - name: speckit.gss-bridge.dashboard
+      file: commands/speckit.gss-bridge.dashboard.md
+      description: "Generate a standalone interactive HTML visual dashboard summarizing tasks, graph topology, bugs, and decisions"
+      aliases:
+        - speckit-gss-bridge-dashboard
+        - gss-bridge-dashboard
+        - gss-bridge.dashboard
+    - name: speckit.gss-bridge.worktree
+      file: commands/speckit.gss-bridge.worktree.md
+      description: "Manage isolated git worktrees for concurrent subagent wave execution without git lock conflicts"
+      aliases:
+        - speckit-gss-bridge-worktree
+        - gss-bridge-worktree
+        - gss-bridge.worktree
 
 hooks:
   before_clarify:
