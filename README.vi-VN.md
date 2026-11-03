@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://github.com/maihcx/GSS-Bridge/actions"><img src="https://img.shields.io/badge/CI%2FCD-passing-success" alt="CI Status" /></a>
-  <a href="https://github.com/maihcx/GSS-Bridge/releases/latest"><img src="https://img.shields.io/badge/release-v1.0.1-blue" alt="Release" /></a>
+  <a href="https://github.com/maihcx/GSS-Bridge/releases/latest"><img src="https://img.shields.io/badge/release-v1.2.0-blue" alt="Release" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License" /></a>
   <a href="https://github.com/maihcx/GSS-Bridge"><img src="https://img.shields.io/badge/spec--kit-extension-purple" alt="Spec-Kit Extension" /></a>
   <a href="https://github.com/maihcx/GSS-Bridge"><img src="https://img.shields.io/badge/cross--agent-claude%20%7C%20codex%20%7C%20antigravity%20%7C%20gemini-orange" alt="Agents" /></a>
