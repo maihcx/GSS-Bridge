@@ -5,6 +5,7 @@
 - **Spec-Kit**: Single source of truth for requirements & tasks (`specs/<feature>/`). Never create files in `docs/plans/`.
 - **Graphify**: Single source of truth for codebase topology (`graphify-out/graph.json`). Prefer `graphify query`, `graphify explain`, and `graphify path` over blind grepping.
 - **Superpowers**: Single standard for execution discipline. TDD Red-Green-Refactor, systematic debugging via graph path tracing, verified evidence before marking `- [x] T###`.
+- **Formatting Standard**: All structural files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates, and configs) must strictly use CRLF (`\r\n`) line endings. Never generate or commit files with bare LF (`\n`) or bare CR (`\r`).
 
 ## Essential Commands
 

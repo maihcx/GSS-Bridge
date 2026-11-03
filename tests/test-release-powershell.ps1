@@ -87,13 +87,16 @@ try {
     & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $archive -Actor codex | Out-Null
     if ($LASTEXITCODE -ne 0) { Fail "auto-archive-handoff failed" }
 
-    # 9. Verify CRLF on all PowerShell scripts
-    $psFiles = Get-ChildItem -LiteralPath $BridgeSource -Filter "*.ps1" -File
-    foreach ($file in $psFiles) {
+    # 9. Verify CRLF on all structural files in bridge package
+    $structuralExts = @(".ps1", ".sh", ".md", ".yml", ".yaml", ".json", ".jsonl")
+    $pkgFiles = Get-ChildItem -Recurse -LiteralPath $bridgeDest -File | Where-Object {
+        $_.Extension -in $structuralExts
+    }
+    foreach ($file in $pkgFiles) {
         $bytes = [System.IO.File]::ReadAllBytes($file.FullName)
         $text = [System.Text.Encoding]::UTF8.GetString($bytes)
         if ($text -notmatch "`r`n") {
-            Fail "PowerShell script appears to lack CRLF line endings: $($file.Name)"
+            Fail "Structural file appears to lack CRLF line endings: $($file.FullName)"
         }
     }
 } finally {

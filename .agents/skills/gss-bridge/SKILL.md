@@ -1,6 +1,6 @@
 ---
 name: gss-bridge
-description: Use when orchestrating Spec-Kit specifications, Graphify architectural knowledge graphs, and Superpowers execution discipline in a project, assessing bugs, synthesizing repro harnesses, pruning subagent contexts, checking test impact, auditing architectural drift, logging cross-agent decisions, or managing wave worktrees.
+description: Use when orchestrating Spec-Kit specifications, Graphify architectural knowledge graphs, and Superpowers execution discipline in a project, assessing bugs, synthesizing repro harnesses, pruning subagent contexts, checking test impact, auditing architectural drift, logging cross-agent decisions, managing wave worktrees, or formatting repository structural files with CRLF discipline.
 ---
 
 # GSS-Bridge: Graphify + Spec-Kit + Superpowers
@@ -221,6 +221,20 @@ Generates a standalone, zero-dependency dark-mode HTML cockpit at `.specify/dash
 
 ---
 
+## 5. Structural File Formatting & Line Ending Discipline (CRLF)
+
+In multi-agent environments spanning disparate execution runtimes (PowerShell on Windows, Git Bash, macOS zsh, Linux bash, and Python subprocesses), mixed or bare line endings (`\n` LF or `\r` CR) cause parse discrepancies, hash mismatches, corrupted script shebangs, and broken test assertions.
+
+### The Universal CRLF Rule
+- **Mandate**: All structural and project files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates, and config files) MUST strictly be written and persisted with **CRLF (`\r\n`)** line endings.
+- **Prohibition**: Never generate or save files with bare LF (`\n`) or bare CR (`\r`).
+- **Enforcement**:
+  - Repository `.gitattributes` mandates `* text=auto eol=crlf` across all structural assets.
+  - Test suites (`test-release-powershell.ps1` and `test-release-package.sh`) assert CRLF presence across package files.
+  - Agents must normalize buffer contents to CRLF before writing to disk.
+
+---
+
 ## Quick Reference & Boundary Rules
 
 | Phase / Action | Allowed Operations | Prohibited Red Flags |
@@ -234,6 +248,7 @@ Generates a standalone, zero-dependency dark-mode HTML cockpit at `.specify/dash
 | **Test Execution** | `test-impact.ps1` to selectively run tests affected within 2 hops. | Running entire slow test suites during every micro-refactor. |
 | **Architecture Audit** | `drift-detector.ps1` to verify clean layering and zero cycles. | Merging code that introduces circular module dependencies. |
 | **Cross-Agent Memory** | `log-decision.ps1` to record choices in `.specify/agent-decisions.jsonl`. | Refactoring without checking past agent trade-offs and rationale. |
+| **File Formatting** | Writing and saving all structural files strictly with CRLF (`\r\n`). | Creating or saving files with bare LF (`\n`) or bare CR (`\r`). |
 | **Completion** | Verification evidence, `graphify update .`, dashboard generation. | Marking `- [x] T###` or completing bug fix without test execution evidence. |
 
 ---
@@ -250,6 +265,19 @@ Generates a standalone, zero-dependency dark-mode HTML cockpit at `.specify/dash
 | *"I don't need to record why I chose this library/architecture."* | The next agent (Claude, Codex, or Gemini) will lack context and may undo your work. | Record in `.specify/agent-decisions.jsonl` via `log-decision`. |
 | *"I'll create the implementation plan in `docs/plans/`."* | Violates Spec-Kit as the single source of truth for design documentation. | Write TDD matrices directly into `specs/<feature>/plan.md`. |
 | *"I don't need to update the graph after fixing."* | Stale knowledge graphs deceive future queries and lead to architectural drift. | Run `graphify update .` upon completion. |
+| *"It's just line endings, Git or the OS will handle LF/CRLF conversion automatically."* | In multi-agent environments spanning Windows, POSIX, and diverse toolchains (PowerShell, Git Bash, Python), mixed or bare LF/CR line endings corrupt test assertions, AST parsers, script shebangs, and cross-agent handoffs. | Enforce strict CRLF (`\r\n`) across all structural files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates). |
+| *"Bash scripts must always be LF, so CRLF will break them."* | Git Bash and modern execution runtimes handle CRLF bash scripts seamlessly on Windows when properly configured in `.gitattributes`, whereas inconsistent line endings break PowerShell test suites and release validations. | Standardize all repository files to CRLF and maintain test verification on both PowerShell and Bash. |
+
+---
+
+## Red Flags - STOP and Fix
+
+- Writing, modifying, or saving structural files with bare LF (`\n`) or CR (`\r`).
+- Relying on Git autocrlf or editor auto-formatting without verifying file bytes.
+- Modifying code before writing a failing reproduction test (violating TDD).
+- Creating ad-hoc plan files outside Spec-Kit governance in `docs/plans/`.
+- Marking tasks `[P]` without checking topological graph distance ($d \ge 3$).
+- Marking tasks `- [x]` without executing test verification commands and capturing evidence.
 
 ---
 

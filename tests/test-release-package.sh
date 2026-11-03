@@ -38,8 +38,14 @@ assert_file ".gitattributes"
 cmp -s "$REPO_ROOT/extension.yml" "$BRIDGE_DIR/extension.yml" ||
     fail "root extension.yml is out of sync with bridge extension.yml"
 
-for cmd in execute guard handoff blast-radius bug-assess bug-fix dispatch; do
+for cmd in execute guard handoff blast-radius bug-assess bug-fix dispatch prune test-select drift repro-gen decision dashboard worktree; do
     assert_file ".specify/extensions/gss-bridge/commands/speckit.gss-bridge.$cmd.md"
+done
+
+# Verify CRLF line endings on structural files
+for f in "$BRIDGE_DIR/extension.yml" "$BRIDGE_DIR/verified-versions.json"; do
+    win_path="$(cygpath -w "$f" 2>/dev/null || echo "$f")"
+    python -c "import sys; assert b'\r\n' in open(sys.argv[1], 'rb').read(), 'missing CRLF'" "$win_path" || fail "file lacks CRLF line endings: $f"
 done
 
 bash_count="$(find "$BRIDGE_DIR/scripts/bash" -maxdepth 1 -type f -name '*.sh' | wc -l)"

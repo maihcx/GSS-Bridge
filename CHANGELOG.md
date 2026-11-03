@@ -37,6 +37,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Manages isolated git worktrees under `.specify/worktrees/` for parallel subagent waves.
   - Prevents file-lock contention and dirty working tree overwrites during concurrent execution.
   - Implemented in `scripts/powershell/wave-worktree.ps1` and `scripts/bash/wave-worktree.sh`.
+- **Strict CRLF Line Ending Standardization (`/writing-skills` Discipline)**:
+  - Enforced CRLF (`\r\n`) across all repository files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates, and config files).
+  - Configured `.gitattributes` to guarantee CRLF line endings across all text and structural assets.
+  - Codified the CRLF invariant and rationalization table into `.agents/skills/gss-bridge/SKILL.md` and `.claude/skills/gss-bridge/SKILL.md`.
+  - Added CRLF assertions to test verification suites (`test-release-powershell.ps1` and `test-release-package.sh`).
 - **Automated Verification Suites**:
   - Added 7 new test suites in both PowerShell and POSIX Bash covering all new capabilities (total: 13 PowerShell suites, 12 Bash suites).
 
