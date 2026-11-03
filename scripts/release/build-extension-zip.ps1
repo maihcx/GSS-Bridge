@@ -32,7 +32,7 @@ if (Test-Path -LiteralPath (Join-Path $repoRoot "assets")) {
 }
 
 # Root documentation
-foreach ($name in @("README.md", "README.vi-VN.md", "CHANGELOG.md", "LICENSE", "AGENTS.md", "CLAUDE.md", ".gitignore", ".gitattributes")) {
+foreach ($name in @("README.md", "README.vi-VN.md", "CHANGELOG.md", "LICENSE", "AGENTS.md", "CLAUDE.md", ".gitignore", ".gitattributes", ".graphifyignore")) {
     $src = Join-Path $repoRoot $name
     if (Test-Path -LiteralPath $src) {
         Copy-Item -LiteralPath $src -Destination $stageDir

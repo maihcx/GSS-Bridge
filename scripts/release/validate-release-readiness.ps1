@@ -85,7 +85,7 @@ if (-not (Test-Path -LiteralPath $changelogPath)) {
 }
 
 # 3. Required root files
-$requiredFiles = @("README.md", "README.vi-VN.md", "LICENSE", "AGENTS.md", "CLAUDE.md", ".gitattributes", ".gitignore")
+$requiredFiles = @("README.md", "README.vi-VN.md", "LICENSE", "AGENTS.md", "CLAUDE.md", ".gitattributes", ".gitignore", ".graphifyignore")
 foreach ($f in $requiredFiles) {
     $p = Join-Path $resolvedRepoRoot $f
     if (-not (Test-Path -LiteralPath $p)) {

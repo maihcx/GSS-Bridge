@@ -65,7 +65,7 @@ flowchart TD
 | Dimension | Pillar | Responsibility | Core Mandate |
 |---|---|---|---|
 | **Governance & Contracts** | **Spec-Kit** | Single Source of Truth for Requirements, Plans & Bug Contracts | Features MUST live in `specs/<feature>/` (`spec.md`, `plan.md`, `tasks.md`). Bugs MUST live in `.specify/bugs/<slug>/` (`assessment.md`, `fix.md`). Never create disconnected plans in `docs/plans/`. |
-| **Codebase & Topology** | **Graphify** | Single Source of Truth for Architecture, Call Flows & Coupling | Always query `graphify-out/graph.json` (`query`, `explain`, `path`) before `grep`/`find`. Calculate blast radius with Mermaid diagrams, select impacted tests (TIA), detect architectural drift, and auto-sync (`graphify update .`). |
+| **Codebase & Topology** | **Graphify** | Single Source of Truth for Architecture, Call Flows & Coupling | Always query `graphify-out/graph.json` (`query`, `explain`, `path`) before `grep`/`find`. Calculate blast radius with Mermaid diagrams, select impacted tests (TIA), detect architectural drift, and auto-sync (`graphify update .`). AI governance frameworks (`.specify/`, `.agents/`, `.claude/`, etc.) and Graphify engine outputs (`graphify-out/`, `raw/`, `.graphify*`) must be strictly excluded via `.graphifyignore`. |
 | **Execution Standard** | **Superpowers** | Execution, TDD & Verification Discipline | Enforce Red-Green-Refactor TDD, Graphify-scoped subagent dispatch, worktree wave isolation, AST skeleton pruning, and verification evidence before completing tasks. |
 
 ---

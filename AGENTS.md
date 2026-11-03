@@ -38,6 +38,7 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
    - `graphify explain "<node>"`: Trace callers, callees, and compute blast radius for `plan.md`.
    - `graphify path "<nodeA>" "<nodeB>"`: Verify that tasks tagged `[P]` have no direct coupling or shared mutable state.
    - `graphify update .`: Run incremental sync upon completing implementation.
+   - **Graphify Boundary & Exclusions**: Graphify knowledge graphs must index application codebase architecture only. All AI knowledge directories (`.specify/`, `.agents/`, `.claude/`, `.gemini/`, `.cursor/`, `.windsurf/`, `.kilo/`, `.devin/`, `.codex/`, `.copilot/`, `.ai/`) and Graphify internal processing artifacts (`graphify-out/`, `raw/`, `.graphify*`) MUST be strictly excluded via `.graphifyignore`.
 
 3. **Superpowers Discipline**:
    - `test-driven-development`: Write failing test before writing implementation code.

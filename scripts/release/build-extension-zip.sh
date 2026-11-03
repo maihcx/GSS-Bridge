@@ -31,7 +31,7 @@ if [ -d "$REPO_ROOT/assets" ]; then
     cp -rp "$REPO_ROOT/assets" "$STAGE_DIR/"
 fi
 
-for f in README.md README.vi-VN.md CHANGELOG.md LICENSE AGENTS.md CLAUDE.md .gitignore .gitattributes; do
+for f in README.md README.vi-VN.md CHANGELOG.md LICENSE AGENTS.md CLAUDE.md .gitignore .gitattributes .graphifyignore; do
     if [ -f "$REPO_ROOT/$f" ]; then
         cp -p "$REPO_ROOT/$f" "$STAGE_DIR/"
     fi

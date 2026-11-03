@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-11-03
+
+### Added
+- **Hermetic Graphify Exclusion Boundary (`.graphifyignore`)**:
+  - Implemented automatic generation and enforcement of `.graphifyignore` across all GSS-Bridge handoff and bug remediation lifecycles.
+  - Strictly excludes AI knowledge, agent directives, and governance directories (`.specify/`, `.agents/`, `.claude/`, `.gemini/`, `.cursor/`, `.windsurf/`, `.kilo/`, `.devin/`, `.codex/`, `.copilot/`, `.ai/`).
+  - Strictly excludes Graphify's internal engine intermediate processing states and artifacts (`graphify-out/`, `raw/`, `.graphify*`).
+  - Excludes transpiled web worker scripts (`*.worker.js`, `editorWorker*.js`), minified assets (`*.min.js`, `*.min.css`), and build outputs (`dist/`, `build/`, `bin/`, `obj/`, `target/`), preventing spurious God nodes in architecture graphs.
+  - Dual-layer protection: persists `excludes` into `graphify-out/.graphify_build.json` to enforce exclusions across both `graphify update` and `graphify watch` runs.
+  - Safe automatic graph pruning with `--force` and `GRAPHIFY_FORCE=1` upon handoff completion and bug remediation.
+  - Added template at `.specify/templates/.graphifyignore` and bundled `.graphifyignore` into release packages.
+- **Automated Verification Suites**:
+  - Added `tests/test-graphify-ignore.ps1` and `tests/test-graphify-ignore.sh` verifying automatic scaffolding, pattern completeness, `.graphify_build.json` synchronization, and preservation of custom user ignore rules. Total test suites: 14 PowerShell, 13 Bash.
+
+### Fixed
+- **Dashboard Text Mojibake**:
+  - Converted raw UTF-8 emoji literals in `generate-dashboard.ps1` and `generate-dashboard.sh` to standard HTML entities, resolving Windows-1252 character corruption on Windows PowerShell hosts.
+
 ## [1.2.0] - 2026-11-03
 
 ### Added

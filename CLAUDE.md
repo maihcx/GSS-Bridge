@@ -3,7 +3,7 @@
 ## Core Principles
 
 - **Spec-Kit**: Single source of truth for requirements & tasks (`specs/<feature>/`). Never create files in `docs/plans/`.
-- **Graphify**: Single source of truth for codebase topology (`graphify-out/graph.json`). Prefer `graphify query`, `graphify explain`, and `graphify path` over blind grepping.
+- **Graphify**: Single source of truth for codebase topology (`graphify-out/graph.json`). Prefer `graphify query`, `graphify explain`, and `graphify path` over blind grepping. AI governance directories (`.specify/`, `.agents/`, `.claude/`, etc.) and Graphify outputs (`graphify-out/`, `raw/`, `.graphify*`) must always be excluded via `.graphifyignore`.
 - **Superpowers**: Single standard for execution discipline. TDD Red-Green-Refactor, systematic debugging via graph path tracing, verified evidence before marking `- [x] T###`.
 - **Formatting Standard**: All structural files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.py`, manifests, templates) must strictly use CRLF (`\r\n`) line endings. All POSIX shell scripts (`*.sh`) must use LF (`\n`) for Linux and macOS execution compatibility.
 

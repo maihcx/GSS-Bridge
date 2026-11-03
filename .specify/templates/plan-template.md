@@ -34,6 +34,10 @@ flowchart LR
     TargetNode --> Callee1["Callee1"]:::calleeNode
 ```
 
+### E. Graphify Knowledge Graph Boundary
+> [!IMPORTANT]
+> Graphify must strictly index application codebase architecture only. All AI knowledge directories (`.specify/`, `.agents/`, `.claude/`, `.gemini/`, `.cursor/`, `.windsurf/`), prompt/scratchpad caches, and Graphify engine outputs (`graphify-out/`, `raw/`, `.graphify*`) MUST be excluded via `.graphifyignore`.
+
 ### D. Architectural Boundaries & Invariants
 - Invariant 1: [Critical architectural invariant that must not be broken]
 - Invariant 2: [Interface contract preservation]

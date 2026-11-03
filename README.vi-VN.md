@@ -94,7 +94,7 @@ specify extension add gss-bridge \
 4. **Tasks**: Chạy `/speckit-tasks` $\rightarrow$ kiểm tra coupling trước khi gắn cờ song song `[P]`.
 5. **Dispatch Waves**: Chạy `/speckit-gss-bridge-dispatch` để phân nhóm các task `[P]` thành các đợt (waves) không va chạm tài nguyên.
 6. **Implement**: Chạy `/gss-bridge` (Claude / Antigravity) hoặc `$gss-bridge` (Codex) $\rightarrow$ điều phối subagent theo phạm vi 1-hop của Graphify, áp dụng TDD Red-Green-Refactor, truy vết bug theo đồ thị và xác thực build/test.
-7. **Complete & Sync**: Xác thực đạt $\rightarrow$ review mã nguồn $\rightarrow$ tự động chạy `graphify update .` $\rightarrow$ chuyển trạng thái sang `complete`.
+7. **Complete & Sync**: Xác thực đạt $\rightarrow$ review mã nguồn $\rightarrow$ tự động chạy `graphify update . --force` (với quy tắc loại trừ tệp AI và Graphify qua `.graphifyignore`) $\rightarrow$ chuyển trạng thái sang `complete`.
 
 ### 2. Quy trình Xử lý Lỗi (GSS-Bug Protocol)
 

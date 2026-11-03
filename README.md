@@ -94,7 +94,7 @@ specify extension add gss-bridge \
 4. **Tasks**: Run `/speckit-tasks` $\rightarrow$ tags parallel tasks `[P]` after verifying coupling.
 5. **Dispatch Waves**: Run `/speckit-gss-bridge-dispatch` to group `[P]` tasks into non-colliding execution waves with 1-hop file boundaries.
 6. **Implement**: Run `/gss-bridge` (Claude Code / Antigravity) or `$gss-bridge` (Codex) $\rightarrow$ dispatches Graphify-scoped subagents, enforces TDD Red-Green-Refactor, systematically traces bugs, and verifies build/tests.
-7. **Complete & Sync**: Verification passes $\rightarrow$ code review $\rightarrow$ `graphify update .` runs automatically $\rightarrow$ handoff transitions to `complete`.
+7. **Complete & Sync**: Verification passes $\rightarrow$ code review $\rightarrow$ `graphify update . --force` runs automatically (with AI metadata exclusions via `.graphifyignore`) $\rightarrow$ handoff transitions to `complete`.
 
 ### 2. Bug Lifecycle (GSS-Bug Protocol)
 
