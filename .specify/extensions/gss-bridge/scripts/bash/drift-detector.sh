@@ -6,12 +6,17 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$SCRIPT_DIR/common-actor-resolution.sh"
 . "$SCRIPT_DIR/bridge-state.sh"
 
+GRAPH_ARG=""
 RULES_FILE=""
 FAIL_ON_CYCLES=0
 OUTPUT_JSON=0
 
 while [ $# -gt 0 ]; do
     case "$1" in
+        --graph|--graph-path)
+            GRAPH_ARG="$2"
+            shift 2
+            ;;
         --rules-file)
             RULES_FILE="$2"
             shift 2
@@ -31,7 +36,16 @@ while [ $# -gt 0 ]; do
 done
 
 REPO_ROOT="$(get_bridge_repo_root)"
-GRAPH_PATH="$REPO_ROOT/graphify-out/graph.json"
+
+if [ -n "$GRAPH_ARG" ]; then
+    if [[ "$GRAPH_ARG" = /* ]] || [[ "$GRAPH_ARG" =~ ^[A-Za-z]: ]]; then
+        GRAPH_PATH="$GRAPH_ARG"
+    else
+        GRAPH_PATH="$REPO_ROOT/$GRAPH_ARG"
+    fi
+else
+    GRAPH_PATH="$REPO_ROOT/graphify-out/graph.json"
+fi
 
 if [ ! -f "$GRAPH_PATH" ]; then
     echo "Error: Graphify index missing at '$GRAPH_PATH'. Run /graphify first." >&2

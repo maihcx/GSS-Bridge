@@ -7,20 +7,23 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 SCRIPT="$REPO_ROOT/.specify/extensions/gss-bridge/scripts/bash/drift-detector.sh"
 [ -f "$SCRIPT" ] || { echo "Missing drift-detector.sh" >&2; exit 1; }
 
+FIXTURE_GRAPH="$REPO_ROOT/tests/fixtures/synthetic-graph.json"
+[ -f "$FIXTURE_GRAPH" ] || { echo "Missing synthetic-graph.json fixture" >&2; exit 1; }
+
 TEMP_RULES="$(mktemp --suffix=.json 2>/dev/null || mktemp)"
 cat <<'EOF' > "$TEMP_RULES"
 {
   "layers": [
-    { "name": "domain", "patterns": ["auth.py"] },
-    { "name": "service", "patterns": ["token.py"] }
+    { "name": "service", "patterns": ["src/services/*"] },
+    { "name": "middleware", "patterns": ["src/middleware/*"] }
   ],
   "forbidden_dependencies": [
-    { "from": "domain", "to": "service", "reason": "Domain cannot depend on service" }
+    { "from": "service", "to": "middleware", "reason": "Service cannot depend on middleware" }
   ]
 }
 EOF
 
-OUT="$(bash "$SCRIPT" --rules-file "$TEMP_RULES" --json)"
+OUT="$(bash "$SCRIPT" --graph "$FIXTURE_GRAPH" --rules-file "$TEMP_RULES" --json)"
 rm -f "$TEMP_RULES"
 
 python -c '

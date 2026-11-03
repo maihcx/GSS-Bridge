@@ -8,21 +8,27 @@ if (-not (Test-Path -LiteralPath $script)) {
     exit 1
 }
 
+$fixtureGraph = Join-Path $RepoRoot "tests\fixtures\synthetic-graph.json"
+if (-not (Test-Path -LiteralPath $fixtureGraph)) {
+    Write-Error "Missing synthetic-graph.json fixture"
+    exit 1
+}
+
 $tempRules = [System.IO.Path]::GetTempFileName() + ".json"
 @"
 {
   "layers": [
-    { "name": "domain", "patterns": ["auth.py"] },
-    { "name": "service", "patterns": ["token.py"] }
+    { "name": "service", "patterns": ["src/services/*"] },
+    { "name": "middleware", "patterns": ["src/middleware/*"] }
   ],
   "forbidden_dependencies": [
-    { "from": "domain", "to": "service", "reason": "Domain cannot depend on service" }
+    { "from": "service", "to": "middleware", "reason": "Service cannot depend on middleware" }
   ]
 }
 "@ | Out-File -FilePath $tempRules -Encoding utf8
 
 try {
-    $raw = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script -RulesFile $tempRules -Json | Out-String
+    $raw = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script -Graph $fixtureGraph -RulesFile $tempRules -Json | Out-String
     $obj = $raw | ConvertFrom-Json
     
     if (-not $obj.status) {

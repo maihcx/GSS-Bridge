@@ -1,6 +1,8 @@
 # drift-detector.ps1 — Detect architectural drift, circular dependencies, and layer violations in GSS-Bridge.
 [CmdletBinding()]
 param(
+    [Alias("GraphPath")]
+    [string]$Graph = "",
     [string]$RulesFile = "",
     [switch]$FailOnCycles,
     [switch]$Json
@@ -13,7 +15,11 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'bridge-state.ps1')
 
 $RepoRoot = Get-BridgeRepoRoot
-$GraphPath = Join-Path $RepoRoot "graphify-out\graph.json"
+$GraphPath = if ($Graph) {
+    if ([System.IO.Path]::IsPathRooted($Graph)) { $Graph } else { Join-Path $RepoRoot $Graph }
+} else {
+    Join-Path $RepoRoot "graphify-out\graph.json"
+}
 
 if (-not (Test-Path -LiteralPath $GraphPath)) {
     Write-Error "Graphify index missing at '$GraphPath'. Run /graphify first."
