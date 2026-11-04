@@ -4,7 +4,6 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$SCRIPT_DIR/common-actor-resolution.sh"
-. "$SCRIPT_DIR/common-graphify.sh"
 . "$SCRIPT_DIR/bridge-state.sh"
 
 GRAPH_ARG=""
@@ -49,13 +48,8 @@ else
 fi
 
 if [ ! -f "$GRAPH_PATH" ]; then
-    if [ -z "$GRAPH_ARG" ]; then
-        ensure_graphify_graph "$REPO_ROOT" "$GRAPH_PATH" >/dev/null 2>&1 || true
-    fi
-    if [ ! -f "$GRAPH_PATH" ]; then
-        echo "Error: Graphify index missing at '$GRAPH_PATH'. Auto-initialization attempted but failed. Run /graphify first." >&2
-        exit 2
-    fi
+    echo "Error: Graphify index missing at '$GRAPH_PATH'. Run /graphify first." >&2
+    exit 2
 fi
 
 if [ -n "$RULES_FILE" ]; then

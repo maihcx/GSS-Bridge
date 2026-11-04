@@ -3,9 +3,95 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ensure_graphify_exclusions() {
+    local target_root="$1"
+    [ -z "$target_root" ] || [ ! -d "$target_root" ] && return 0
+    local ignore_path="$target_root/.graphifyignore"
+    local mandatory=(
+        ".specify/"
+        ".agents/"
+        ".claude/"
+        ".gemini/"
+        ".cursor/"
+        ".windsurf/"
+        ".kilo/"
+        ".devin/"
+        ".codex/"
+        ".copilot/"
+        ".ai/"
+        "graphify-out/"
+        "raw/"
+        ".graphify*"
+    )
+    if [ -f "$ignore_path" ]; then
+        local missing=()
+        for p in "${mandatory[@]}"; do
+            if ! grep -qF "$p" "$ignore_path" 2>/dev/null; then
+                missing+=("$p")
+            fi
+        done
+        if [ ${#missing[@]} -gt 0 ]; then
+            printf "
+# GSS-Bridge Meta-Tooling Exclusions
+" >> "$ignore_path"
+            for m in "${missing[@]}"; do
+                printf "%s
+" "$m" >> "$ignore_path"
+            done
+        fi
+    else
+        cat << 'EOF' > "$ignore_path"
+# =====================================================================
+# Graphify Ignore Rules: AI Knowledge & Meta-Tooling Exclusions
+# Generated and maintained by GSS-Bridge Protocol
+# =====================================================================
+
+# 1. Spec-Kit & Agent Governance Frameworks (AI Knowledge & Directives)
+.specify/
+.agents/
+.claude/
+.gemini/
+.cursor/
+.windsurf/
+.kilo/
+.devin/
+.codex/
+.copilot/
+.ai/
+
+# 2. Graphify Internal Engine, Intermediate Processing & Artifacts
+graphify-out/
+raw/
+.graphify*
+
+# 3. Transpiled Bundles, Minified Workers & Build Artifacts
+node_modules/
+dist/
+build/
+bin/
+obj/
+out/
+target/
+.cache/
+*.min.js
+*.min.css
+*.worker.js
+*.worker-*.js
+*.bundle.js
+editorWorker*.js
+EOF
+    fi
+
+    local out_dir="$target_root/graphify-out"
+    if [ -d "$out_dir" ]; then
+        local build_cfg="$out_dir/.graphify_build.json"
+        cat << 'EOF' > "$build_cfg"
+{"excludes": [".specify/", ".agents/", ".claude/", ".gemini/", ".cursor/", ".windsurf/", ".kilo/", ".devin/", ".codex/", ".copilot/", ".ai/", "graphify-out/", "raw/", ".graphify*"], "gitignore": true}
+EOF
+    fi
+}
 
 . "$SCRIPT_DIR/common-actor-resolution.sh"
-. "$SCRIPT_DIR/common-graphify.sh"
 . "$SCRIPT_DIR/bridge-state.sh"
 
 SLUG=""
@@ -128,8 +214,12 @@ $VER_TEXT
 EOF
 
 GRAPH_SYNCED=0
-if ensure_graphify_graph "$REPO_ROOT" "" 1; then
-    GRAPH_SYNCED=1
+if [ -f "$REPO_ROOT/graphify-out/graph.json" ]; then
+    ensure_graphify_exclusions "$REPO_ROOT"
+    if command -v graphify >/dev/null 2>&1; then
+        GRAPHIFY_FORCE=1 graphify update . --force >/dev/null 2>&1 || true
+        GRAPH_SYNCED=1
+    fi
 fi
 
 if [ -f "$UPDATE_SCRIPT" ]; then

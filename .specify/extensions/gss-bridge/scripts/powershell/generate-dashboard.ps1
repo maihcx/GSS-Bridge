@@ -8,10 +8,8 @@ param(
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 . (Join-Path $ScriptDir "common-actor-resolution.ps1")
-. (Join-Path $ScriptDir "common-graphify.ps1")
 
 $repoRoot = Get-BridgeRepoRoot
-Ensure-GraphifyGraph -RepoRoot $repoRoot | Out-Null
 $specifyDir = Join-Path $repoRoot ".specify"
 $dashDir = Join-Path $specifyDir "dashboard"
 if (-not (Test-Path -LiteralPath $dashDir)) {

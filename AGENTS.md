@@ -39,8 +39,6 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
    - `graphify path "<nodeA>" "<nodeB>"`: Verify that tasks tagged `[P]` have no direct coupling or shared mutable state.
    - `graphify update .`: Run incremental sync upon completing implementation.
    - **Graphify Boundary & Exclusions**: Graphify knowledge graphs must index application codebase architecture only. All AI knowledge directories (`.specify/`, `.agents/`, `.claude/`, `.gemini/`, `.cursor/`, `.windsurf/`, `.kilo/`, `.devin/`, `.codex/`, `.copilot/`, `.ai/`) and Graphify internal processing artifacts (`graphify-out/`, `raw/`, `.graphify*`) MUST be strictly excluded via `.graphifyignore`.
-   - **Automatic Knowledge Graph Generation**: Whenever any GSS-Bridge command requiring Graphify context is executed (e.g. bug triage, blast radius, drift check, subagent dispatch, dashboard), if `graphify-out/graph.json` does not yet exist, GSS-Bridge automatically invokes `graphify update . --force` with hermetic exclusions to construct the knowledge graph before proceeding, ensuring architectural context is never bypassed.
-
 
 3. **Superpowers Discipline**:
    - `test-driven-development`: Write failing test before writing implementation code.

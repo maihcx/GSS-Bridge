@@ -12,7 +12,6 @@ $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common-actor-resolution.ps1')
-. (Join-Path $ScriptDir 'common-graphify.ps1')
 . (Join-Path $ScriptDir 'bridge-state.ps1')
 
 $RepoRoot = Get-BridgeRepoRoot
@@ -71,10 +70,6 @@ if ($pTasks.Count -eq 0) {
 
 # Load graphify-out/graph.json
 $GraphPath = Join-Path $RepoRoot "graphify-out\graph.json"
-if (-not (Test-Path -LiteralPath $GraphPath)) {
-    Ensure-GraphifyGraph -RepoRoot $RepoRoot -GraphPath $GraphPath | Out-Null
-}
-
 $Nodes = @{}
 $Neighbors = @{}
 
