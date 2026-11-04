@@ -2,6 +2,8 @@
 [CmdletBinding()]
 param(
     [string]$Node = "",
+    [Alias("GraphPath")]
+    [string]$Graph = "",
     [switch]$CheckCoupling,
     [string]$NodeA = "",
     [string]$NodeB = "",
@@ -14,18 +16,28 @@ $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common-actor-resolution.ps1')
+. (Join-Path $ScriptDir 'common-graphify.ps1')
 
 $RepoRoot = Get-BridgeRepoRoot
-$GraphPath = Join-Path $RepoRoot "graphify-out\graph.json"
+$GraphPath = if ($Graph) {
+    if ([System.IO.Path]::IsPathRooted($Graph)) { $Graph } else { Join-Path $RepoRoot $Graph }
+} else {
+    Join-Path $RepoRoot "graphify-out\graph.json"
+}
 
 if (-not (Test-Path -LiteralPath $GraphPath -PathType Leaf)) {
-    if ($Json) {
-        @{ status = "error"; message = "graphify-out/graph.json not found. Run /graphify first." } | ConvertTo-Json
-    } else {
-        Write-Output "[graphify] ERROR: graphify-out/graph.json not found."
-        Write-Output "Please run '/graphify' on the workspace before calculating blast radius."
+    if (-not $Graph) {
+        Ensure-GraphifyGraph -RepoRoot $RepoRoot -GraphPath $GraphPath | Out-Null
     }
-    exit 2
+    if (-not (Test-Path -LiteralPath $GraphPath -PathType Leaf)) {
+        if ($Json) {
+            @{ status = "error"; message = "graphify-out/graph.json not found. Auto-initialization attempted but failed. Run /graphify first." } | ConvertTo-Json
+        } else {
+            Write-Output "[graphify] ERROR: graphify-out/graph.json not found."
+            Write-Output "Auto-initialization attempted but graphify command not found or failed. Please run '/graphify' on the workspace."
+        }
+        exit 2
+    }
 }
 
 $GraphData = Get-Content -LiteralPath $GraphPath -Raw | ConvertFrom-Json

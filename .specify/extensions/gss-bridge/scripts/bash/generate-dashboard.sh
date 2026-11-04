@@ -4,6 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$SCRIPT_DIR/common-actor-resolution.sh"
+. "$SCRIPT_DIR/common-graphify.sh"
 
 OUT_FILE=""
 OPEN_BROWSER=0
@@ -30,6 +31,8 @@ while [ $# -gt 0 ]; do
 done
 
 REPO_ROOT="$(get_bridge_repo_root)"
+ensure_graphify_graph "$REPO_ROOT" >/dev/null 2>&1 || true
+
 SPECIFY_DIR="$REPO_ROOT/.specify"
 DASH_DIR="$SPECIFY_DIR/dashboard"
 mkdir -p "$DASH_DIR"

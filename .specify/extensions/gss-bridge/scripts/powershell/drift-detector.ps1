@@ -13,6 +13,7 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common-actor-resolution.ps1')
 . (Join-Path $ScriptDir 'bridge-state.ps1')
+. (Join-Path $ScriptDir 'common-graphify.ps1')
 
 $RepoRoot = Get-BridgeRepoRoot
 $GraphPath = if ($Graph) {
@@ -22,8 +23,13 @@ $GraphPath = if ($Graph) {
 }
 
 if (-not (Test-Path -LiteralPath $GraphPath)) {
-    Write-Error "Graphify index missing at '$GraphPath'. Run /graphify first."
-    exit 2
+    if (-not $Graph) {
+        Ensure-GraphifyGraph -RepoRoot $RepoRoot -GraphPath $GraphPath | Out-Null
+    }
+    if (-not (Test-Path -LiteralPath $GraphPath)) {
+        Write-Error "Graphify index missing at '$GraphPath'. Auto-initialization attempted but failed. Run /graphify first."
+        exit 2
+    }
 }
 
 $rulesPath = if ($RulesFile) {

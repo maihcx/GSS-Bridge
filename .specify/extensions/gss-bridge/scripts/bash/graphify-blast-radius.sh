@@ -4,6 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$SCRIPT_DIR/common-actor-resolution.sh"
+. "$SCRIPT_DIR/common-graphify.sh"
 
 REPO_ROOT="$(get_bridge_repo_root)"
 GRAPH_PATH="$REPO_ROOT/graphify-out/graph.json"
@@ -15,6 +16,7 @@ NODE_B=""
 MAX_HOPS=2
 OUTPUT_JSON=0
 MERMAID=0
+GRAPH_ARG=""
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -46,6 +48,11 @@ while [ $# -gt 0 ]; do
             MERMAID=1
             shift
             ;;
+        --graph)
+            GRAPH_ARG="$2"
+            GRAPH_PATH="$2"
+            shift 2
+            ;;
         *)
             shift
             ;;
@@ -53,13 +60,18 @@ while [ $# -gt 0 ]; do
 done
 
 if [ ! -f "$GRAPH_PATH" ]; then
-    if [ "$OUTPUT_JSON" -eq 1 ]; then
-        printf '{"status":"error","message":"graphify-out/graph.json not found. Run /graphify first."}\n'
-    else
-        echo "[graphify] ERROR: graphify-out/graph.json not found."
-        echo "Please run '/graphify' on the workspace before calculating blast radius."
+    if [ -z "$GRAPH_ARG" ]; then
+        ensure_graphify_graph "$REPO_ROOT" "$GRAPH_PATH" >/dev/null 2>&1 || true
     fi
-    exit 2
+    if [ ! -f "$GRAPH_PATH" ]; then
+        if [ "$OUTPUT_JSON" -eq 1 ]; then
+            printf '{"status":"error","message":"graphify-out/graph.json not found. Auto-initialization attempted but failed. Run /graphify first."}\n'
+        else
+            echo "[graphify] ERROR: graphify-out/graph.json not found."
+            echo "Auto-initialization attempted but graphify command not found or failed. Please run '/graphify' on the workspace."
+        fi
+        exit 2
+    fi
 fi
 
 PYTHON_CMD=""

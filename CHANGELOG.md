@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-11-04
+
+### Added
+- **Automatic Knowledge Graph Generation (`Ensure-GraphifyGraph`)**:
+  - Implemented `Ensure-GraphifyGraph` (PowerShell) and `ensure_graphify_graph` (Bash) in shared `common-graphify` module.
+  - When any GSS-Bridge command requiring architectural context is executed (`bug-assess`, `bug-fix`, `blast-radius`, `dispatch-subagents`, `drift-detector`, `test-impact`, `update-handoff`, or `generate-dashboard`), if `graphify-out/graph.json` has not yet been generated, GSS-Bridge automatically invokes `graphify update . --force` to construct the knowledge graph rather than skipping context or failing.
+  - Enforces hermetic AI metadata exclusions (`.specify/`, `.agents/`, `.claude/`, `.gemini/`, etc.) and bundle artifact exclusions (`node_modules/`, `dist/`, `build/`, `*.worker.js`, etc.) prior to graph generation.
+- **Dedicated Automated Auto-Init Test Suites**:
+  - Added `tests/test-graphify-auto-init.ps1` and `tests/test-graphify-auto-init.sh` to CI test matrices.
+  - Total test suites: 15 PowerShell, 14 Bash.
+
+### Fixed
+- **CI Release Gate Line Ending Portability**:
+  - Enforced strict LF line endings (`*.sh text eol=lf`) on all POSIX shell scripts in `.gitattributes`, preventing `$'': command not found` and `invalid option name` errors on Linux and macOS CI release runners.
+- **Dashboard cp1252 Character Encoding Compatibility**:
+  - Replaced all Unicode emojis and symbols in the dashboard generator with standard HTML entities (`&#128737;&#65039;`, `&middot;`, `&#9989;`, `&#11036;`, `&#127760;`, `&#128203;`, `&#128027;`, `&#129504;`), eliminating Windows cp1252 mojibake.
+
 ## [1.2.1] - 2026-11-03
 
 ### Added

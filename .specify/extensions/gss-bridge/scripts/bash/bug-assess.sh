@@ -4,6 +4,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 . "$SCRIPT_DIR/common-actor-resolution.sh"
+. "$SCRIPT_DIR/common-graphify.sh"
 . "$SCRIPT_DIR/bridge-state.sh"
 
 SLUG=""

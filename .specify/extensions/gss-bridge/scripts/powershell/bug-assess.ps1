@@ -16,6 +16,7 @@ $ErrorActionPreference = "Stop"
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common-actor-resolution.ps1')
+. (Join-Path $ScriptDir 'common-graphify.ps1')
 . (Join-Path $ScriptDir 'bridge-state.ps1')
 
 $RepoRoot = Get-BridgeRepoRoot
@@ -44,6 +45,10 @@ if ([string]::IsNullOrWhiteSpace($symptomText)) {
 }
 
 # Search for suspect nodes in Graphify
+if (-not (Test-Path -LiteralPath $GraphPath)) {
+    Ensure-GraphifyGraph -RepoRoot $RepoRoot -GraphPath $GraphPath | Out-Null
+}
+
 $targetNode = $SuspectNode
 $blastReport = $null
 $mermaidBlock = ""
