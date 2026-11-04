@@ -64,7 +64,7 @@ if [ ! -d "$SPECIFY_DIR" ]; then
 fi
 
 ACTOR="$(resolve_bridge_actor "$ACTOR_ARG")"
-GRAPH_PATH="$REPO_ROOT/graphify-out/graph.json"
+GRAPH_PATH="$(ensure_graphify_index "$REPO_ROOT")"
 
 SYMPTOM_TEXT="$SYMPTOM"
 if [ -n "$STACK_FILE" ] && [ -f "$STACK_FILE" ]; then

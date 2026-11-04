@@ -52,11 +52,13 @@ while [ $# -gt 0 ]; do
     esac
 done
 
+GRAPH_PATH="$(ensure_graphify_index "$REPO_ROOT" "$OUTPUT_JSON")"
+
 if [ ! -f "$GRAPH_PATH" ]; then
     if [ "$OUTPUT_JSON" -eq 1 ]; then
-        printf '{"status":"error","message":"graphify-out/graph.json not found. Run /graphify first."}\n'
+        printf '{"status":"error","message":"graphify-out/graph.json not found and auto-initialization failed. Run /graphify first."}\n'
     else
-        echo "[graphify] ERROR: graphify-out/graph.json not found."
+        echo "[graphify] ERROR: graphify-out/graph.json not found and auto-initialization failed."
         echo "Please run '/graphify' on the workspace before calculating blast radius."
     fi
     exit 2

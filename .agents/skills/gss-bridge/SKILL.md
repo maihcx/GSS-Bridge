@@ -65,8 +65,34 @@ flowchart TD
 | Dimension | Pillar | Responsibility | Core Mandate |
 |---|---|---|---|
 | **Governance & Contracts** | **Spec-Kit** | Single Source of Truth for Requirements, Plans & Bug Contracts | Features MUST live in `specs/<feature>/` (`spec.md`, `plan.md`, `tasks.md`). Bugs MUST live in `.specify/bugs/<slug>/` (`assessment.md`, `fix.md`). Never create disconnected plans in `docs/plans/`. |
-| **Codebase & Topology** | **Graphify** | Single Source of Truth for Architecture, Call Flows & Coupling | Always query `graphify-out/graph.json` (`query`, `explain`, `path`) before `grep`/`find`. Calculate blast radius with Mermaid diagrams, select impacted tests (TIA), detect architectural drift, and auto-sync (`graphify update .`). AI governance frameworks (`.specify/`, `.agents/`, `.claude/`, etc.) and Graphify engine outputs (`graphify-out/`, `raw/`, `.graphify*`) must be strictly excluded via `.graphifyignore`. |
+| **Codebase & Topology** | **Graphify** | Single Source of Truth for Architecture, Call Flows & Coupling | Always query `graphify-out/graph.json` (`query`, `explain`, `path`) before `grep`/`find`. **Graph Pre-requisite Mandate**: If `graphify-out/graph.json` does not exist, you MUST run `/graphify .` (or `graphify .`) to initialize and build the knowledge graph first before running any Graphify-dependent command; NEVER skip or bypass Graphify. Calculate blast radius with Mermaid diagrams, select impacted tests (TIA), detect architectural drift, and auto-sync (`graphify update .`). AI governance frameworks (`.specify/`, `.agents/`, `.claude/`, etc.) and Graphify engine outputs (`graphify-out/`, `raw/`, `.graphify*`) must be strictly excluded via `.graphifyignore`. |
 | **Execution Standard** | **Superpowers** | Execution, TDD & Verification Discipline | Enforce Red-Green-Refactor TDD, Graphify-scoped subagent dispatch, worktree wave isolation, AST skeleton pruning, and verification evidence before completing tasks. |
+
+---
+
+### Mandatory Knowledge Graph Pre-requisite & Auto-Initialization
+
+```mermaid
+flowchart TD
+    Check{"Does graphify-out/graph.json exist?"}
+    Check -- "Yes" --> RunCmd["Execute Graphify Command\n(query / explain / path / blast-radius / bug-assess / dispatch)"]
+    Check -- "No" --> InitGraph["Execute /graphify .\n(Initialize & build knowledge graph)"]
+    InitGraph --> VerifyInit{"Did graphify-out/graph.json build successfully?"}
+    VerifyInit -- "Yes" --> RunCmd
+    VerifyInit -- "No" --> StopError["STOP: Report Graphify build error\nDO NOT bypass or fall back to blind grepping"]
+```
+
+**The Iron Law of Graph Initialization:**
+> **Violating the letter of the rules is violating the spirit of the rules.**
+> If any command or workflow requires Graphify — including `graphify query`, `graphify explain`, `graphify path`, `graphify-blast-radius`, `speckit-gss-bridge-bug-assess`, `speckit-gss-bridge-dispatch`, `speckit-gss-bridge-test-select`, `speckit-gss-bridge-drift`, or feature planning in `plan.md` — and `graphify-out/graph.json` has not yet been generated:
+> 
+> **You MUST execute `/graphify .` (or `graphify .`) to initialize the knowledge graph FIRST.**
+> 
+> **STRICT PROHIBITIONS**:
+> - NEVER skip Graphify analysis because `graphify-out/graph.json` is missing.
+> - NEVER fall back to raw file reading, blind grepping, or guessing when the graph is missing.
+> - NEVER emit or accept an ungrounded bug assessment or plan stating "Graphify context not available" without initializing the graph.
+> - NEVER proceed with task wave dispatching without graph distance analysis.
 
 ---
 
@@ -240,6 +266,7 @@ In multi-agent environments spanning disparate execution runtimes (PowerShell on
 | Phase / Action | Allowed Operations | Prohibited Red Flags |
 |---|---|---|
 | **Specification** | `/speckit-specify`, `graphify query` on domain concepts. | Proposing new models without querying existing entities in graph. |
+| **Graph Initialization** | Running `/graphify .` whenever `graphify-out/graph.json` is missing before graph-dependent commands. | Skipping Graphify or falling back to manual grep/reading because graph.json is not yet created. |
 | **Planning** | `graphify-blast-radius` with Mermaid, embedding TDD matrices into `plan.md`. | Creating external plan files in `docs/plans/`. |
 | **Tasks** | Tagging `[P]` after `dispatch-subagents` or coupling check. | Marking `[P]` without verifying $\ge 2$ hop independence. |
 | **Bug Assessment** | `bug-assess.ps1 -GenerateRepro` to synthesize repro harness and extract blast radius. | Blind guessing or grep-only triage without graph topology. |
@@ -257,6 +284,9 @@ In multi-agent environments spanning disparate execution runtimes (PowerShell on
 
 | Excuse | Reality | Mandated Action |
 |---|---|---|
+| *"graphify-out/graph.json does not exist yet, so I will skip Graphify analysis and use grep or read files directly."* | Skipping Graphify violates Pillar 2 of the Trinity Protocol. Without graph topology, you are guessing callers, callees, and coupling blindly. | Stop immediately. Run `/graphify .` to initialize `graphify-out/graph.json`, then execute the Graphify command. |
+| *"Building the graph takes time; I'll diagnose the bug or plan the feature first and build the graph later."* | Diagnosing bugs and planning architectures requires ground-truth topology from the start. Post-hoc graphs cannot fix flawed architectural assumptions. | Execute `/graphify .` first before diagnosing or planning. |
+| *"The bug-assess script noted that graph context was not available, so I will continue with manual triage."* | Bug assessment without Graphify omits blast radius, Mermaid call flows, and caller boundaries. | Initialize the graph via `/graphify .`, re-run `bug-assess`, and produce a complete assessment. |
 | *"I can diagnose this bug by reading the file directly."* | Stack traces only show symptoms. Graphify reveals the full caller chain and transitive blast radius. | Run `/speckit-gss-bridge-bug-assess` first. |
 | *"I'll fix the bug first, then add a test."* | Tests written after code are biased toward passing and miss regression edge cases. | Run with `-GenerateRepro` and verify RED before touching code. |
 | *"I can run all [P] tasks at once in the same working tree."* | Concurrent edits produce git index locks and state collisions. | Use `dispatch-subagents` and `wave-worktree`. |
@@ -266,12 +296,16 @@ In multi-agent environments spanning disparate execution runtimes (PowerShell on
 | *"I'll create the implementation plan in `docs/plans/`."* | Violates Spec-Kit as the single source of truth for design documentation. | Write TDD matrices directly into `specs/<feature>/plan.md`. |
 | *"I don't need to update the graph after fixing."* | Stale knowledge graphs deceive future queries and lead to architectural drift. | Run `graphify update .` upon completion. |
 | *"It's just line endings, Git or the OS will handle LF/CRLF conversion automatically."* | In multi-agent environments spanning Windows, POSIX, and diverse toolchains (PowerShell, Git Bash, Python), mixed or bare LF/CR line endings corrupt test assertions, AST parsers, script shebangs, and cross-agent handoffs. | Enforce strict CRLF (`\r\n`) across all structural files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates). |
-| *"Bash scripts can use CRLF on Linux/macOS."* | POSIX bash on Linux and macOS treats `\r` as a command character, causing syntax errors (`set: pipefail\r: invalid option`, `$'': command not found`). | Enforce strict LF (`\n`) for all `*.sh` scripts via `.gitattributes` while keeping all structural files CRLF. |
+| *"Bash scripts can use CRLF on Linux/macOS."* | POSIX bash on Linux and macOS treats `\r` as a command character, causing syntax errors (`set: pipefail\r: invalid option`, `$'
+': command not found`). | Enforce strict LF (`\n`) for all `*.sh` scripts via `.gitattributes` while keeping all structural files CRLF. |
 
 ---
 
 ## Red Flags - STOP and Fix
 
+- Skipping Graphify analysis because `graphify-out/graph.json` does not exist yet.
+- Falling back to grep/find or manual code inspection when a Graphify-dependent command is requested.
+- Accepting a degraded "(Graphify context not available)" output without running `/graphify .`.
 - Writing, modifying, or saving structural files with bare LF (`\n`) or CR (`\r`).
 - Relying on Git autocrlf or editor auto-formatting without verifying file bytes.
 - Modifying code before writing a failing reproduction test (violating TDD).

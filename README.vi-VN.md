@@ -28,7 +28,7 @@
 | Trụ cột | Hệ thống | Trách nhiệm cốt lõi | Cơ chế vận hành |
 |---|---|---|---|
 | **Quản trị (Governance)** | **Spec-Kit** | Nguồn sự thật duy nhất về yêu cầu, kế hoạch, task và quy trình xử lý lỗi | `specs/<feature>/` (`spec.md`, `plan.md`, `tasks.md`), `.specify/bugs/<slug>/` (`assessment.md`, `fix.md`) |
-| **Ngữ cảnh (Context)** | **Graphify** | Nguồn sự thật về cấu trúc mã nguồn, quan hệ AST, phạm vi ảnh hưởng (Blast Radius) | `graphify-out/graph.json` (`query`, `explain`, `path`, `blast-radius`, `update .`) |
+| **Ngữ cảnh (Context)** | **Graphify** | Nguồn sự thật về cấu trúc mã nguồn, quan hệ AST, phạm vi ảnh hưởng (Blast Radius) | `graphify-out/graph.json` (`query`, `explain`, `path`, `blast-radius`, tự động khởi tạo biểu đồ, `update .`) |
 | **Kỷ luật (Discipline)** | **Superpowers** | Kỷ luật thực thi, điều phối subagent theo đợt, TDD & xác thực | Red-Green-Refactor, `systematic-debugging`, `verification-before-completion`, `dispatch-subagents` |
 
 ---

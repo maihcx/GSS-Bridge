@@ -8,6 +8,8 @@ Diagnose an incoming bug report, stack trace, or issue using **Graphify** codeba
 
 ## Workflow
 
+0. **Mandatory Knowledge Graph Pre-requisite**:
+   Verifies that `graphify-out/graph.json` exists. If not yet created, automatically executes `graphify .` to initialize and build the knowledge graph first. Never skips or triages blindly without graph context.
 1. **Extract Root Cause Candidates**:
    Parses error stack traces, symbols, or exception logs against `graphify-out/graph.json`.
 2. **Compute Blast Radius**:

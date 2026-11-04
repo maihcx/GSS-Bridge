@@ -27,7 +27,7 @@ if (-not (Test-Path -LiteralPath $SpecifyDir)) {
 }
 
 $ResolvedActor = Resolve-BridgeActor $Actor
-$GraphPath = Join-Path $RepoRoot "graphify-out\graph.json"
+$GraphPath = Ensure-GraphifyIndex -RepoRoot $RepoRoot
 
 # Collect symptom text
 $symptomText = $Symptom

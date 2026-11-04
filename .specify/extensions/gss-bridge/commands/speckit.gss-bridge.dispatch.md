@@ -6,6 +6,10 @@ description: "Partition tasks tagged [P] into independent execution waves and ge
 
 Automates the grouping and context-scoping of parallel tasks `[P]` from `tasks.md` using **Graphify** topological distance analysis.
 
+## Knowledge Graph Pre-requisite & Auto-Initialization
+
+If `graphify-out/graph.json` has not yet been generated in the workspace, the wave dispatcher automatically executes `graphify .` to initialize and build the knowledge graph before computing topological graph distance ($d \ge 3$), preventing erroneous parallel collisions.
+
 ## Capabilities
 
 1. **Topological Coupling Detection**:

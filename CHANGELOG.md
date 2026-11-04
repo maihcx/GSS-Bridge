@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-11-04
+
+### Added
+- **Mandatory Graphify Pre-requisite & Auto-Initialization Engine**:
+  - Implemented automated knowledge graph initialization across all Graphify-dependent bridge scripts (`graphify-blast-radius`, `bug-assess`, `dispatch-subagents`, `drift-detector`, `test-impact`).
+  - Added `Ensure-GraphifyIndex` in `common-actor-resolution.ps1` and `ensure_graphify_index` in `common-actor-resolution.sh`. When `graphify-out/graph.json` is missing, commands automatically trigger `graphify .` (or python module fallback) to initialize and build the knowledge graph before proceeding, eliminating blind or degraded ungrounded triage.
+  - Added test suites `tests/test-graphify-auto-init.ps1` and `tests/test-graphify-auto-init.sh` to verify automatic graph construction in fresh/un-indexed workspaces. Total test suites: 15 PowerShell, 14 Bash.
+- **Cross-Agent Iron Rule for Graph Pre-requisites**:
+  - Updated GSS-Bridge specifications, skills (`.agents/skills/gss-bridge/SKILL.md`, `.claude/skills/gss-bridge/SKILL.md`, global `graphify` skill), and multi-agent guides (`AGENTS.md`, `CLAUDE.md`, `commands/*.md`).
+  - Enforced strict prohibitions and rationalization table counters against skipping Graphify analysis or falling back to raw file reading/grep when `graphify-out/graph.json` has not yet been built.
+
+
 ## [1.2.1] - 2026-11-03
 
 ### Added

@@ -18,7 +18,7 @@ $RepoRoot = Get-BridgeRepoRoot
 $GraphPath = if ($Graph) {
     if ([System.IO.Path]::IsPathRooted($Graph)) { $Graph } else { Join-Path $RepoRoot $Graph }
 } else {
-    Join-Path $RepoRoot "graphify-out\graph.json"
+    Ensure-GraphifyIndex -RepoRoot $RepoRoot -Silent:($Json -eq $true)
 }
 
 if (-not (Test-Path -LiteralPath $GraphPath)) {

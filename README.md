@@ -28,7 +28,7 @@
 | Pillar | System | Responsibility | Key Mechanism |
 |---|---|---|---|
 | **Governance** | **Spec-Kit** | Requirements, contracts, tasks & bug triage single source of truth | `specs/<feature>/` (`spec.md`, `plan.md`, `tasks.md`), `.specify/bugs/<slug>/` (`assessment.md`, `fix.md`) |
-| **Context** | **Graphify** | Codebase topology, AST relationships, blast radius & call chains | `graphify-out/graph.json` (`query`, `explain`, `path`, `blast-radius`, `update .`) |
+| **Context** | **Graphify** | Codebase topology, AST relationships, blast radius & call chains | `graphify-out/graph.json` (`query`, `explain`, `path`, `blast-radius`, auto-initialization, `update .`) |
 | **Discipline** | **Superpowers** | Execution quality, subagent wave dispatch, TDD & verification | Red-Green-Refactor, `systematic-debugging`, `verification-before-completion`, `dispatch-subagents` |
 
 ---

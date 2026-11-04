@@ -6,6 +6,10 @@ description: "Detect architectural drift, layer boundary violations, and circula
 
 Audit the codebase knowledge graph against architectural layer boundaries and detect circular dependency cycles. Enforces clean architecture contracts across agents during implementation.
 
+## Knowledge Graph Pre-requisite & Auto-Initialization
+
+If `graphify-out/graph.json` has not yet been generated in the workspace, the auditor automatically executes `graphify .` to initialize and build the knowledge graph before analyzing layer boundaries or dependency cycles.
+
 ## Workflow
 
 1. **Rule Configuration**:

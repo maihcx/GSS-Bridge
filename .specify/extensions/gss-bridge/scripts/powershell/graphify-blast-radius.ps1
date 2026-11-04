@@ -16,13 +16,13 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $ScriptDir 'common-actor-resolution.ps1')
 
 $RepoRoot = Get-BridgeRepoRoot
-$GraphPath = Join-Path $RepoRoot "graphify-out\graph.json"
+$GraphPath = Ensure-GraphifyIndex -RepoRoot $RepoRoot -Silent:($Json -eq $true)
 
 if (-not (Test-Path -LiteralPath $GraphPath -PathType Leaf)) {
     if ($Json) {
-        @{ status = "error"; message = "graphify-out/graph.json not found. Run /graphify first." } | ConvertTo-Json
+        @{ status = "error"; message = "graphify-out/graph.json not found and auto-initialization failed. Run /graphify first." } | ConvertTo-Json
     } else {
-        Write-Output "[graphify] ERROR: graphify-out/graph.json not found."
+        Write-Output "[graphify] ERROR: graphify-out/graph.json not found and auto-initialization failed."
         Write-Output "Please run '/graphify' on the workspace before calculating blast radius."
     }
     exit 2

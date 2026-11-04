@@ -48,3 +48,37 @@ resolve_bridge_actor() {
 
     echo "unknown"
 }
+ensure_graphify_index() {
+    local repo_root="${1:-}"
+    local silent="${2:-0}"
+    if [ -z "$repo_root" ]; then
+        repo_root="$(get_bridge_repo_root)"
+    fi
+    local graph_path="$repo_root/graphify-out/graph.json"
+
+    if [ -f "$graph_path" ]; then
+        echo "$graph_path"
+        return 0
+    fi
+
+    # Graphify index missing: execute initialization command instead of skipping
+    if command -v graphify >/dev/null 2>&1; then
+        if [ "$silent" -ne 1 ]; then
+            echo "[graphify] Notice: graphify-out/graph.json not found. Executing graphify to initialize knowledge graph..." >&2
+        fi
+        (cd "$repo_root" && graphify . >/dev/null 2>&1 || true)
+    elif command -v python3 >/dev/null 2>&1 && python3 -c "import graphify" >/dev/null 2>&1; then
+        if [ "$silent" -ne 1 ]; then
+            echo "[graphify] Notice: graphify-out/graph.json not found. Executing graphify to initialize knowledge graph..." >&2
+        fi
+        (cd "$repo_root" && python3 -m graphify . >/dev/null 2>&1 || true)
+    elif command -v python >/dev/null 2>&1 && python -c "import graphify" >/dev/null 2>&1; then
+        if [ "$silent" -ne 1 ]; then
+            echo "[graphify] Notice: graphify-out/graph.json not found. Executing graphify to initialize knowledge graph..." >&2
+        fi
+        (cd "$repo_root" && python -m graphify . >/dev/null 2>&1 || true)
+    fi
+
+    echo "$graph_path"
+    return 0
+}

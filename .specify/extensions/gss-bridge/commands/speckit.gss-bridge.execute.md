@@ -8,6 +8,7 @@ Execute the active Spec-Kit feature through Superpowers discipline with Graphify
 
 ## Behavior
 
+0. **Graphify Pre-requisite Check**: Verify that `graphify-out/graph.json` exists. If not yet created, execute `graphify .` to initialize the knowledge graph first before proceeding. Never skip or execute tasks without graph topology.
 1. **Handoff Check**: Read `.specify/gss-handoff.json` (or fallback `.specify/superpowers-handoff.json`). If status is `complete`, run auto-archive to reset to `ready`.
 2. **Context Ingestion**: Read `.specify/memory/constitution.md`, `<feature_directory>/spec.md`, `plan.md`, and `tasks.md`.
 3. **Guard Validation**: Run the GSS-Bridge guard before touching implementation code.

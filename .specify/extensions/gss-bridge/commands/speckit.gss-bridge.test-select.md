@@ -6,6 +6,10 @@ description: "Select impacted test suites topologically linked to modified compo
 
 Analyze `graphify-out/graph.json` to identify test suites and test files topologically connected within 1 to 2 hops of target symbols, functions, or modified files. Accelerates Superpowers TDD cycles by running only relevant tests before full suite validation.
 
+## Knowledge Graph Pre-requisite
+
+If `graphify-out/graph.json` is missing, the selector executes `graphify .` to initialize the knowledge graph before calculating test impact.
+
 ## Workflow
 
 1. **Input Identification**:

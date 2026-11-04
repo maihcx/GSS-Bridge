@@ -73,7 +73,7 @@ if [ -z "$PYTHON_CMD" ]; then
     exit 2
 fi
 
-GRAPH_PATH="$REPO_ROOT/graphify-out/graph.json"
+GRAPH_PATH="$(ensure_graphify_index "$REPO_ROOT" "$OUTPUT_JSON")"
 
 export RESOLVED_TASKS GRAPH_PATH OUTPUT_JSON
 

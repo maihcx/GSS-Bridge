@@ -69,7 +69,7 @@ if ($pTasks.Count -eq 0) {
 }
 
 # Load graphify-out/graph.json
-$GraphPath = Join-Path $RepoRoot "graphify-out\graph.json"
+$GraphPath = Ensure-GraphifyIndex -RepoRoot $RepoRoot -Silent:($Json -eq $true)
 $Nodes = @{}
 $Neighbors = @{}
 

@@ -6,6 +6,10 @@ description: "Analyze component blast radius and verify parallel task [P] indepe
 
 Leverage `graphify-out/graph.json` to calculate component blast radius and verify that tasks tagged `[P]` are genuinely decoupled before dispatching parallel subagents.
 
+## Knowledge Graph Auto-Initialization
+
+If `graphify-out/graph.json` has not yet been generated in the workspace, the command automatically initializes and constructs the knowledge graph via `graphify .` before calculating blast radius, rather than skipping or failing.
+
 ## Capabilities
 
 1. **Blast Radius Analysis**:

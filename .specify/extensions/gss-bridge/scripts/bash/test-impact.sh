@@ -47,7 +47,7 @@ if [ -n "$GRAPH_ARG" ]; then
         GRAPH_PATH="$REPO_ROOT/$GRAPH_ARG"
     fi
 else
-    GRAPH_PATH="$REPO_ROOT/graphify-out/graph.json"
+    GRAPH_PATH="$(ensure_graphify_index "$REPO_ROOT" "$OUTPUT_JSON")"
 fi
 
 if [ ! -f "$GRAPH_PATH" ]; then
