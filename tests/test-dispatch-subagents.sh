@@ -42,6 +42,10 @@ EOF
     TEXT_OUT="$(bash "$DISPATCH_SCRIPT" --tasks-path "specs/001-checkout/tasks.md")"
     echo "$TEXT_OUT" | grep -q "Wave 1" || fail "Missing Wave 1 in text output"
     echo "$TEXT_OUT" | grep -q "Wave 2" || fail "Missing Wave 2 in text output"
+
+    JSON_OUT="$(bash "$DISPATCH_SCRIPT" --tasks-path "specs/001-checkout/tasks.md" --json)"
+    echo "$JSON_OUT" | grep -q "subagent_prompt" || fail "Missing subagent_prompt in json output"
+    echo "$JSON_OUT" | grep -q "TDD" || fail "Missing TDD in subagent_prompt"
 )
 
 echo "test-dispatch-subagents-ok"

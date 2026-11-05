@@ -187,7 +187,8 @@ for i, wave in enumerate(waves):
                 "description": t["description"],
                 "target_node": t["suspect_node"] or "(unmapped)",
                 "scoped_files": t["target_files"] or [f"Identified by Graphify for {t['suspect_node']}"],
-                "prune_context": bool(int(os.environ.get("PRUNE_CONTEXT", 0)))
+                "prune_context": bool(int(os.environ.get("PRUNE_CONTEXT", 0))),
+                "subagent_prompt": f"Task: [{t['id']}] {t['description']}\nRole: GSS-Bridge Task Implementer\nScoped Files: {', '.join(t['target_files']) if t['target_files'] else 'Identified by Graphify'}\n\nStrict TDD & Verification Instructions:\n1. RED: Write a failing unit/integration test first before modifying source code. Confirm it fails.\n2. GREEN: Write minimal code within the scoped boundary to pass the test.\n3. REFACTOR: Clean up without breaking existing tests.\n4. EVIDENCE: Run test commands and return actual output as verification evidence.\n\nConstraints: Stay strictly within scoped files. Do not modify unrelated components."
             }
             for t in wave
         ]

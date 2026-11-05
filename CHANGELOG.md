@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-11-05
+
+### Added
+- **Automated Subagent Prompt Synthesis in Wave Dispatcher**:
+  - Enhanced `dispatch-subagents.ps1` and `dispatch-subagents.sh` with automatic generation of pre-scoped `subagent_prompt` payloads in JSON output.
+  - Subagent prompts automatically embed task identification, Graphify 1-2 hop scoped files, strict TDD Red-Green-Refactor discipline, and test evidence reporting requirements.
+  - Eliminates prompt composition cognitive load and friction for LLM runtimes, allowing direct mapping into `invoke_subagent`.
+- **The Iron Law of Automated Subagent Wave Dispatch**:
+  - Codified the Iron Law of Subagent Dispatch across `AGENTS.md` and `.agents/skills/gss-bridge/SKILL.md`.
+  - Added anti-rationalization table entries and red flag indicators strictly prohibiting sequential or inline execution of `[P]` tasks in parent agent sessions.
+- **Automated Subagent-Driven Execution Protocol**:
+  - Updated `commands/speckit.gss-bridge.execute.md` to register `superpowers:subagent-driven-development` with the guard.
+  - Standardized Execution Loop Step 5 into automated pre-flight wave partitioning via `dispatch-subagents.ps1 -Json` followed by simultaneous parallel subagent dispatch per wave.
+
 ## [1.2.2] - 2026-11-04
 
 ### Added

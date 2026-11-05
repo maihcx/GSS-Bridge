@@ -52,8 +52,9 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
    - `speckit-gss-bridge-bug-assess`: Diagnoses bugs with Graphify AST context, computing upstream callers, downstream callees, blast radius, and visual Mermaid diagrams. Outputs canonical assessment to `.specify/bugs/<slug>/assessment.md`.
    - `speckit-gss-bridge-bug-fix`: Remediates bugs under strict Superpowers TDD discipline (reproduction test RED $\rightarrow$ fix GREEN $\rightarrow$ REFACTOR), test verification, automatic `graphify update .`, and canonical closure in `.specify/bugs/<slug>/fix.md`.
 
-5. **Automated Subagent Wave Dispatcher**:
+5. **Automated Subagent Wave Dispatcher & The Iron Law of Subagent Dispatch**:
    - `speckit-gss-bridge-dispatch`: Automatically partitions `[P]` tasks in `tasks.md` into execution waves based on pairwise topological graph distance ($d \ge 3$), generating subagent prompts strictly scoped to 1-2 hop AST neighborhoods.
+   - **Mandatory Automated Dispatch Mandate**: When executing implementation tasks (`/gss-bridge` or `/speckit-gss-bridge-execute`), if `tasks.md` contains `[P]` tasks, the agent MUST run `dispatch-subagents.ps1 -Json` (or `.sh --json`) and MUST dispatch subagents in parallel for each wave (`invoke_subagent` for Antigravity with `Model: 'inherit'`, `TypeName: 'self'`, `Prompt: task.subagent_prompt`). Sequential or inline execution of `[P]` tasks in the parent session is strictly prohibited.
 
 6. **Advanced Architecture & Concurrency Optimizations**:
    - `speckit-gss-bridge-prune`: Extracts AST structural skeletons, saving 70–80% of subagent prompt tokens.

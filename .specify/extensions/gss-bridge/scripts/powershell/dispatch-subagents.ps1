@@ -175,12 +175,27 @@ foreach ($wave in $waves) {
     $taskList = @()
     foreach ($t in $wave) {
         $files = if ($t.TargetFiles.Count -gt 0) { $t.TargetFiles } else { @("Identified by Graphify for $($t.SuspectNode)") }
+        $promptLines = @(
+            "Task: [$($t.Id)] $($t.Description)",
+            "Role: GSS-Bridge Task Implementer",
+            "Scoped Files: $(($files -join ', '))",
+            "",
+            "Strict TDD & Verification Instructions:",
+            "1. RED: Write a failing unit/integration test first before modifying source code. Confirm it fails.",
+            "2. GREEN: Write minimal code within the scoped boundary to pass the test.",
+            "3. REFACTOR: Clean up without breaking existing tests.",
+            "4. EVIDENCE: Run test commands and return actual output as verification evidence.",
+            "",
+            "Constraints: Stay strictly within scoped files. Do not modify unrelated components."
+        )
+        $subagentPrompt = $promptLines -join "`r`n"
         $taskList += [ordered]@{
             task_id = $t.Id
             description = $t.Description
             target_node = if ($t.SuspectNode) { $t.SuspectNode } else { "(unmapped)" }
             scoped_files = $files
             prune_context = $PruneContext.IsPresent
+            subagent_prompt = $subagentPrompt
         }
     }
     $waveResults += [ordered]@{
