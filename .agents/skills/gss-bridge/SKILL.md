@@ -201,7 +201,38 @@ sequenceDiagram
 
 ---
 
-## 3. Parallel Subagent Waves & Worktree Isolation
+## 3. Autonomous Multi-Agent Teamwork (GSS-Teamwork Protocol)
+
+For complex campaigns and large refactoring tasks, GSS-Bridge provides an autonomous multi-agent teamwork architecture (integrating with Google Antigravity `/teamwork` and multi-agent swarms):
+
+```mermaid
+flowchart TD
+    Orchestrator["Lead Orchestrator
+(Plans waves, manages gss-handoff.json)"] --> WaveWorkers["Coder Subagents (Parallel Waves)
+- Isolated Git worktrees (.specify/worktrees/)
+- AST-pruned context skeletons
+- Strict TDD (Red-Green-Refactor)"]
+    WaveWorkers --> Sentinel["Sentinel Adversarial Reviewer Gate
+- Test Impact Analysis (test-impact.ps1)
+- Cycle & Drift Audit (drift-detector.ps1)"]
+    Sentinel -- "Pass" --> Merge["Merge Worktree into Main"]
+    Sentinel -- "Reject" --> WaveWorkers
+```
+
+### Teamwork Roster
+1. **Lead Orchestrator**: Maintains global contract truth from `spec.md`/`plan.md`, tracks lifecycle state, and coordinates waves.
+2. **Coder Subagents**: Independent implementers assigned to non-colliding components ($d \ge 3$), working in isolated worktrees (`wave-worktree.ps1`).
+3. **Sentinel Reviewer**: Independent adversarial gate verifying each wave before merge.
+
+```powershell
+# Generate autonomous teamwork plan with JSON output
+.\.specify\extensions\gss-bridge\scripts\powershell\teamwork-plan.ps1 -Json
+
+# Generate human-readable multi-agent roster and verification commands
+.\.specify\extensions\gss-bridge\scripts\powershell\teamwork-plan.ps1
+```
+
+## 4. Parallel Subagent Waves & Worktree Isolation
 
 When executing multiple tasks tagged with `[P]` in `tasks.md`:
 - Tasks targeting components within 2 hops in `graph.json` are **coupled** and cannot run in parallel.
@@ -230,7 +261,7 @@ When executing multiple tasks tagged with `[P]` in `tasks.md`:
 
 ---
 
-## 4. Advanced Architecture & Telemetry Tools
+## 5. Advanced Architecture & Telemetry Tools
 
 ### A. Graph-Guided Test Impact Analysis (TIA)
 Identifies all test files and suites within 1–2 hops of modified components or git changes:
@@ -258,7 +289,7 @@ Generates a standalone, zero-dependency dark-mode HTML cockpit at `.specify/dash
 
 ---
 
-## 5. Structural File Formatting & Line Ending Discipline (CRLF)
+## 6. Structural File Formatting & Line Ending Discipline (CRLF)
 
 In multi-agent environments spanning disparate execution runtimes (PowerShell on Windows, Git Bash, macOS zsh, Linux bash, and Python subprocesses), mixed or bare line endings (`\n` LF or `\r` CR) cause parse discrepancies, hash mismatches, corrupted script shebangs, and broken test assertions.
 

@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-11-09
+
+### Added
+- **GSS-Teamwork Protocol & Autonomous Multi-Agent Swarm Orchestrator**:
+  - Integrated native support for autonomous agent teams (including Google Antigravity `/teamwork` command and multi-agent systems).
+  - Implemented 3-tier Role Matrix:
+    1. **Lead Orchestrator**: Coordinates wave progression, monitors `.specify/gss-handoff.json`, generates isolated worktrees, and finalizes merge verification.
+    2. **Coder Subagents**: Parallel agents executing `[P]` tasks across isolated Git worktrees (`.specify/worktrees/<name>`) with AST-pruned skeletons under strict TDD (Red-Green-Refactor).
+    3. **Sentinel Adversarial Reviewer**: Independent verification gate running Test Impact Analysis (`test-impact.ps1`) and Architectural Drift / Circular Dependency audits (`drift-detector.ps1 -FailOnCycles`) before worktree merge.
+  - Implemented teamwork planners:
+    - `.specify/extensions/gss-bridge/scripts/powershell/teamwork-plan.ps1`
+    - `.specify/extensions/gss-bridge/scripts/bash/teamwork-plan.sh`
+  - Added command specification `.specify/extensions/gss-bridge/commands/speckit.gss-bridge.teamwork.md` (aliases: `speckit-gss-bridge-teamwork`, `gss-bridge-teamwork`, `gss-teamwork`, `/teamwork`).
+  - Added test suites `tests/test-teamwork.ps1` and `tests/test-teamwork.sh`.
+
 ## [1.2.3] - 2026-11-05
 
 ### Added

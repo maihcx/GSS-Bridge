@@ -56,7 +56,14 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
    - `speckit-gss-bridge-dispatch`: Automatically partitions `[P]` tasks in `tasks.md` into execution waves based on pairwise topological graph distance ($d \ge 3$), generating subagent prompts strictly scoped to 1-2 hop AST neighborhoods.
    - **Mandatory Automated Dispatch Mandate**: When executing implementation tasks (`/gss-bridge` or `/speckit-gss-bridge-execute`), if `tasks.md` contains `[P]` tasks, the agent MUST run `dispatch-subagents.ps1 -Json` (or `.sh --json`) and MUST dispatch subagents in parallel for each wave (`invoke_subagent` for Antigravity with `Model: 'inherit'`, `TypeName: 'self'`, `Prompt: task.subagent_prompt`). Sequential or inline execution of `[P]` tasks in the parent session is strictly prohibited.
 
-6. **Advanced Architecture & Concurrency Optimizations**:
+6. **GSS-Teamwork Protocol (Autonomous Multi-Agent Teams)**:
+   - `speckit-gss-bridge-teamwork`: Unites Antigravity `/teamwork` with the Trinity Protocol, deploying a 3-role matrix:
+     1. **Lead Orchestrator**: Manages state in `.specify/gss-handoff.json` and orchestrates waves.
+     2. **Coder Subagents**: Execute parallel tasks in isolated Git worktrees (`.specify/worktrees/`) with AST-pruned skeletons and strict TDD.
+     3. **Sentinel Reviewer**: Independent adversarial verification gate running `test-impact.ps1` and `drift-detector.ps1` before approving worktree merge.
+   - Script: `teamwork-plan.ps1 -Json` / `teamwork-plan.sh --json` outputs the full team roster and verification commands.
+
+7. **Advanced Architecture & Concurrency Optimizations**:
    - `speckit-gss-bridge-prune`: Extracts AST structural skeletons, saving 70–80% of subagent prompt tokens.
    - `speckit-gss-bridge-test-select`: Graph-guided Test Impact Analysis (TIA) to identify test suites affected within 1–2 hops.
    - `speckit-gss-bridge-drift`: Audits knowledge graph for architectural drift, layer boundary violations, and circular dependencies.
@@ -65,7 +72,7 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
    - `speckit-gss-bridge-dashboard`: Interactive standalone HTML cockpit at `.specify/dashboard/index.html`.
    - `speckit-gss-bridge-worktree`: Manages isolated git worktrees (`.specify/worktrees/`) for parallel subagent waves.
 
-7. **Line Ending & Portability Discipline**:
+8. **Line Ending & Portability Discipline**:
    - All structural files, manifests, templates, docs, data, and PowerShell scripts (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.py`) must strictly use **CRLF (`\r\n`)** line endings.
    - All POSIX shell scripts (`*.sh`) must strictly use **LF (`\n`)** line endings without carriage returns (`\r`) for cross-platform execution on Linux (`ubuntu-latest`) and macOS (`macos-latest`).
    - `.gitattributes` enforces `* text=auto eol=crlf` and `*.sh text eol=lf` across all assets.
@@ -78,7 +85,7 @@ This repository establishes a cross-agent protocol connecting **Spec-Kit**, **Gr
 |---|---|---|---|---|---|
 | **Claude Code** | `/gss-bridge` or `/speckit-gss-bridge-execute` | `/speckit-gss-bridge-bug-assess` | `/speckit-gss-bridge-bug-fix` | `/speckit-gss-bridge-dispatch` | `/speckit-gss-bridge-dashboard` |
 | **OpenAI Codex** | `$gss-bridge` or `$speckit-gss-bridge-execute` | `$speckit-gss-bridge-bug-assess` | `$speckit-gss-bridge-bug-fix` | `$speckit-gss-bridge-dispatch` | `$speckit-gss-bridge-dashboard` |
-| **Google Antigravity** | `/gss-bridge` or native skill | `speckit-gss-bridge-bug-assess` | `speckit-gss-bridge-bug-fix` | `speckit-gss-bridge-dispatch` | `speckit-gss-bridge-dashboard` |
+| **Google Antigravity** | `/gss-bridge` or `/teamwork` | `speckit-gss-bridge-bug-assess` | `speckit-gss-bridge-bug-fix` | `speckit-gss-bridge-dispatch` | `speckit-gss-bridge-dashboard` |
 | **Gemini CLI** | `/gss-bridge` | `/speckit-gss-bridge-bug-assess` | `/speckit-gss-bridge-bug-fix` | `/speckit-gss-bridge-dispatch` | `/speckit-gss-bridge-dashboard` |
 
 ---
