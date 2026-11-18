@@ -207,13 +207,15 @@ sentinel_role = {
 Task: Perform independent verification gate on completed wave worktrees.
 
 Verification Steps:
-1. Run Test Impact Analysis:
+1. Constitution Compliance & Anti-Drift Audit:
+   Verify wave implementation complies with .specify/memory/constitution.md and project regulations in AGENTS.md. Confirm NO files were modified outside assigned scoped files (zero drift).
+2. Run Test Impact Analysis:
    bash .specify/extensions/gss-bridge/scripts/bash/test-impact.sh --node "{all_nodes_str}" --detect-changed
-2. Run Architectural Drift & Circular Dependency check:
+3. Run Architectural Drift & Circular Dependency check:
    bash .specify/extensions/gss-bridge/scripts/bash/drift-detector.sh --fail-on-cycles
-3. Execute targeted test suites and examine test runner output.
-4. If any test fails or architecture cycles are detected, REJECT with actionable feedback.
-5. If all tests pass with evidence, APPROVE the wave for merge."""
+4. Execute targeted test suites and examine test runner output.
+5. If any test fails, architecture cycles are detected, or unrequested code drift occurred, REJECT with actionable feedback.
+6. If all tests pass with evidence and zero drift, APPROVE the wave for merge."""
 }
 
 wave_results = []
@@ -229,6 +231,10 @@ for i, wave in enumerate(waves):
 Role: GSS Coder Subagent
 Assigned Worktree: .specify/worktrees/{wt_name} (branch: gss-worktree/{wt_name})
 Scoped Files: {', '.join(scoped)}
+
+Constitutional & Anti-Drift Rules (MANDATORY):
+1. Read and adhere strictly to .specify/memory/constitution.md and project regulations in AGENTS.md before modifying any file in your worktree.
+2. ANTI-DRIFT MANDATE: Stay strictly within assigned worktree and Scoped Files. Never modify unrelated components, never alter contracts outside the task, and never invent external plans.
 
 Strict TDD & Verification Instructions:
 1. RED: Write a failing unit/integration test first in the assigned worktree. Confirm it fails.

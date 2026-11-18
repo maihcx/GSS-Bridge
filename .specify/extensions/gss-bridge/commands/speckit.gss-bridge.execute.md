@@ -10,10 +10,11 @@ Execute the active Spec-Kit feature through Superpowers discipline with Graphify
 
 0. **Graphify Pre-requisite Check**: Verify that `graphify-out/graph.json` exists. If not yet created, execute `graphify .` to initialize the knowledge graph first before proceeding. Never skip or execute tasks without graph topology.
 1. **Handoff Check**: Read `.specify/gss-handoff.json` (or fallback `.specify/superpowers-handoff.json`). If status is `complete`, run auto-archive to reset to `ready`.
-2. **Context Ingestion**: Read `.specify/memory/constitution.md`, `<feature_directory>/spec.md`, `plan.md`, and `tasks.md`.
+2. **Context Ingestion & Regulatory Re-reading**: Read `.specify/memory/constitution.md`, project regulations (`AGENTS.md`, `CLAUDE.md`, `.specify/memory/architecture-rules.json`), `<feature_directory>/spec.md`, `plan.md`, and `tasks.md`. Enforce Constitution Principle VI: Establish anti-drift alignment before touching code.
 3. **Guard Validation**: Run the GSS-Bridge guard before touching implementation code.
 4. **Adapter Scaffolding**: Derive a disposable execution plan outside `.superpowers/sdd/` at a temporary path. Format headings as `### Task N: T###` preserving exact task descriptions from `tasks.md`.
 5. **Execution Loop & Automated Wave Dispatch**:
+   - **Anti-Drift Pre-Execution Checkpoint**: Before executing each wave or task, the agent and all subagents MUST re-read the Constitution and project regulations to guarantee zero code drift. Modifications must strictly remain within the scoped blast radius declared in `plan.md`.
    - **Pre-flight Wave Partitioning**: Run `dispatch-subagents.ps1 -Json` (or `dispatch-subagents.sh --json`).
    - **Parallel Wave Execution**:
      - For each wave in `waves`, the agent **MUST** dispatch subagents simultaneously in a single turn (`invoke_subagent` for Antigravity with `Model: 'inherit'`, `TypeName: 'self'`, `Prompt: task.subagent_prompt`).

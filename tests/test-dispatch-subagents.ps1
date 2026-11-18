@@ -1,4 +1,4 @@
-# tests/test-dispatch-subagents.ps1 — verify Parallel Subagent Wave Dispatcher.
+﻿# tests/test-dispatch-subagents.ps1 — verify Parallel Subagent Wave Dispatcher.
 $ErrorActionPreference = "Stop"
 
 function Fail {
@@ -68,7 +68,7 @@ try {
         Fail "OrderService and PaymentService are coupled and should NOT be in the same wave ($waveOfOrder)"
     }
 
-    # Verify each task has a ready-to-dispatch subagent_prompt with TDD discipline
+    # Verify each task has a ready-to-dispatch subagent_prompt with TDD and Anti-Drift discipline
     foreach ($w in $plan.waves) {
         foreach ($t in $w.tasks) {
             if (-not $t.subagent_prompt -or $t.subagent_prompt.Length -lt 30) {
@@ -76,6 +76,12 @@ try {
             }
             if ($t.subagent_prompt -notmatch "TDD" -and $t.subagent_prompt -notmatch "failing test") {
                 Fail "Task $($t.task_id) subagent_prompt missing TDD instructions"
+            }
+            if ($t.subagent_prompt -notmatch "constitution\.md") {
+                Fail "Task $($t.task_id) subagent_prompt missing mandatory constitution.md re-reading instruction"
+            }
+            if ($t.subagent_prompt -notmatch "Anti-Drift|anti-drift") {
+                Fail "Task $($t.task_id) subagent_prompt missing Anti-Drift constraints"
             }
         }
     }

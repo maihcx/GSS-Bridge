@@ -1,4 +1,4 @@
-# tests/test-teamwork.ps1 — verify GSS-Teamwork multi-agent planning.
+﻿# tests/test-teamwork.ps1 — verify GSS-Teamwork multi-agent planning.
 $ErrorActionPreference = "Stop"
 
 function Fail {
@@ -66,12 +66,18 @@ try {
     if (-not $hasTIA) { Fail "Sentinel missing test-impact verification command" }
     if (-not $hasDrift) { Fail "Sentinel missing drift-detector verification command" }
 
-    # Verify coders have worktree metadata and subagent_prompt
+    # Verify sentinel prompt has drift and constitution checks
+    if ($plan.roster.sentinel.subagent_prompt -notmatch "drift|Anti-Drift") { Fail "Sentinel subagent_prompt missing drift audit instruction" }
+    if ($plan.roster.sentinel.subagent_prompt -notmatch "constitution\.md") { Fail "Sentinel subagent_prompt missing constitution.md compliance verification" }
+
+    # Verify coders have worktree metadata and subagent_prompt with Anti-Drift discipline
     foreach ($w in $plan.roster.waves) {
         foreach ($c in $w.coders) {
             if (-not $c.worktree_name) { Fail "Coder $($c.task_id) missing worktree_name" }
             if (-not $c.subagent_prompt) { Fail "Coder $($c.task_id) missing subagent_prompt" }
             if ($c.subagent_prompt -notmatch "TDD") { Fail "Coder $($c.task_id) missing TDD in subagent_prompt" }
+            if ($c.subagent_prompt -notmatch "constitution\.md") { Fail "Coder $($c.task_id) subagent_prompt missing mandatory constitution.md re-reading instruction" }
+            if ($c.subagent_prompt -notmatch "Anti-Drift|anti-drift") { Fail "Coder $($c.task_id) subagent_prompt missing Anti-Drift constraints" }
         }
     }
 

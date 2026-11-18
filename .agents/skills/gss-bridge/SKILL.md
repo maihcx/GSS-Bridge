@@ -1,6 +1,6 @@
 ---
 name: gss-bridge
-description: Use when orchestrating Spec-Kit specifications, Graphify architectural knowledge graphs, and Superpowers execution discipline in a project, assessing bugs, synthesizing repro harnesses, pruning subagent contexts, checking test impact, auditing architectural drift, logging cross-agent decisions, managing wave worktrees, or formatting repository structural files with CRLF discipline.
+description: Use when orchestrating Spec-Kit specifications, Graphify architectural knowledge graphs, and Superpowers execution discipline in a project, enforcing constitution compliance and zero code drift before editing code, assessing bugs, synthesizing repro harnesses, pruning subagent contexts, checking test impact, auditing architectural drift, logging cross-agent decisions, managing wave worktrees, or formatting repository structural files with CRLF discipline.
 ---
 
 # GSS-Bridge: Graphify + Spec-Kit + Superpowers
@@ -96,6 +96,33 @@ flowchart TD
 
 ---
 
+### Mandatory Constitution & Regulatory Re-reading (Anti-Drift Mandate)
+
+```mermaid
+flowchart TD
+    TaskStart["Task Execution / Bug Remediation Triggered"] --> ReadConst["Read/Re-read .specify/memory/constitution.md\n& Project Regulations (AGENTS.md, CLAUDE.md)"]
+    ReadConst --> CheckScope{"Is code modification within\nauthorized blast radius in plan.md / assessment.md?"}
+    CheckScope -- "Yes" --> CheckTDD{"Is failing test written first (RED)?"}
+    CheckScope -- "No (Out of Scope / Drift)" --> DenyDrift["STOP: Scope Violation!\nDo not modify unrequested files or perform drive-by refactoring"]
+    CheckTDD -- "Yes" --> ExecGreen["Apply minimal GREEN fix strictly within boundary"]
+    CheckTDD -- "No" --> DenyNoTest["STOP: TDD Violation!\nWrite failing reproduction test first"]
+```
+
+**The Iron Law of Anti-Drift & Regulatory Re-reading:**
+> **Violating the letter of the rules is violating the spirit of the rules.**
+> Before modifying ANY code during feature execution (`/speckit-gss-bridge-execute`), bug remediation (`/speckit-gss-bridge-bug-fix`), or subagent wave tasks:
+>
+> **The agent and all dispatched subagents MUST re-read `.specify/memory/constitution.md` and project regulations (`AGENTS.md`, `CLAUDE.md`, `.specify/memory/architecture-rules.json`).**
+>
+> **STRICT PROHIBITIONS ("Zero Code Drift")**:
+> - NEVER modify code outside the scoped blast radius declared in `plan.md` or `assessment.md`.
+> - NEVER perform "drive-by" refactoring, cosmetic rewrites, or style modifications on unrequested files.
+> - NEVER modify code without first re-reading the Constitution to confirm architectural invariants.
+> - NEVER dispatch subagents without injecting mandatory constitution re-reading and anti-drift rules in their prompt.
+> - NEVER alter public APIs or data contracts outside the active task's explicit requirements.
+
+---
+
 ## 1. Feature Lifecycle (Spec-Kit + Graphify + Superpowers)
 
 ```mermaid
@@ -128,11 +155,12 @@ flowchart LR
    .\.specify\extensions\gss-bridge\scripts\powershell\dispatch-subagents.ps1 -PruneContext -Actor <actor>
    ```
    Scope each subagent strictly to the 1-hop/2-hop files identified by Graphify.
-5. **Execution Discipline (TDD & TIA)**:
+5. **Execution Discipline (TDD, TIA & Anti-Drift)**:
+   - **Anti-Drift Pre-Execution Gate**: Re-read `.specify/memory/constitution.md` and project regulations (`AGENTS.md`, `CLAUDE.md`). Confirm all planned edits stay strictly within the authorized blast radius in `plan.md`. Drive-by refactoring is strictly forbidden.
    - Identify targeted test suites via Test Impact Analysis (`test-impact.ps1`).
    - **RED**: Write failing test first.
-   - **GREEN**: Write minimal code to pass.
-   - **REFACTOR**: Improve design while preserving invariants.
+   - **GREEN**: Write minimal code within scoped boundary to pass.
+   - **REFACTOR**: Improve design while preserving invariants and zero scope creep.
 6. **Completion & Auto Graphify Sync**:
    Verify test runner evidence before marking `- [x] T###`. Upon completing implementation, `update-handoff` automatically synchronizes the graph (`graphify update .`).
 
@@ -180,10 +208,10 @@ sequenceDiagram
   ```
 
 ### B. Bug Fix (`speckit-gss-bridge-bug-fix`)
-- **Precondition Check**: Guard denies `speckit.bug.fix` if `assessment.md` does not exist.
-- **TDD Red-Green-Refactor**:
+- **Precondition & Context Ingestion Check**: Guard denies `speckit.bug.fix` if `assessment.md` does not exist. Re-read `.specify/memory/constitution.md`, project regulations (`AGENTS.md`, `CLAUDE.md`), and `assessment.md` before modifying code.
+- **TDD Red-Green-Refactor (Zero Drift)**:
   1. Run the auto-synthesized test case reproducing the failure. Confirm it fails (RED).
-  2. Apply the minimal bug fix within the blast radius boundary (GREEN).
+  2. Apply the minimal bug fix strictly within the blast radius boundary (GREEN). Never touch outside files.
   3. Confirm reproduction test and test suite pass (REFACTOR).
 - **Completion & Sync**:
   1. Run verification commands and record actual output.
@@ -342,11 +370,20 @@ In multi-agent environments spanning disparate execution runtimes (PowerShell on
 | *"It's just line endings, Git or the OS will handle LF/CRLF conversion automatically."* | In multi-agent environments spanning Windows, POSIX, and diverse toolchains (PowerShell, Git Bash, Python), mixed or bare LF/CR line endings corrupt test assertions, AST parsers, script shebangs, and cross-agent handoffs. | Enforce strict CRLF (`\r\n`) across all structural files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates). |
 | *"Bash scripts can use CRLF on Linux/macOS."* | POSIX bash on Linux and macOS treats `\r` as a command character, causing syntax errors (`set: pipefail\r: invalid option`, `$'
 ': command not found`). | Enforce strict LF (`\n`) for all `*.sh` scripts via `.gitattributes` while keeping all structural files CRLF. |
+| *"I already read the constitution at session start; I can skip re-reading it before editing code."* | Context attenuation in long conversations causes agents to forget constraints and drift into ad-hoc refactoring. | Re-read `.specify/memory/constitution.md` and project regulations before starting each task or wave. |
+| *"I noticed an adjacent file has messy code or deprecated syntax; I'll quickly refactor it while implementing this task."* | Drive-by refactoring causes unexpected regressions, breaks merge isolation in git worktrees, and violates blast radius boundaries. | Stop immediately. Confine all edits strictly to scoped files in `plan.md`. Never perform unrequested refactoring. |
+| *"This bug fix is just 2 lines; reading the constitution and running assessment is unnecessary overhead."* | Unverified quick-patches create architectural drift and break callers. | Re-read constitution, inspect `assessment.md`, write a failing repro test (RED), and stay within the blast radius. |
+| *"Subagents are isolated anyway, they don't need the constitution or regulations."* | Subagents start with blank-slate contexts. Without the constitution, they will hallucinate dependencies, skip TDD, or rewrite unintended files. | Inject mandatory constitution re-reading and anti-drift rules into every `subagent_prompt`. |
 
 ---
 
 ## Red Flags - STOP and Fix
 
+- Modifying files outside the scoped files or blast radius declared in `plan.md` or `assessment.md` (code drift).
+- Modifying code before re-reading `.specify/memory/constitution.md` and project regulations (`AGENTS.md`).
+- Performing drive-by refactoring, cosmetic rewrites, or unrequested structural edits on untouched files.
+- Dispatching subagents with prompts lacking constitution and anti-drift instructions.
+- Sentinel approving a wave merge without verifying zero modifications outside scoped files.
 - Skipping Graphify analysis because `graphify-out/graph.json` does not exist yet.
 - Falling back to grep/find or manual code inspection when a Graphify-dependent command is requested.
 - Accepting a degraded "(Graphify context not available)" output without running `/graphify .`.

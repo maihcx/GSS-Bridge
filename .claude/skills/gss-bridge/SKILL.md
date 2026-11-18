@@ -1,6 +1,6 @@
 ---
 name: gss-bridge
-description: Use when orchestrating Spec-Kit specifications, Graphify architectural knowledge graphs, and Superpowers execution discipline in a project, assessing bugs, synthesizing repro harnesses, pruning subagent contexts, checking test impact, auditing architectural drift, logging cross-agent decisions, managing wave worktrees, or formatting repository structural files with CRLF discipline.
+description: Use when orchestrating Spec-Kit specifications, Graphify architectural knowledge graphs, and Superpowers execution discipline in a project, enforcing constitution compliance and zero code drift before editing code, assessing bugs, synthesizing repro harnesses, pruning subagent contexts, checking test impact, auditing architectural drift, logging cross-agent decisions, managing wave worktrees, or formatting repository structural files with CRLF discipline.
 ---
 
 # GSS-Bridge: Graphify + Spec-Kit + Superpowers
@@ -96,6 +96,33 @@ flowchart TD
 
 ---
 
+### Mandatory Constitution & Regulatory Re-reading (Anti-Drift Mandate)
+
+```mermaid
+flowchart TD
+    TaskStart["Task Execution / Bug Remediation Triggered"] --> ReadConst["Read/Re-read .specify/memory/constitution.md\n& Project Regulations (AGENTS.md, CLAUDE.md)"]
+    ReadConst --> CheckScope{"Is code modification within\nauthorized blast radius in plan.md / assessment.md?"}
+    CheckScope -- "Yes" --> CheckTDD{"Is failing test written first (RED)?"}
+    CheckScope -- "No (Out of Scope / Drift)" --> DenyDrift["STOP: Scope Violation!\nDo not modify unrequested files or perform drive-by refactoring"]
+    CheckTDD -- "Yes" --> ExecGreen["Apply minimal GREEN fix strictly within boundary"]
+    CheckTDD -- "No" --> DenyNoTest["STOP: TDD Violation!\nWrite failing reproduction test first"]
+```
+
+**The Iron Law of Anti-Drift & Regulatory Re-reading:**
+> **Violating the letter of the rules is violating the spirit of the rules.**
+> Before modifying ANY code during feature execution (`/speckit-gss-bridge-execute`), bug remediation (`/speckit-gss-bridge-bug-fix`), or subagent wave tasks:
+>
+> **The agent and all dispatched subagents MUST re-read `.specify/memory/constitution.md` and project regulations (`AGENTS.md`, `CLAUDE.md`, `.specify/memory/architecture-rules.json`).**
+>
+> **STRICT PROHIBITIONS ("Zero Code Drift")**:
+> - NEVER modify code outside the scoped blast radius declared in `plan.md` or `assessment.md`.
+> - NEVER perform "drive-by" refactoring, cosmetic rewrites, or style modifications on unrequested files.
+> - NEVER modify code without first re-reading the Constitution to confirm architectural invariants.
+> - NEVER dispatch subagents without injecting mandatory constitution re-reading and anti-drift rules in their prompt.
+> - NEVER alter public APIs or data contracts outside the active task's explicit requirements.
+
+---
+
 ## 1. Feature Lifecycle (Spec-Kit + Graphify + Superpowers)
 
 ```mermaid
@@ -128,11 +155,12 @@ flowchart LR
    .\.specify\extensions\gss-bridge\scripts\powershell\dispatch-subagents.ps1 -PruneContext -Actor <actor>
    ```
    Scope each subagent strictly to the 1-hop/2-hop files identified by Graphify.
-5. **Execution Discipline (TDD & TIA)**:
+5. **Execution Discipline (TDD, TIA & Anti-Drift)**:
+   - **Anti-Drift Pre-Execution Gate**: Re-read `.specify/memory/constitution.md` and project regulations (`AGENTS.md`, `CLAUDE.md`). Confirm all planned edits stay strictly within the authorized blast radius in `plan.md`. Drive-by refactoring is strictly forbidden.
    - Identify targeted test suites via Test Impact Analysis (`test-impact.ps1`).
    - **RED**: Write failing test first.
-   - **GREEN**: Write minimal code to pass.
-   - **REFACTOR**: Improve design while preserving invariants.
+   - **GREEN**: Write minimal code within scoped boundary to pass.
+   - **REFACTOR**: Improve design while preserving invariants and zero scope creep.
 6. **Completion & Auto Graphify Sync**:
    Verify test runner evidence before marking `- [x] T###`. Upon completing implementation, `update-handoff` automatically synchronizes the graph (`graphify update .`).
 
@@ -180,10 +208,10 @@ sequenceDiagram
   ```
 
 ### B. Bug Fix (`speckit-gss-bridge-bug-fix`)
-- **Precondition Check**: Guard denies `speckit.bug.fix` if `assessment.md` does not exist.
-- **TDD Red-Green-Refactor**:
+- **Precondition & Context Ingestion Check**: Guard denies `speckit.bug.fix` if `assessment.md` does not exist. Re-read `.specify/memory/constitution.md`, project regulations (`AGENTS.md`, `CLAUDE.md`), and `assessment.md` before modifying code.
+- **TDD Red-Green-Refactor (Zero Drift)**:
   1. Run the auto-synthesized test case reproducing the failure. Confirm it fails (RED).
-  2. Apply the minimal bug fix within the blast radius boundary (GREEN).
+  2. Apply the minimal bug fix strictly within the blast radius boundary (GREEN). Never touch outside files.
   3. Confirm reproduction test and test suite pass (REFACTOR).
 - **Completion & Sync**:
   1. Run verification commands and record actual output.
@@ -201,7 +229,38 @@ sequenceDiagram
 
 ---
 
-## 3. Parallel Subagent Waves & Worktree Isolation
+## 3. Autonomous Multi-Agent Teamwork (GSS-Teamwork Protocol)
+
+For complex campaigns and large refactoring tasks, GSS-Bridge provides an autonomous multi-agent teamwork architecture (integrating with Google Antigravity `/teamwork` and multi-agent swarms):
+
+```mermaid
+flowchart TD
+    Orchestrator["Lead Orchestrator
+(Plans waves, manages gss-handoff.json)"] --> WaveWorkers["Coder Subagents (Parallel Waves)
+- Isolated Git worktrees (.specify/worktrees/)
+- AST-pruned context skeletons
+- Strict TDD (Red-Green-Refactor)"]
+    WaveWorkers --> Sentinel["Sentinel Adversarial Reviewer Gate
+- Test Impact Analysis (test-impact.ps1)
+- Cycle & Drift Audit (drift-detector.ps1)"]
+    Sentinel -- "Pass" --> Merge["Merge Worktree into Main"]
+    Sentinel -- "Reject" --> WaveWorkers
+```
+
+### Teamwork Roster
+1. **Lead Orchestrator**: Maintains global contract truth from `spec.md`/`plan.md`, tracks lifecycle state, and coordinates waves.
+2. **Coder Subagents**: Independent implementers assigned to non-colliding components ($d \ge 3$), working in isolated worktrees (`wave-worktree.ps1`).
+3. **Sentinel Reviewer**: Independent adversarial gate verifying each wave before merge.
+
+```powershell
+# Generate autonomous teamwork plan with JSON output
+.\.specify\extensions\gss-bridge\scripts\powershell\teamwork-plan.ps1 -Json
+
+# Generate human-readable multi-agent roster and verification commands
+.\.specify\extensions\gss-bridge\scripts\powershell\teamwork-plan.ps1
+```
+
+## 4. Parallel Subagent Waves & Worktree Isolation
 
 When executing multiple tasks tagged with `[P]` in `tasks.md`:
 - Tasks targeting components within 2 hops in `graph.json` are **coupled** and cannot run in parallel.
@@ -209,9 +268,20 @@ When executing multiple tasks tagged with `[P]` in `tasks.md`:
 - **Git Worktree Isolation**: Subagents can run in isolated worktrees (`.specify/worktrees/<name>`) on dedicated branches (`gss-worktree/<name>`), eliminating git lock conflicts and dirty working trees.
 - **Context Pruning**: Subagent prompts are pruned to AST skeletons, stripping function bodies and saving 70–80% of prompt tokens.
 
+### The Iron Law of Automated Subagent Wave Dispatch
+> **Violating the letter of the rules is violating the spirit of the rules.**
+> When executing implementation tasks via `/gss-bridge` or `/speckit-gss-bridge-execute`:
+> If `tasks.md` contains tasks tagged `[P]`:
+> **The agent MUST run `dispatch-subagents.ps1 -Json` (or `.sh --json`) and MUST dispatch all tasks in each wave simultaneously using the runtime's subagent facility (`invoke_subagent` for Antigravity with `Model: 'inherit'`, `TypeName: 'self'`, `Prompt: task.subagent_prompt`).**
+>
+> **STRICT PROHIBITIONS**:
+> - NEVER execute `[P]` tasks sequentially or inline in the parent session when subagent facilities exist.
+> - NEVER skip wave dispatching when `[P]` tasks are present.
+> - NEVER compose subagent prompts from scratch when `dispatch-subagents.ps1 -Json` provides pre-scoped `subagent_prompt` payloads.
+
 ```powershell
-# Dispatch waves with AST skeleton pruning
-.\.specify\extensions\gss-bridge\scripts\powershell\dispatch-subagents.ps1 -PruneContext -Actor <actor>
+# Dispatch waves with AST skeleton pruning and JSON output
+.\.specify\extensions\gss-bridge\scripts\powershell\dispatch-subagents.ps1 -PruneContext -Json
 
 # Create an isolated wave worktree
 .\.specify\extensions\gss-bridge\scripts\powershell\wave-worktree.ps1 -Action create -Name "wave-1-auth"
@@ -219,7 +289,7 @@ When executing multiple tasks tagged with `[P]` in `tasks.md`:
 
 ---
 
-## 4. Advanced Architecture & Telemetry Tools
+## 5. Advanced Architecture & Telemetry Tools
 
 ### A. Graph-Guided Test Impact Analysis (TIA)
 Identifies all test files and suites within 1–2 hops of modified components or git changes:
@@ -247,7 +317,7 @@ Generates a standalone, zero-dependency dark-mode HTML cockpit at `.specify/dash
 
 ---
 
-## 5. Structural File Formatting & Line Ending Discipline (CRLF)
+## 6. Structural File Formatting & Line Ending Discipline (CRLF)
 
 In multi-agent environments spanning disparate execution runtimes (PowerShell on Windows, Git Bash, macOS zsh, Linux bash, and Python subprocesses), mixed or bare line endings (`\n` LF or `\r` CR) cause parse discrepancies, hash mismatches, corrupted script shebangs, and broken test assertions.
 
@@ -293,16 +363,27 @@ In multi-agent environments spanning disparate execution runtimes (PowerShell on
 | *"I must send all source files into the subagent prompt."* | Subagents only need signatures and interfaces; bodies waste 70–80% of tokens. | Use `ast-skeleton.ps1` / `dispatch -PruneContext`. |
 | *"I need to run the entire 10-minute test suite on every change."* | Slow feedback halts TDD flow. Only tests linked within 1–2 hops are impacted. | Run `test-impact.ps1` during iteration; full suite before commit. |
 | *"I don't need to record why I chose this library/architecture."* | The next agent (Claude, Codex, or Gemini) will lack context and may undo your work. | Record in `.specify/agent-decisions.jsonl` via `log-decision`. |
+| *"I can implement these [P] tasks directly in the main session faster without subagents."* | Inline execution creates context pollution, ignores Graphify file scoping, and risks cross-task coupling. | Run `dispatch-subagents.ps1 -Json` and invoke `invoke_subagent` in parallel for each wave. |
+| *"Writing prompts for subagents takes too many tokens."* | `dispatch-subagents.ps1 -Json` generates ready-to-run `subagent_prompt` payloads with AST context and TDD rules. | Pass `task.subagent_prompt` directly to `invoke_subagent`. |
 | *"I'll create the implementation plan in `docs/plans/`."* | Violates Spec-Kit as the single source of truth for design documentation. | Write TDD matrices directly into `specs/<feature>/plan.md`. |
 | *"I don't need to update the graph after fixing."* | Stale knowledge graphs deceive future queries and lead to architectural drift. | Run `graphify update .` upon completion. |
 | *"It's just line endings, Git or the OS will handle LF/CRLF conversion automatically."* | In multi-agent environments spanning Windows, POSIX, and diverse toolchains (PowerShell, Git Bash, Python), mixed or bare LF/CR line endings corrupt test assertions, AST parsers, script shebangs, and cross-agent handoffs. | Enforce strict CRLF (`\r\n`) across all structural files (`.md`, `.yml`, `.yaml`, `.json`, `.jsonl`, `.ps1`, `.sh`, `.py`, manifests, templates). |
 | *"Bash scripts can use CRLF on Linux/macOS."* | POSIX bash on Linux and macOS treats `\r` as a command character, causing syntax errors (`set: pipefail\r: invalid option`, `$'
 ': command not found`). | Enforce strict LF (`\n`) for all `*.sh` scripts via `.gitattributes` while keeping all structural files CRLF. |
+| *"I already read the constitution at session start; I can skip re-reading it before editing code."* | Context attenuation in long conversations causes agents to forget constraints and drift into ad-hoc refactoring. | Re-read `.specify/memory/constitution.md` and project regulations before starting each task or wave. |
+| *"I noticed an adjacent file has messy code or deprecated syntax; I'll quickly refactor it while implementing this task."* | Drive-by refactoring causes unexpected regressions, breaks merge isolation in git worktrees, and violates blast radius boundaries. | Stop immediately. Confine all edits strictly to scoped files in `plan.md`. Never perform unrequested refactoring. |
+| *"This bug fix is just 2 lines; reading the constitution and running assessment is unnecessary overhead."* | Unverified quick-patches create architectural drift and break callers. | Re-read constitution, inspect `assessment.md`, write a failing repro test (RED), and stay within the blast radius. |
+| *"Subagents are isolated anyway, they don't need the constitution or regulations."* | Subagents start with blank-slate contexts. Without the constitution, they will hallucinate dependencies, skip TDD, or rewrite unintended files. | Inject mandatory constitution re-reading and anti-drift rules into every `subagent_prompt`. |
 
 ---
 
 ## Red Flags - STOP and Fix
 
+- Modifying files outside the scoped files or blast radius declared in `plan.md` or `assessment.md` (code drift).
+- Modifying code before re-reading `.specify/memory/constitution.md` and project regulations (`AGENTS.md`).
+- Performing drive-by refactoring, cosmetic rewrites, or unrequested structural edits on untouched files.
+- Dispatching subagents with prompts lacking constitution and anti-drift instructions.
+- Sentinel approving a wave merge without verifying zero modifications outside scoped files.
 - Skipping Graphify analysis because `graphify-out/graph.json` does not exist yet.
 - Falling back to grep/find or manual code inspection when a Graphify-dependent command is requested.
 - Accepting a degraded "(Graphify context not available)" output without running `/graphify .`.
@@ -311,6 +392,8 @@ In multi-agent environments spanning disparate execution runtimes (PowerShell on
 - Modifying code before writing a failing reproduction test (violating TDD).
 - Creating ad-hoc plan files outside Spec-Kit governance in `docs/plans/`.
 - Marking tasks `[P]` without checking topological graph distance ($d \ge 3$).
+- Inlining or executing `[P]` tasks sequentially in the main session instead of dispatching subagents.
+- Ignoring the `subagent_prompt` generated by `dispatch-subagents.ps1 -Json`.
 - Marking tasks `- [x]` without executing test verification commands and capturing evidence.
 
 ---

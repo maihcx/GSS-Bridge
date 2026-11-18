@@ -23,9 +23,9 @@ Integrates native multi-agent team capabilities (such as Google Antigravity `/te
   └──────────────────────────────┘                └──────────────────────────────┘
 ```
 
-1. **Lead Orchestrator**: Maintains global contract truth from `spec.md` and `plan.md`, tracks lifecycle state in `.specify/gss-handoff.json`, generates isolated git worktrees, and dispatches parallel subagent waves.
-2. **Coder Subagents**: Execute parallel tasks `[P]` in dedicated worktrees (`.specify/worktrees/<name>`), strictly scoped to 1-2 hop AST skeletons from Graphify, under strict TDD Red-Green-Refactor.
-3. **Sentinel Adversarial Reviewer**: Independent verification gate that validates each wave before merging. Runs `test-impact.ps1` to detect regressions and `drift-detector.ps1` to prevent circular dependencies and layer boundary violations.
+1. **Lead Orchestrator**: Maintains global contract truth from `.specify/memory/constitution.md`, `spec.md`, and `plan.md`, tracks lifecycle state in `.specify/gss-handoff.json`, generates isolated git worktrees, and dispatches parallel subagent waves with explicit constitutional and anti-drift constraints.
+2. **Coder Subagents**: Re-read `.specify/memory/constitution.md` and project regulations upon waking, execute parallel tasks `[P]` in dedicated worktrees (`.specify/worktrees/<name>`), strictly scoped to 1-2 hop AST skeletons from Graphify, under strict TDD Red-Green-Refactor with zero code drift.
+3. **Sentinel Adversarial Reviewer**: Independent verification gate that validates each wave before merging. Audits compliance with `.specify/memory/constitution.md`, verifies zero modifications outside scoped files, runs `test-impact.ps1` to detect regressions, and runs `drift-detector.ps1` to prevent circular dependencies and layer boundary violations.
 
 ## Invocation
 

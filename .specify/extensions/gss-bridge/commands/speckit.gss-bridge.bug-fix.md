@@ -10,13 +10,16 @@ Executes bug remediation based on `.specify/bugs/<slug>/assessment.md` under str
 
 1. **Precondition Check (Guard)**:
    Verifies that `assessment.md` exists and contains identified root causes. Direct unverified patching is blocked.
-2. **Active Remediation State**:
+2. **Context Ingestion & Regulatory Re-reading**:
+   Read `.specify/memory/constitution.md`, project regulations (`AGENTS.md`, `CLAUDE.md`), and `.specify/bugs/<slug>/assessment.md`.
+   Enforce Constitution Principle VI: the fix MUST strictly remain confined within the identified blast radius boundary. Modifying unrelated files or introducing drive-by refactoring is strictly prohibited.
+3. **Active Remediation State**:
    Sets `.specify/gss-handoff.json` to `executing` scoped to `.specify/bugs/<slug>`.
-3. **Red-Green-Refactor Cycle**:
+4. **Red-Green-Refactor Cycle**:
    - **RED**: Write a minimal failing test reproducing the reported symptom. Run the test and confirm failure.
    - **GREEN**: Make minimal code modifications strictly within the blast radius boundary. Run test and confirm pass.
-   - **REFACTOR**: Clean implementation without changing observable invariants.
-4. **Verification & Completion**:
+   - **REFACTOR**: Clean implementation without changing observable invariants or drifting outside the fix scope.
+5. **Verification & Completion**:
    - Run verification commands and record actual output.
    - Automatically trigger `graphify --update` to synchronize the knowledge graph.
    - Generate `.specify/bugs/<slug>/fix.md`.

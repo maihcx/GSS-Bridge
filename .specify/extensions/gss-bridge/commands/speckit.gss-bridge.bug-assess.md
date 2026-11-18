@@ -16,8 +16,8 @@ Diagnose an incoming bug report, stack trace, or issue using **Graphify** codeba
    Traces 1-hop callers, 2-hop transitive impact, and risk classification.
 3. **Generate Mermaid Architecture Flow**:
    Visualizes call paths into the suspect component.
-4. **Enforce Superpowers TDD Contract**:
-   Generates `.specify/bugs/<slug>/assessment.md` mandating that a failing regression test case be written *before* touching source code.
+4. **Enforce Superpowers TDD & Anti-Drift Contract**:
+   Generates `.specify/bugs/<slug>/assessment.md` mandating that a failing regression test case be written *before* touching source code, and strictly confining remediation boundaries to prevent out-of-scope code drift as required by Constitution Principle VI.
 
 ## Invocation
 

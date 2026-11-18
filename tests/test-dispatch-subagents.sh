@@ -46,6 +46,8 @@ EOF
     JSON_OUT="$(bash "$DISPATCH_SCRIPT" --tasks-path "specs/001-checkout/tasks.md" --json)"
     echo "$JSON_OUT" | grep -q "subagent_prompt" || fail "Missing subagent_prompt in json output"
     echo "$JSON_OUT" | grep -q "TDD" || fail "Missing TDD in subagent_prompt"
+    echo "$JSON_OUT" | grep -q "constitution.md" || fail "Missing constitution.md in subagent_prompt"
+    echo "$JSON_OUT" | grep -qi "anti-drift" || fail "Missing anti-drift in subagent_prompt"
 )
 
 echo "test-dispatch-subagents-ok"

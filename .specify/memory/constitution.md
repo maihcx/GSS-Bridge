@@ -28,3 +28,9 @@
 ### Principle V: Auditability and Snapshots
 1. Every state transition and guard decision must be appended to `.specify/bridge-events.jsonl`.
 2. Handoff transitions must snapshot feature artifacts under `.specify/bridge-snapshots/` to enable deterministic audit and recovery.
+
+### Principle VI: Anti-Drift and Mandatory Regulatory Re-reading (Code Scope Discipline)
+1. **Mandatory Pre-Edit Re-reading**: Before modifying any source code or committing changes in feature implementation, bug fixing, or subagent tasks, agents and subagents MUST explicitly re-read this Constitution and project regulations (`AGENTS.md`, `CLAUDE.md`, and `.specify/memory/architecture-rules.json`).
+2. **Blast Radius & Scope Confinement**: All code modifications MUST be strictly confined to the authorized files and blast radius defined in `plan.md` (for features) or `assessment.md` (for bugs). Modifying out-of-scope files, creating unauthorized abstractions, or altering unrelated files is strictly prohibited.
+3. **Zero Code Drift**: Unsolicited refactoring, stylistic rewriting of untouched code ("drive-by cleanup"), or altering architectural invariants without an explicit task in `tasks.md` is a direct constitutional violation.
+4. **Subagent Constitutional Invariance**: Any subagent spawned by wave dispatch or teamwork MUST be initialized with explicit instructions to read this Constitution and abide by the Anti-Drift Mandate.

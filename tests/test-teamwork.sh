@@ -52,6 +52,8 @@ EOF
     echo "$JSON_OUT" | grep -q "worktree_name" || fail "Missing worktree_name in json output"
     echo "$JSON_OUT" | grep -q "subagent_prompt" || fail "Missing subagent_prompt in json output"
     echo "$JSON_OUT" | grep -q "test-impact" || fail "Missing test-impact in sentinel commands"
+    echo "$JSON_OUT" | grep -q "constitution.md" || fail "Missing constitution.md in subagent_prompt"
+    echo "$JSON_OUT" | grep -qi "anti-drift" || fail "Missing anti-drift in subagent_prompt"
 )
 
 echo "test-teamwork-ok"

@@ -16,8 +16,8 @@ If `graphify-out/graph.json` has not yet been generated in the workspace, the wa
    Inspects all `[P]` tasks in `tasks.md` and checks shortest paths between target components in `graphify-out/graph.json`.
 2. **Execution Wave Partitioning**:
    Applies graph coloring to partition tasks into safe, non-interfering parallel waves (Wave 1, Wave 2, etc.).
-3. **Subagent Context Boundary Scoping**:
-   Generates isolated subagent prompt instructions restricted exclusively to the 1-hop / 2-hop file neighborhood identified by Graphify. Prevents repo-wide token dumping and merge collisions.
+3. **Subagent Context Boundary & Anti-Drift Scoping**:
+   Generates isolated subagent prompt instructions restricted exclusively to the 1-hop / 2-hop file neighborhood identified by Graphify, and mandates re-reading `.specify/memory/constitution.md` and project regulations (`AGENTS.md`). Strictly prohibits repo-wide token dumping, merge collisions, and unrequested code modifications (zero code drift).
 
 ## Invocation
 

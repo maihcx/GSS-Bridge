@@ -1,4 +1,4 @@
-# dispatch-subagents.ps1 — Parallel Subagent Wave Dispatcher with Graphify Scoping.
+﻿# dispatch-subagents.ps1 — Parallel Subagent Wave Dispatcher with Graphify Scoping.
 [CmdletBinding()]
 param(
     [string]$TasksPath = "",
@@ -180,10 +180,14 @@ foreach ($wave in $waves) {
             "Role: GSS-Bridge Task Implementer",
             "Scoped Files: $(($files -join ', '))",
             "",
+            "Constitutional & Anti-Drift Rules (MANDATORY):",
+            "1. Read and adhere strictly to .specify/memory/constitution.md and project regulations in AGENTS.md before modifying any code.",
+            "2. ANTI-DRIFT MANDATE: Stay strictly within Scoped Files and blast radius boundary. Never modify unrelated components, never perform unrequested refactoring, and never invent external plans.",
+            "",
             "Strict TDD & Verification Instructions:",
             "1. RED: Write a failing unit/integration test first before modifying source code. Confirm it fails.",
             "2. GREEN: Write minimal code within the scoped boundary to pass the test.",
-            "3. REFACTOR: Clean up without breaking existing tests.",
+            "3. REFACTOR: Clean up without breaking existing tests or violating architecture invariants.",
             "4. EVIDENCE: Run test commands and return actual output as verification evidence.",
             "",
             "Constraints: Stay strictly within scoped files. Do not modify unrelated components."
