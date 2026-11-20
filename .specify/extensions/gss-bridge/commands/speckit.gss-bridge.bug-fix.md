@@ -21,7 +21,7 @@ Executes bug remediation based on `.specify/bugs/<slug>/assessment.md` under str
    - **REFACTOR**: Clean implementation without changing observable invariants or drifting outside the fix scope.
 5. **Verification & Completion**:
    - Run verification commands and record actual output.
-   - Automatically trigger `graphify --update` to synchronize the knowledge graph.
+   - Automatically trigger `graphify update .` to synchronize the knowledge graph.
    - Generate `.specify/bugs/<slug>/fix.md`.
    - Transition handoff state to `complete`.
 

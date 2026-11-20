@@ -22,11 +22,19 @@ if (Test-Path -LiteralPath $stageRoot) { Remove-Item -Recurse -Force -LiteralPat
 New-Item -ItemType Directory -Force -Path $stageDir | Out-Null
 
 # Extension content
-Copy-Item -LiteralPath (Join-Path $bridgeDir "extension.yml") -Destination $stageDir
-Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "commands") -Destination $stageDir
-New-Item -ItemType Directory -Force -Path (Join-Path $stageDir "scripts") | Out-Null
-Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "scripts/powershell") -Destination (Join-Path $stageDir "scripts/powershell")
-Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "scripts/bash") -Destination (Join-Path $stageDir "scripts/bash") -ErrorAction SilentlyContinue
+if (Test-Path -LiteralPath (Join-Path $repoRoot "commands")) {
+    Copy-Item -LiteralPath (Join-Path $repoRoot "extension.yml") -Destination $stageDir
+    Copy-Item -Recurse -LiteralPath (Join-Path $repoRoot "commands") -Destination $stageDir
+    New-Item -ItemType Directory -Force -Path (Join-Path $stageDir "scripts") | Out-Null
+    Copy-Item -Recurse -LiteralPath (Join-Path $repoRoot "scripts/powershell") -Destination (Join-Path $stageDir "scripts/powershell")
+    Copy-Item -Recurse -LiteralPath (Join-Path $repoRoot "scripts/bash") -Destination (Join-Path $stageDir "scripts/bash") -ErrorAction SilentlyContinue
+} else {
+    Copy-Item -LiteralPath (Join-Path $bridgeDir "extension.yml") -Destination $stageDir
+    Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "commands") -Destination $stageDir
+    New-Item -ItemType Directory -Force -Path (Join-Path $stageDir "scripts") | Out-Null
+    Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "scripts/powershell") -Destination (Join-Path $stageDir "scripts/powershell")
+    Copy-Item -Recurse -LiteralPath (Join-Path $bridgeDir "scripts/bash") -Destination (Join-Path $stageDir "scripts/bash") -ErrorAction SilentlyContinue
+}
 if (Test-Path -LiteralPath (Join-Path $repoRoot "assets")) {
     Copy-Item -Recurse -LiteralPath (Join-Path $repoRoot "assets") -Destination (Join-Path $stageDir "assets")
 }

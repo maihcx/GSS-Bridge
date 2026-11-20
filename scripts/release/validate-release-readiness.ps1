@@ -71,6 +71,12 @@ if ((Test-Path -LiteralPath $rootManifestPath) -and (Test-Path -LiteralPath $bri
     if ($bridgeContent -notmatch "version:\s*[`"']?$([regex]::Escape($Version))[`"']?\b") {
         Add-Problem $problems "bridge extension.yml does not declare version '$Version'"
     }
+    if ($rootContent -notmatch "(?m)^\s*schema_version:\s*[`"']?1\.0[`"']?\s*$") {
+        Add-Problem $problems "root extension.yml must declare schema_version: '1.0' (Spec-Kit schema standard)"
+    }
+    if ($bridgeContent -notmatch "(?m)^\s*schema_version:\s*[`"']?1\.0[`"']?\s*$") {
+        Add-Problem $problems "bridge extension.yml must declare schema_version: '1.0' (Spec-Kit schema standard)"
+    }
 }
 
 # 2. CHANGELOG checks
@@ -109,41 +115,45 @@ if (-not (Test-Path -LiteralPath $verPath)) {
 }
 
 # 5. Commands check
-$cmdDir = Join-Path $resolvedRepoRoot ".specify/extensions/gss-bridge/commands"
-if (-not (Test-Path -LiteralPath $cmdDir)) {
-    Add-Problem $problems "Missing commands directory at $cmdDir"
-} else {
-    foreach ($cmd in @("execute", "guard", "handoff", "blast-radius", "bug-assess", "bug-fix", "dispatch")) {
-        $cmdFile = Join-Path $cmdDir "speckit.gss-bridge.$cmd.md"
-        if (-not (Test-Path -LiteralPath $cmdFile)) {
-            Add-Problem $problems "Missing command file: speckit.gss-bridge.$cmd.md"
+$expectedCmds = @("status", "execute", "guard", "handoff", "blast-radius", "bug-assess", "bug-fix", "dispatch", "prune", "test-select", "drift", "repro-gen", "decision", "dashboard", "worktree", "teamwork")
+foreach ($cmdLocation in @((Join-Path $resolvedRepoRoot "commands"), (Join-Path $resolvedRepoRoot ".specify/extensions/gss-bridge/commands"))) {
+    if (-not (Test-Path -LiteralPath $cmdLocation)) {
+        Add-Problem $problems "Missing commands directory at $cmdLocation"
+    } else {
+        foreach ($cmd in $expectedCmds) {
+            $cmdFile = Join-Path $cmdLocation "speckit.gss-bridge.$cmd.md"
+            if (-not (Test-Path -LiteralPath $cmdFile)) {
+                Add-Problem $problems "Missing command file at $($cmdLocation): speckit.gss-bridge.$cmd.md"
+            }
         }
     }
 }
 
 # 6. Scripts pairing check
-$psDir = Join-Path $resolvedRepoRoot ".specify/extensions/gss-bridge/scripts/powershell"
-$bashDir = Join-Path $resolvedRepoRoot ".specify/extensions/gss-bridge/scripts/bash"
-
-if (-not (Test-Path -LiteralPath $psDir)) {
-    Add-Problem $problems "Missing scripts/powershell directory at $psDir"
-}
-if (-not (Test-Path -LiteralPath $bashDir)) {
-    Add-Problem $problems "Missing scripts/bash directory at $bashDir"
-}
-
-if ((Test-Path -LiteralPath $psDir) -and (Test-Path -LiteralPath $bashDir)) {
-    $psScripts = Get-ChildItem -LiteralPath $psDir -Filter "*.ps1" -File
-    $bashScripts = Get-ChildItem -LiteralPath $bashDir -Filter "*.sh" -File
-
-    if ($psScripts.Count -ne $bashScripts.Count) {
-        Add-Problem $problems "Script count mismatch between PowerShell ($($psScripts.Count)) and Bash ($($bashScripts.Count))"
+foreach ($scriptLocation in @(
+    @{ Ps = (Join-Path $resolvedRepoRoot "scripts/powershell"); Bash = (Join-Path $resolvedRepoRoot "scripts/bash") },
+    @{ Ps = (Join-Path $resolvedRepoRoot ".specify/extensions/gss-bridge/scripts/powershell"); Bash = (Join-Path $resolvedRepoRoot ".specify/extensions/gss-bridge/scripts/bash") }
+)) {
+    $psDir = $scriptLocation.Ps
+    $bashDir = $scriptLocation.Bash
+    if (-not (Test-Path -LiteralPath $psDir)) {
+        Add-Problem $problems "Missing scripts/powershell directory at $psDir"
     }
-    foreach ($ps in $psScripts) {
-        $stem = [System.IO.Path]::GetFileNameWithoutExtension($ps.Name)
-        $sh = Join-Path $bashDir "$stem.sh"
-        if (-not (Test-Path -LiteralPath $sh)) {
-            Add-Problem $problems "Missing matching bash script for '$($ps.Name)' -> '$stem.sh'"
+    if (-not (Test-Path -LiteralPath $bashDir)) {
+        Add-Problem $problems "Missing scripts/bash directory at $bashDir"
+    }
+    if ((Test-Path -LiteralPath $psDir) -and (Test-Path -LiteralPath $bashDir)) {
+        $psScripts = Get-ChildItem -LiteralPath $psDir -Filter "*.ps1" -File
+        $bashScripts = Get-ChildItem -LiteralPath $bashDir -Filter "*.sh" -File
+        if ($psScripts.Count -ne $bashScripts.Count) {
+            Add-Problem $problems "Script count mismatch in $psDir ($($psScripts.Count)) and $bashDir ($($bashScripts.Count))"
+        }
+        foreach ($ps in $psScripts) {
+            $stem = [System.IO.Path]::GetFileNameWithoutExtension($ps.Name)
+            $sh = Join-Path $bashDir "$stem.sh"
+            if (-not (Test-Path -LiteralPath $sh)) {
+                Add-Problem $problems "Missing matching bash script for '$($ps.Name)' -> '$stem.sh' in $bashDir"
+            }
         }
     }
 }

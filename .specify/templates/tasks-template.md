@@ -23,7 +23,7 @@
 ## Phase 4: Verification, Review & Synchronization
 - [ ] T009 Run full test suite and collect passing evidence (superpowers:verification-before-completion)
 - [ ] T010 Request code review (superpowers:requesting-code-review)
-- [ ] T011 Synchronize knowledge graph with new codebase changes (`graphify --update`)
+- [ ] T011 Synchronize knowledge graph with new codebase changes (`graphify update .`)
 - [ ] T012 Finish development branch (superpowers:finishing-a-development-branch)
 
 ## Deferred / Out of Scope

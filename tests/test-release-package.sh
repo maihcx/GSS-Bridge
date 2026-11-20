@@ -27,6 +27,9 @@ assert_file ".specify/extensions/gss-bridge/verified-versions.json"
 assert_dir ".specify/extensions/gss-bridge/commands"
 assert_dir ".specify/extensions/gss-bridge/scripts/bash"
 assert_dir ".specify/extensions/gss-bridge/scripts/powershell"
+assert_dir "commands"
+assert_dir "scripts/bash"
+assert_dir "scripts/powershell"
 assert_file "README.md"
 assert_file "README.vi-VN.md"
 assert_file "CHANGELOG.md"
@@ -38,8 +41,9 @@ assert_file ".gitattributes"
 cmp -s "$REPO_ROOT/extension.yml" "$BRIDGE_DIR/extension.yml" ||
     fail "root extension.yml is out of sync with bridge extension.yml"
 
-for cmd in execute guard handoff blast-radius bug-assess bug-fix dispatch prune test-select drift repro-gen decision dashboard worktree; do
+for cmd in status execute guard handoff blast-radius bug-assess bug-fix dispatch prune test-select drift repro-gen decision dashboard worktree teamwork; do
     assert_file ".specify/extensions/gss-bridge/commands/speckit.gss-bridge.$cmd.md"
+    assert_file "commands/speckit.gss-bridge.$cmd.md"
 done
 
 # Verify CRLF line endings on structural files

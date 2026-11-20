@@ -28,7 +28,7 @@ Execute the active Spec-Kit feature through Superpowers discipline with Graphify
    - Run `superpowers:requesting-code-review`.
    - Run `superpowers:finishing-a-development-branch`.
 7. **Graph Synchronization**:
-   - Run `graphify --update` to synchronize the knowledge graph with the new codebase state.
+   - Run `graphify update .` to synchronize the knowledge graph with the new codebase state.
 8. **Handoff Finalization**:
    - Transition handoff status to `complete` via `update-handoff.ps1` or `update-handoff.sh`.
 

@@ -23,7 +23,7 @@
 4. **Branch Finishing & Review**: Every completed feature must undergo `superpowers:requesting-code-review` and `superpowers:finishing-a-development-branch`.
 
 ### Principle IV: Knowledge Graph Synchronization
-1. Upon completing implementation and passing verification, agents must run `graphify --update` to synchronize the knowledge graph with the new codebase state.
+1. Upon completing implementation and passing verification, agents must run `graphify update .` to synchronize the knowledge graph with the new codebase state.
 
 ### Principle V: Auditability and Snapshots
 1. Every state transition and guard decision must be appended to `.specify/bridge-events.jsonl`.

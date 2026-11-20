@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2] - 2026-11-20
+
+### Fixed
+- **Manifest Schema Version Alignment (Spec-Kit Standard)**:
+  - Fixed `schema_version` in `extension.yml` and `.specify/extensions/gss-bridge/extension.yml` from package version `"1.3.1"` to Spec-Kit specification schema version `"1.0"`, preventing `specify extension add` validation failure (`Unsupported schema version: 1.3.1 (expected 1.0)`).
+- **Commands & Scripts Directory Structure Alignment**:
+  - Added root `commands/` directory containing all 16 command specifications (`speckit.gss-bridge.*.md`) so that local dev install (`specify extension add --dev <path>`) resolves commands without missing file warnings.
+  - Added root `scripts/powershell/` and `scripts/bash/` directories mirroring `.specify/extensions/gss-bridge/scripts/` ensuring relative script invocations resolve seamlessly.
+- **Added Status Command Specification & Registration**:
+  - Registered `speckit.gss-bridge.status` in `extension.yml` and added command specification `commands/speckit.gss-bridge.status.md` and `.specify/extensions/gss-bridge/commands/speckit.gss-bridge.status.md` to expose `bridge-status` functionality to all agents.
+- **Graphify CLI Syntax Correction**:
+  - Replaced legacy `graphify --update` references with official `graphify update .` (or `graphify update . --force`) across all command specifications, scripts, templates, and documentation.
+
 ## [1.3.1] - 2026-11-18
 
 ### Added
@@ -172,7 +185,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Component Blast Radius analysis integrated into `plan.md` via `graphify-blast-radius.ps1` and `.sh`.
   - Coupling verification for parallel tasks `[P]` in `tasks.md` before concurrent subagent dispatch.
   - Subagent context scoping to 1-2 hop neighborhoods, reducing token usage by 50x-100x.
-  - Automatic post-implementation graph synchronization (`graphify --update`).
+  - Automatic post-implementation graph synchronization (`graphify update .`).
 - **Superpowers Engineering Discipline**:
   - Test-Driven Development (TDD) Red-Green-Refactor enforcement.
   - Systematic debugging with call graph path tracing.

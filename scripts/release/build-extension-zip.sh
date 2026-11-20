@@ -22,11 +22,19 @@ cleanup() {
 }
 trap cleanup EXIT
 
-cp -p "$BRIDGE_DIR/extension.yml" "$STAGE_DIR/"
-cp -rp "$BRIDGE_DIR/commands" "$STAGE_DIR/"
-mkdir -p "$STAGE_DIR/scripts"
-cp -rp "$BRIDGE_DIR/scripts/powershell" "$STAGE_DIR/scripts/"
-cp -rp "$BRIDGE_DIR/scripts/bash" "$STAGE_DIR/scripts/"
+if [ -d "$REPO_ROOT/commands" ]; then
+    cp -p "$REPO_ROOT/extension.yml" "$STAGE_DIR/"
+    cp -rp "$REPO_ROOT/commands" "$STAGE_DIR/"
+    mkdir -p "$STAGE_DIR/scripts"
+    cp -rp "$REPO_ROOT/scripts/powershell" "$STAGE_DIR/scripts/"
+    cp -rp "$REPO_ROOT/scripts/bash" "$STAGE_DIR/scripts/"
+else
+    cp -p "$BRIDGE_DIR/extension.yml" "$STAGE_DIR/"
+    cp -rp "$BRIDGE_DIR/commands" "$STAGE_DIR/"
+    mkdir -p "$STAGE_DIR/scripts"
+    cp -rp "$BRIDGE_DIR/scripts/powershell" "$STAGE_DIR/scripts/"
+    cp -rp "$BRIDGE_DIR/scripts/bash" "$STAGE_DIR/scripts/"
+fi
 if [ -d "$REPO_ROOT/assets" ]; then
     cp -rp "$REPO_ROOT/assets" "$STAGE_DIR/"
 fi

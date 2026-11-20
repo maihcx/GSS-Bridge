@@ -335,7 +335,7 @@ Write-BridgeEvent -RepoRoot $repoRoot -Action "handoff" -Status $resolvedStatus 
 if ($resolvedStatus -eq "complete" -and (Test-Path -LiteralPath (Join-Path $repoRoot "graphify-out\graph.json"))) {
     if (Get-Command "graphify" -ErrorAction SilentlyContinue) {
         try {
-            Write-Output "[bridge] Triggering automatic Graphify sync (graphify --update)..."
+            Write-Output "[bridge] Triggering automatic Graphify sync (graphify update .)..."
             & graphify update . | Out-Null
             Write-Output "[bridge] Knowledge graph synchronized."
         } catch {
