@@ -14,6 +14,8 @@ Inspect the current GSS-Bridge lifecycle state, active handoff status, pending t
    Verifies runtime environment readiness, required tools (PowerShell, Bash, Python, jq), package integrity, and agent configuration.
 3. **Machine-Readable Telemetry (`-Json`)**:
    Outputs full state and readiness metrics as JSON for automation and dashboard ingestion.
+4. **Interactive HTML Dashboard (`generate-dashboard`)**:
+   Generates a standalone dark-mode HTML cockpit at `.specify/dashboard/index.html` summarizing tasks, graph topology, bugs, and decisions.
 
 ## Invocation
 
@@ -26,6 +28,9 @@ Inspect the current GSS-Bridge lifecycle state, active handoff status, pending t
 
 # Output status as JSON
 .\.specify\extensions\gss-bridge\scripts\powershell\bridge-status.ps1 -Json
+
+# Generate and open interactive HTML dashboard
+.\.specify\extensions\gss-bridge\scripts\powershell\generate-dashboard.ps1 -Open
 ```
 
 ```bash
@@ -37,8 +42,11 @@ bash .specify/extensions/gss-bridge/scripts/bash/bridge-status.sh --readiness --
 
 # Output status as JSON
 bash .specify/extensions/gss-bridge/scripts/bash/bridge-status.sh --json
+
+# Generate and open interactive HTML dashboard
+bash .specify/extensions/gss-bridge/scripts/bash/generate-dashboard.sh --open
 ```
 
 ### Agent Aliases
-- Claude Code / Antigravity: `/speckit-gss-bridge-status` or `/gss-bridge-status` or `/gss-status`
-- Codex: `$speckit-gss-bridge-status` or `$gss-bridge-status` or `$gss-status`
+- Claude Code / Antigravity: `/speckit.gss-bridge.status` or `/gss-status`
+- Codex: `$speckit.gss-bridge.status` or `$gss-status`

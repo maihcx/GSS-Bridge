@@ -52,7 +52,7 @@ flowchart TD
 - Auditing architectural drift, forbidden layer boundaries, or circular dependency cycles.
 - Recording or querying cross-agent decisions in `.specify/agent-decisions.jsonl`.
 - Generating an interactive HTML cockpit at `.specify/dashboard/index.html`.
-- The user or prompt invokes `/gss-bridge`, `/speckit-gss-bridge-execute`, `$gss-bridge`, `/speckit-gss-bridge-bug-assess`, `/speckit-gss-bridge-bug-fix`, `/speckit-gss-bridge-dispatch`, or any bridge command.
+- The user or prompt invokes `/gss-bridge`, `/gss-teamwork`, `/gss-bug-assess`, `/gss-bug-fix`, `/gss-analyze`, `/gss-status`, `/gss-decision`, or any `speckit.gss-bridge.*` command.
 
 ### When NOT to Use
 - Quick, one-line scratchpad edits with zero architectural dependencies or side effects.
@@ -84,7 +84,7 @@ flowchart TD
 
 **The Iron Law of Graph Initialization:**
 > **Violating the letter of the rules is violating the spirit of the rules.**
-> If any command or workflow requires Graphify — including `graphify query`, `graphify explain`, `graphify path`, `graphify-blast-radius`, `speckit-gss-bridge-bug-assess`, `speckit-gss-bridge-dispatch`, `speckit-gss-bridge-test-select`, `speckit-gss-bridge-drift`, or feature planning in `plan.md` — and `graphify-out/graph.json` has not yet been generated:
+> If any command or workflow requires Graphify — including `graphify query`, `graphify explain`, `graphify path`, `speckit.gss-bridge.analyze`, `speckit.gss-bridge.bug-assess`, `speckit.gss-bridge.execute`, or feature planning in `plan.md` — and `graphify-out/graph.json` has not yet been generated:
 > 
 > **You MUST execute `/graphify .` (or `graphify .`) to initialize the knowledge graph FIRST.**
 > 

@@ -34,16 +34,26 @@ Execute the active Spec-Kit feature through Superpowers discipline with Graphify
 
 ## Invocation
 
-- Claude Code / Antigravity: `/speckit-gss-bridge-execute` or `/gss-bridge`
-- Codex: `$speckit-gss-bridge-execute` or `$gss-bridge`
+- Claude Code / Antigravity: `/speckit.gss-bridge.execute` or `/gss-bridge`
+- Codex: `$speckit.gss-bridge.execute` or `$gss-bridge`
 
 ```powershell
-# Transition to executing
+# Transition to executing & validate guard
 .\.specify\extensions\gss-bridge\scripts\powershell\update-handoff.ps1 -Status executing -Actor <actor>
 .\.specify\extensions\gss-bridge\scripts\powershell\guard-command.ps1 -Action "superpowers:subagent-driven-development" -Actor <actor>
+
+# Partition [P] tasks into waves with AST skeleton pruning
+.\.specify\extensions\gss-bridge\scripts\powershell\dispatch-subagents.ps1 -PruneContext -Json -Actor <actor>
+
+# Optional: extract AST skeleton or manage isolated wave worktrees
+.\.specify\extensions\gss-bridge\scripts\powershell\ast-skeleton.ps1 -Path "src/auth.py"
+.\.specify\extensions\gss-bridge\scripts\powershell\wave-worktree.ps1 -Action create -Name "wave-1-auth"
 ```
 
 ```bash
 bash .specify/extensions/gss-bridge/scripts/bash/update-handoff.sh --status executing --actor <actor>
 bash .specify/extensions/gss-bridge/scripts/bash/guard-command.sh --action "superpowers:subagent-driven-development" --actor <actor>
+bash .specify/extensions/gss-bridge/scripts/bash/dispatch-subagents.sh --prune-context --json --actor <actor>
+bash .specify/extensions/gss-bridge/scripts/bash/ast-skeleton.sh --path "src/auth.py"
+bash .specify/extensions/gss-bridge/scripts/bash/wave-worktree.sh --action create --name "wave-1-auth"
 ```

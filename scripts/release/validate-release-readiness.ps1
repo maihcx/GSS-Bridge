@@ -115,7 +115,7 @@ if (-not (Test-Path -LiteralPath $verPath)) {
 }
 
 # 5. Commands check
-$expectedCmds = @("status", "execute", "guard", "handoff", "blast-radius", "bug-assess", "bug-fix", "dispatch", "prune", "test-select", "drift", "repro-gen", "decision", "dashboard", "worktree", "teamwork")
+$expectedCmds = @("status", "execute", "guard", "handoff", "analyze", "bug-assess", "bug-fix", "decision", "teamwork")
 foreach ($cmdLocation in @((Join-Path $resolvedRepoRoot "commands"), (Join-Path $resolvedRepoRoot ".specify/extensions/gss-bridge/commands"))) {
     if (-not (Test-Path -LiteralPath $cmdLocation)) {
         Add-Problem $problems "Missing commands directory at $cmdLocation"

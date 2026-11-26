@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-11-26
+
+### Changed
+- **Command Surface Consolidation (16 -> 9 Commands)**:
+  - Merged overlapping Graphify analysis commands (`blast-radius`, `test-select`, `drift`) into unified `speckit.gss-bridge.analyze` (`gss-analyze`).
+  - Integrated wave sub-utilities (`dispatch`, `prune`, `worktree`) into `speckit.gss-bridge.execute` (`gss-bridge`).
+  - Integrated `repro-gen` into `speckit.gss-bridge.bug-assess` (`gss-bug-assess`).
+  - Integrated `dashboard` into `speckit.gss-bridge.status` (`gss-status`).
+  - Simplified `aliases` in `extension.yml` to one concise alias per command while preserving all underlying PowerShell and Bash scripts.
+  - Updated `AGENTS.md`, `README.md`, `README.vi-VN.md`, `SKILL.md`, and `scripts/release/validate-release-readiness.ps1`.
+
 ## [1.3.2] - 2026-11-20
 
 ### Fixed

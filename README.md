@@ -92,9 +92,8 @@ specify extension add gss-bridge \
 2. **Clarify**: Run `/speckit-clarify` to resolve ambiguities.
 3. **Plan**: Run `/speckit-plan` $\rightarrow$ calculates component blast radius and Mermaid call flow via `graphify explain` and embeds TDD test strategies into `plan.md`.
 4. **Tasks**: Run `/speckit-tasks` $\rightarrow$ tags parallel tasks `[P]` after verifying coupling.
-5. **Dispatch Waves**: Run `/speckit-gss-bridge-dispatch` to group `[P]` tasks into non-colliding execution waves with 1-hop file boundaries.
-6. **Implement**: Run `/gss-bridge` (Claude Code / Antigravity) or `$gss-bridge` (Codex) $\rightarrow$ dispatches Graphify-scoped subagents, enforces TDD Red-Green-Refactor, systematically traces bugs, and verifies build/tests.
-7. **Complete & Sync**: Verification passes $\rightarrow$ code review $\rightarrow$ `graphify update . --force` runs automatically (with AI metadata exclusions via `.graphifyignore`) $\rightarrow$ handoff transitions to `complete`.
+5. **Implement & Dispatch Waves**: Run `/gss-bridge` (Claude Code / Antigravity) or `$gss-bridge` (Codex) $\rightarrow$ automatically partitions `[P]` tasks into non-colliding waves with 1-hop AST-pruned subagents, enforces TDD Red-Green-Refactor, systematically traces bugs, and verifies build/tests.
+6. **Complete & Sync**: Verification passes $\rightarrow$ code review $\rightarrow$ `graphify update . --force` runs automatically (with AI metadata exclusions via `.graphifyignore`) $\rightarrow$ handoff transitions to `complete`.
 
 ### 2. Bug Lifecycle (GSS-Bug Protocol)
 
