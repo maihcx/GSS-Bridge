@@ -41,7 +41,7 @@ assert_file ".gitattributes"
 cmp -s "$REPO_ROOT/extension.yml" "$BRIDGE_DIR/extension.yml" ||
     fail "root extension.yml is out of sync with bridge extension.yml"
 
-for cmd in status execute guard handoff blast-radius bug-assess bug-fix dispatch prune test-select drift repro-gen decision dashboard worktree teamwork; do
+for cmd in status execute guard handoff analyze bug-assess bug-fix decision teamwork; do
     assert_file ".specify/extensions/gss-bridge/commands/speckit.gss-bridge.$cmd.md"
     assert_file "commands/speckit.gss-bridge.$cmd.md"
 done
